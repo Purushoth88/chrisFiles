@@ -1,0 +1,28 @@
+[user]
+	email = christian.halstrick@sap.com
+	name = Christian Halstrick
+[core]
+	filemode = false
+	autocrlf = false
+#	editor = 'C:/notepad++/notepad++.exe' -multiInst -notabbar -nosession -noPlugin
+[alias]
+	lo = log --date=short --graph --pretty=\"%h %cd %s (%an%Cgreen%d%Creset)\"
+	los = log --numstat --date=short --graph --pretty=\"%h %cd %s (%an%Cgreen%d%Creset)\"
+	loa = log --all --date=short --graph --pretty=\"%h %cd %s (%an%Cgreen%d%Creset)\"
+	loas = log --numstat --all --date=short --graph --pretty=\"%h %cd %s (%an%Cgreen%d%Creset)\"
+	co = checkout
+	st = status -s
+	cm = commit
+	br = branch
+	addchange = !sh -c 'git config --add remote.\"$1\".fetch refs/changes/\"${2: -2}\"/\"$2\"/*:refs/tags/\"$1\"/\"$2\"/*' -
+	getchange = !sh -c 'git fetch \"$1\" refs/changes/\"${2: -2}\"/\"$2\"/*:refs/tags/\"$1\"/\"$2\"/*' -
+	rl = reflog --date=local
+[http]
+	sslverify = false
+#	sslverify = true
+#	sslcainfo = c:/Users/d032780/certs/SAPNetCA_cert_BaseEncoded.cer
+#	sslCert = c:/Users/d032780/certs/d032780_cert_withPrivateKey_withCertsInChain.pfx
+#	sslKey = c:/Users/d032780/d032780.pfx
+#	sslcainfo = c:/Users/d032780/certs/Cybertrust_wirthAllCerts.pem
+[color]
+	ui = auto
