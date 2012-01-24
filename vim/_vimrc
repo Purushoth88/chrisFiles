@@ -1,0 +1,46 @@
+"============================================================================
+" General settings
+"----------------------------------------------------------------------------
+set langmenu=none
+set nocompatible		" turn off vi compatibility
+set clipboard=unnamed		" Sets the unnamed register (the  default for yanks&pastes&...) to be windows clipboard
+set autochdir
+set helplang=en
+
+"============================================================================
+" Statusline, Ruler
+"----------------------------------------------------------------------------
+set guioptions=cgm
+set statusline=%f%=(%{&ff}\ %o\ %v,%l\ HEX:%B\ %p%%)
+set showcmd			" show (partial) command on last line of window
+set laststatus=2		" show a status line always
+
+"============================================================================
+" Presentation
+"----------------------------------------------------------------------------
+set hidden
+set showmatch
+set visualbell			" dont ring the bell
+set nowrap
+set scrolloff=5			" keep some context around text cursor
+set sidescrolloff=5		" keep some context around text cursor
+set sidescroll=1		" scroll by one column
+syntax on
+colorscheme desert
+
+"============================================================================
+" Search and Replace
+"----------------------------------------------------------------------------
+set ignorecase			" search case-insensitive
+set smartcase			" if you search case-insensitive and search string contains a capital letter -> search case sensitive
+set incsearch
+set hlsearch
+
+"============================================================================
+" Keyboard mappings
+"----------------------------------------------------------------------------
+nmap ,ve :e ~/_vimrc<CR>
+nmap ,t :e ~/vimtips<CR>
+
+" replace a GUID
+nmap ,cg mz:%s/<C-r><C-w>/                                /g<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Insert>
