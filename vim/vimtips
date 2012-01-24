@@ -1,0 +1,27 @@
+Modify
+- replace regexep with newline				:s /regexp/\r/
+- execute some actions on every line
+    containing pattern					:[range] g /pattern/ <command>
+    not containing pattern				:[range] g! /pattern/ <command>
+- replace the word the cursor is in                     ciw
+  replace the quoted string the cursor is in		ci"
+  replace the java block the cursor is in		ci}
+  replace the word and the surrounding whitespaces	caw
+  indent the currrent block				>i}
+
+Navigate
+- scroll left,right,up,down				A-Left, A-Right, A-Up, A-Down
+
+Command-line editing
+- join lines without inserting a space			gJ
+- insert current word/Word under cursor			^R^w / ^R^W
+- scroll through history of cmds			Up,Down 
+- scroll through search history				/Up,Down 
+
+Efficient Work
+- record a macro to register x				qx <keystrokes> q
+- execute macro x/last					@x / @@
+- redo last command					.
+
+Selecting
+- turn on visual block selection mode			^Q
