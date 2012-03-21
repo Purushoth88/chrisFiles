@@ -32,7 +32,6 @@ public class HTTPSServer {
 
 //			ks.load(new FileInputStream(ksName), ksPass);
 			ks.load(null, ksPass);
-			ks.
 			
 			KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
 			kmf.init(ks, ctPass);

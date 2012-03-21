@@ -6,7 +6,7 @@ import java.io.IOException;
 /**
  * TODO document this type
  */
-public class JavaIoFilePerf {
+public class JavaFileIOPerf {
 	private static final int NR_OF_BIG_FILES = 30;
 	private static final int NR_OF_SMALL_FILES = 10000;
 	private static final int BIG_FILE_SIZE = 50000000;
@@ -16,7 +16,7 @@ public class JavaIoFilePerf {
 
 	public static void main(String args[]) throws IOException {
 		if (args.length > 0 && "-h".equalsIgnoreCase(args[0])) {
-			System.err.println("JavaIoFilePerf [-h] [tmpDir]");
+			System.err.println("JavaFileIOPerf [-h] [tmpDir]");
 			System.exit(1);
 		}
 		String tmpDirName = (args.length == 0) ? System
