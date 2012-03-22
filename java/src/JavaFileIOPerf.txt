@@ -1,0 +1,64 @@
+==========================================================================
+Windows, On Access Scan: on, 15:57 21.03.2012
+
+Java File I/O perf measured in C:\Users\d032780\AppData\Local\Temp\JGitTests_1332341443037
+Reading 10000 files of size 1000(bytes): overall=359(ms), time per file=0,04(ms), throughput=26,56(MByte/s)
+Writing 10000 files of size 1000(bytes): overall=51628(ms), time per file=5,16(ms), throughput=0,18(MByte/s)
+Reading 30 files of size 50000000(bytes): overall=1810(ms), time per file=60,33(ms), throughput=790,34(MByte/s)
+Writing 30 files of size 50000000(bytes): overall=23744(ms), time per file=791,47(ms), throughput=60,25(MByte/s)
+==========================================================================
+Windows, On Access Scan: off, 15:57 21.03.2012
+
+Java File I/O perf measured in C:\Users\d032780\AppData\Local\Temp\JGitTests_1332341904997
+Reading 10000 files of size 1000(bytes): overall=219(ms), time per file=0,02(ms), throughput=43,55(MByte/s)
+Writing 10000 files of size 1000(bytes): overall=2463(ms), time per file=0,25(ms), throughput=3,87(MByte/s)
+Reading 30 files of size 50000000(bytes): overall=1903(ms), time per file=63,43(ms), throughput=751,71(MByte/s)
+Writing 30 files of size 50000000(bytes): overall=25038(ms), time per file=834,60(ms), throughput=57,13(MByte/s)
+
+==========================================================================
+Linux (Lubuntu), Java6, Running inside: Windows On Access Scan: off, 16:03 21.03.2012
+
+Java File I/O perf measured in /tmp/JGitTests_1332342107231
+Reading 10000 files of size 1000(bytes): overall=172(ms), time per file=0.02(ms), throughput=55.45(MByte/s)
+Writing 10000 files of size 1000(bytes): overall=247(ms), time per file=0.02(ms), throughput=38.61(MByte/s)
+Reading 30 files of size 50000000(bytes): overall=2369(ms), time per file=78.97(ms), throughput=603.85(MByte/s)
+Writing 30 files of size 50000000(bytes): overall=25431(ms), time per file=847.70(ms), throughput=56.25(MByte/s)
+==========================================================================
+Linux (Lubuntu), Java6, Running inside: Windows On Access Scan: on, 16:03 21.03.2012
+
+Java File I/O perf measured in /tmp/JGitTests_1332342263315
+Reading 10000 files of size 1000(bytes): overall=185(ms), time per file=0.02(ms), throughput=51.55(MByte/s)
+Writing 10000 files of size 1000(bytes): overall=234(ms), time per file=0.02(ms), throughput=40.76(MByte/s)
+Reading 30 files of size 50000000(bytes): overall=2474(ms), time per file=82.47(ms), throughput=578.22(MByte/s)
+Writing 30 files of size 50000000(bytes): overall=31706(ms), time per file=1056.87(ms), throughput=45.12(MByte/s)
+
+==========================================================================
+On access AntiVirus: on
+Java File I/O perf (2012/03/22 14:48:11): java.version=1.6.0_26, os.name=Windows 7, os.arch=amd64, basedir=C:\Users\d032780\AppData\Local\Temp\JGitTests_1332424091090
+Reading 10000 files of size 1000(bytes): overall=284(ms), time per file=0,03(ms), throughput=33,58(MByte/s)
+Writing 10000 files of size 1000(bytes): overall=47112(ms), time per file=4,71(ms), throughput=0,20(MByte/s)
+Reading 30 files of size 50000000(bytes): overall=1950(ms), time per file=65,00(ms), throughput=733,60(MByte/s)
+Writing 30 files of size 50000000(bytes): overall=30467(ms), time per file=1015,57(ms), throughput=46,95(MByte/s)
+==========================================================================
+On access AntiVirus: on
+Java File I/O perf (2012/03/22 14:50:33): java.version=1.6.0_26, os.name=Windows 7, os.arch=amd64, basedir=C:\Users\d032780\AppData\Local\Temp\JGitTests_1332424232989
+Reading 10000 files of size 1000(bytes): overall=298(ms), time per file=0,03(ms), throughput=32,00(MByte/s)
+Writing 10000 files of size 1000(bytes): overall=45528(ms), time per file=4,55(ms), throughput=0,21(MByte/s)
+Reading 30 files of size 50000000(bytes): overall=1903(ms), time per file=63,43(ms), throughput=751,71(MByte/s)
+Writing 30 files of size 50000000(bytes): overall=41028(ms), time per file=1367,60(ms), throughput=34,87(MByte/s)
+==========================================================================
+On access AntiVirus: off
+Java File I/O perf (2012/03/22 14:53:59): java.version=1.6.0_26, os.name=Windows 7, os.arch=amd64, basedir=C:\Users\d032780\AppData\Local\Temp\JGitTests_1332424439018
+Reading 10000 files of size 1000(bytes): overall=313(ms), time per file=0,03(ms), throughput=30,47(MByte/s)
+Writing 10000 files of size 1000(bytes): overall=1569(ms), time per file=0,16(ms), throughput=6,08(MByte/s)
+Reading 30 files of size 50000000(bytes): overall=1763(ms), time per file=58,77(ms), throughput=811,41(MByte/s)
+Writing 30 files of size 50000000(bytes): overall=56659(ms), time per file=1888,63(ms), throughput=25,25(MByte/s)
+==========================================================================
+On access AntiVirus: off
+Java File I/O perf (2012/03/22 14:55:28): java.version=1.6.0_26, os.name=Windows 7, os.arch=amd64, basedir=C:\Users\d032780\AppData\Local\Temp\JGitTests_1332424528190
+Reading 10000 files of size 1000(bytes): overall=268(ms), time per file=0,03(ms), throughput=35,58(MByte/s)
+Writing 10000 files of size 1000(bytes): overall=2907(ms), time per file=0,29(ms), throughput=3,28(MByte/s)
+Reading 30 files of size 50000000(bytes): overall=1840(ms), time per file=61,33(ms), throughput=777,45(MByte/s)
+Writing 30 files of size 50000000(bytes): overall=57922(ms), time per file=1930,73(ms), throughput=24,70(MByte/s)
+==========================================================================
+
