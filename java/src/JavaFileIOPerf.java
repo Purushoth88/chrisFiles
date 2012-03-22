@@ -11,10 +11,15 @@ import java.util.Properties;
  * TODO document this type
  */
 public class JavaFileIOPerf {
-	private static final int NR_OF_BIG_FILES = 30;
-	private static final int NR_OF_SMALL_FILES = 10000;
+	private static final int NR_OF_BIG_FILES = 10;
+	private static final int NR_OF_SMALL_FILES = 100000;
 	private static final int BIG_FILE_SIZE = 50000000;
 	private static final int SMALL_FILE_SIZE = 1000;
+
+	private static double READ_SMALL_STD = (double) 1551.0 / 100000.0;
+	private static double WRITE_SMALL_STD = (double) 7061.0 / 100000.0;
+	private static double READ_BIG_STD = (double) 2853.0 / 30.0;
+	private static double WRITE_BIG_STD = (double) 24217.0 / 30.0;
 
 	static byte buffer[] = new byte[BIG_FILE_SIZE];
 
@@ -32,13 +37,14 @@ public class JavaFileIOPerf {
 					+ baseDir.getPath());
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Properties sysProps = System.getProperties();
-		System.out.println("Java File I/O perf ("+dateFormat.format(new Date())+"):"
-				+ " java.version="+sysProps.getProperty("java.version")
-				+ ", os.name="+sysProps.getProperty("os.name")
-				+ ", os.arch="+sysProps.getProperty("os.arch")
-				+ ", basedir=" + baseDir.getPath()
-				);
+		Properties sysProps = System.getProperties();
+		System.out.println("Java File I/O perf ("
+				+ dateFormat.format(new Date()) + "):" 
+				+ " hostName=" + java.net.InetAddress.getLocalHost().getHostName()
+				+ ", java.version=" + sysProps.getProperty("java.version")
+				+ ", os.name=" + sysProps.getProperty("os.name")
+				+ ", os.arch=" + sysProps.getProperty("os.arch")
+				+ ", basedir=" + baseDir.getPath());
 
 		for (int i = 0; i < buffer.length; i++)
 			buffer[i] = (byte) i;
@@ -53,26 +59,30 @@ public class JavaFileIOPerf {
 				BIG_FILE_SIZE);
 
 		System.out
-				.printf("Reading %d files of size %d(bytes): overall=%d(ms), time per file=%.2f(ms), throughput=%.2f(MByte/s)\n",
-						NR_OF_SMALL_FILES, SMALL_FILE_SIZE, readSmall,
-						(float) readSmall / NR_OF_SMALL_FILES,
+				.printf("Reading %d files of size %d(bytes): speedFactor: %.2f, overall=%d(ms), time per file=%.2f(ms), throughput=%.2f(MByte/s)\n",
+						NR_OF_SMALL_FILES, SMALL_FILE_SIZE, readSmall
+								/ (READ_SMALL_STD * NR_OF_SMALL_FILES),
+						readSmall, (float) readSmall / NR_OF_SMALL_FILES,
 						((float) SMALL_FILE_SIZE * NR_OF_SMALL_FILES * 1000)
 								/ (1024.0 * 1024.0 * readSmall));
 		System.out
-				.printf("Writing %d files of size %d(bytes): overall=%d(ms), time per file=%.2f(ms), throughput=%.2f(MByte/s)\n",
-						NR_OF_SMALL_FILES, SMALL_FILE_SIZE, writeSmall,
-						(float) writeSmall / NR_OF_SMALL_FILES,
+				.printf("Writing %d files of size %d(bytes): speedFactor: %.2f, overall=%d(ms), time per file=%.2f(ms), throughput=%.2f(MByte/s)\n",
+						NR_OF_SMALL_FILES, SMALL_FILE_SIZE, writeSmall
+								/ (WRITE_SMALL_STD * NR_OF_SMALL_FILES),
+						writeSmall, (float) writeSmall / NR_OF_SMALL_FILES,
 						((float) SMALL_FILE_SIZE * NR_OF_SMALL_FILES * 1000)
 								/ (1024.0 * 1024.0 * writeSmall));
 		System.out
-				.printf("Reading %d files of size %d(bytes): overall=%d(ms), time per file=%.2f(ms), throughput=%.2f(MByte/s)\n",
-						NR_OF_BIG_FILES, BIG_FILE_SIZE, readBig,
+				.printf("Reading %d files of size %d(bytes): speedFactor: %.2f, overall=%d(ms), time per file=%.2f(ms), throughput=%.2f(MByte/s)\n",
+						NR_OF_BIG_FILES, BIG_FILE_SIZE, readBig
+								/ (READ_BIG_STD * NR_OF_BIG_FILES), readBig,
 						(float) readBig / NR_OF_BIG_FILES,
 						((float) BIG_FILE_SIZE * NR_OF_BIG_FILES * 1000)
 								/ (1024.0 * 1024.0 * readBig));
 		System.out
-				.printf("Writing %d files of size %d(bytes): overall=%d(ms), time per file=%.2f(ms), throughput=%.2f(MByte/s)\n",
-						NR_OF_BIG_FILES, BIG_FILE_SIZE, writeBig,
+				.printf("Writing %d files of size %d(bytes): speedFactor: %.2f, overall=%d(ms), time per file=%.2f(ms), throughput=%.2f(MByte/s)\n",
+						NR_OF_BIG_FILES, BIG_FILE_SIZE, writeBig
+								/ (WRITE_BIG_STD * NR_OF_BIG_FILES), writeBig,
 						(float) writeBig / NR_OF_BIG_FILES,
 						((float) BIG_FILE_SIZE * NR_OF_BIG_FILES * 1000)
 								/ (1024.0 * 1024.0 * writeBig));
@@ -88,22 +98,23 @@ public class JavaFileIOPerf {
 			String fileNamePrefix, int repetitions, int size)
 			throws IOException {
 		long ioTime = 0, start;
-		for (int i = 0; i < repetitions; i++) {
-			File f = new File(parentFolder, fileNamePrefix + i);
-			if (read) {
-				FileInputStream fis = new FileInputStream(f);
-				start = System.currentTimeMillis();
+		if (read) {
+			start = System.currentTimeMillis();
+			for (int i = 0; i < repetitions; i++) {
+				FileInputStream fis = new FileInputStream(new File(parentFolder, fileNamePrefix + i));
 				if (fis.read(buffer, 0, size) != size)
 					throw new IOException("Fatal: Short read!");
 				fis.close();
-				ioTime += System.currentTimeMillis() - start;
-			} else {
-				FileOutputStream fos = new FileOutputStream(f);
-				start = System.currentTimeMillis();
+			}
+			ioTime += System.currentTimeMillis() - start;
+		} else {
+			start = System.currentTimeMillis();
+			for (int i = 0; i < repetitions; i++) {
+				FileOutputStream fos = new FileOutputStream(new File(parentFolder, fileNamePrefix + i));
 				fos.write(buffer, 0, size);
 				fos.close();
-				ioTime += System.currentTimeMillis() - start;
 			}
+			ioTime += System.currentTimeMillis() - start;
 		}
 		return ioTime;
 	}
