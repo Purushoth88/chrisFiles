@@ -61,4 +61,30 @@ Writing 10000 files of size 1000(bytes): overall=2907(ms), time per file=0,29(ms
 Reading 30 files of size 50000000(bytes): overall=1840(ms), time per file=61,33(ms), throughput=777,45(MByte/s)
 Writing 30 files of size 50000000(bytes): overall=57922(ms), time per file=1930,73(ms), throughput=24,70(MByte/s)
 ==========================================================================
-
+[Running in a virtual machine VirtualBox on host os.name=Linux, os.arch=i386. On access AntiVirus: off]
+Java File I/O perf (2012/03/22 15:01:39): java.version=1.6.0_23, os.name=Linux, os.arch=i386, basedir=/tmp/JGitTests_1332424899361
+Reading 10000 files of size 1000(bytes): overall=160(ms), time per file=0.02(ms), throughput=59.60(MByte/s)
+Writing 10000 files of size 1000(bytes): overall=224(ms), time per file=0.02(ms), throughput=42.57(MByte/s)
+Reading 30 files of size 50000000(bytes): overall=2318(ms), time per file=77.27(ms), throughput=617.13(MByte/s)
+Writing 30 files of size 50000000(bytes): overall=23058(ms), time per file=768.60(ms), throughput=62.04(MByte/s)
+==========================================================================
+[Running in a virtual machine VirtualBox on host os.name=Linux, os.arch=i386. On access AntiVirus: off]
+Java File I/O perf (2012/03/22 15:03:40): java.version=1.6.0_23, os.name=Linux, os.arch=i386, basedir=/tmp/JGitTests_1332425020233
+Reading 10000 files of size 1000(bytes): overall=149(ms), time per file=0.01(ms), throughput=64.00(MByte/s)
+Writing 10000 files of size 1000(bytes): overall=255(ms), time per file=0.03(ms), throughput=37.40(MByte/s)
+Reading 30 files of size 50000000(bytes): overall=2367(ms), time per file=78.90(ms), throughput=604.36(MByte/s)
+Writing 30 files of size 50000000(bytes): overall=26883(ms), time per file=896.10(ms), throughput=53.21(MByte/s)
+==========================================================================
+[Running in a virtual machine VirtualBox on host os.name=Linux, os.arch=i386. On access AntiVirus: on]
+Java File I/O perf (2012/03/22 15:07:19): java.version=1.6.0_23, os.name=Linux, os.arch=i386, basedir=/tmp/JGitTests_1332425239565
+Reading 10000 files of size 1000(bytes): overall=206(ms), time per file=0.02(ms), throughput=46.29(MByte/s)
+Writing 10000 files of size 1000(bytes): overall=252(ms), time per file=0.03(ms), throughput=37.84(MByte/s)
+Reading 30 files of size 50000000(bytes): overall=2307(ms), time per file=76.90(ms), throughput=620.07(MByte/s)
+Writing 30 files of size 50000000(bytes): overall=25748(ms), time per file=858.27(ms), throughput=55.56(MByte/s)
+==========================================================================
+[Running in a virtual machine VirtualBox on host os.name=Linux, os.arch=i386. On access AntiVirus: on]
+Java File I/O perf (2012/03/22 15:08:19): java.version=1.6.0_23, os.name=Linux, os.arch=i386, basedir=/tmp/JGitTests_1332425299960
+Reading 10000 files of size 1000(bytes): overall=176(ms), time per file=0.02(ms), throughput=54.19(MByte/s)
+Writing 10000 files of size 1000(bytes): overall=251(ms), time per file=0.03(ms), throughput=37.99(MByte/s)
+Reading 30 files of size 50000000(bytes): overall=2564(ms), time per file=85.47(ms), throughput=557.92(MByte/s)
+Writing 30 files of size 50000000(bytes): overall=27283(ms), time per file=909.43(ms), throughput=52.43(MByte/s)
