@@ -2,6 +2,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Properties;
 
 /**
  * TODO document this type
@@ -27,6 +31,15 @@ public class JavaFileIOPerf {
 			throw new IOException("Couldn't create temporary directory "
 					+ baseDir.getPath());
 
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Properties sysProps = System.getProperties();
+		System.out.println("Java File I/O perf ("+dateFormat.format(new Date())+"):"
+				+ " java.version="+sysProps.getProperty("java.version")
+				+ ", os.name="+sysProps.getProperty("os.name")
+				+ ", os.arch="+sysProps.getProperty("os.arch")
+				+ ", basedir=" + baseDir.getPath()
+				);
+
 		for (int i = 0; i < buffer.length; i++)
 			buffer[i] = (byte) i;
 
@@ -38,9 +51,6 @@ public class JavaFileIOPerf {
 				NR_OF_SMALL_FILES, SMALL_FILE_SIZE);
 		long readBig = measureFileIO(true, baseDir, "big", NR_OF_BIG_FILES,
 				BIG_FILE_SIZE);
-
-		System.out.println("Java File I/O perf measured in "
-				+ baseDir.getPath());
 
 		System.out
 				.printf("Reading %d files of size %d(bytes): overall=%d(ms), time per file=%.2f(ms), throughput=%.2f(MByte/s)\n",
