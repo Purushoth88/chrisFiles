@@ -22,5 +22,5 @@
 	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/javax.servlet_2.5.0.v201103041518.jar"/>
 	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.jetty.util_7.4.2.v20110526.jar"/>
 	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.jetty.http_7.4.2.v20110526.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="java/bin"/>
 </classpath>

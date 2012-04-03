@@ -1,0 +1,6 @@
+==========================================================================
+Java File I/O perf (2012/03/22 18:27:07): hostName=lpc2, java.version=1.6.0_23, os.name=Linux, os.arch=i386, basedir=/tmp/JGitTests_1332437227849
+Reading 100000 files of size 1000(bytes): speedFactor: 0.98, overall=1515(ms), time per file=0.02(ms), throughput=62.95(MByte/s)
+Writing 100000 files of size 1000(bytes): speedFactor: 1.02, overall=7193(ms), time per file=0.07(ms), throughput=13.26(MByte/s)
+Reading 10 files of size 50000000(bytes): speedFactor: 1.01, overall=958(ms), time per file=95.80(ms), throughput=497.74(MByte/s)
+Writing 10 files of size 50000000(bytes): speedFactor: 1.07, overall=8622(ms), time per file=862.20(ms), throughput=55.30(MByte/s)
