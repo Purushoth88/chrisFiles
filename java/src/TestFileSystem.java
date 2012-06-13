@@ -2,27 +2,38 @@ import java.io.File;
 import java.io.IOException;
 
 public class TestFileSystem {
-	private static final int NrOfFiles = 90000;
+	private static final int NR_OF_FILES = 1000;
 
 	public static void main(String[] args) throws IOException {
 		File tmpDir = new File(System.getProperty("java.io.tmpdir"), "tmp"
 				+ System.currentTimeMillis());
 		tmpDir.mkdirs();
-		
-		File[] files=new File[NrOfFiles];
-		long[] timestamps=new long[NrOfFiles+1];
-		
-		for(int i=0; i<NrOfFiles; i++) {
-			timestamps[i]=System.currentTimeMillis();
-			files[i]=new File(tmpDir, String.valueOf(i));
-			files[i].createNewFile();
+
+		try {
+			long[] timestamps = new long[NR_OF_FILES + 1];
+
+			for (int i = 0; i < NR_OF_FILES; i++) {
+				timestamps[i] = System.currentTimeMillis();
+				File f = new File(tmpDir, String.valueOf(i));
+				f.createNewFile();
+			}
+
+			for (int i = 0; i < NR_OF_FILES; i++) {
+				File f = new File(tmpDir, String.valueOf(i));
+				System.out.println("File #" + i
+						+ ": System timer when creating file: " + timestamps[i]
+						+ ".\t lastModified of created file:"
+						+ f.lastModified());
+			}
+		} finally {
+			delete(tmpDir);
 		}
-		timestamps[NrOfFiles]=System.currentTimeMillis();
-		
-		for(int i=0; i<NrOfFiles; i++) {
-			File f=new File(tmpDir, String.valueOf(i));
-			System.out.println("#"+i+": tsBefore: "+timestamps[i]+"/"+(timestamps[i+1]-timestamps[i])+" lastModified:"+f.lastModified()+"/"+(f.lastModified()-timestamps[i]));
-		}
-		System.out.println("#"+NrOfFiles+": tsBefore"+timestamps[NrOfFiles]);
+	}
+
+	static void delete(File f) {
+		if (f.isDirectory())
+			for (File c : f.listFiles())
+				delete(c);
+		f.delete();
 	}
 }
