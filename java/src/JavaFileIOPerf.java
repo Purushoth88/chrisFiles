@@ -24,30 +24,26 @@ public class JavaFileIOPerf {
 	private static final String TEST_REPO = "testRepo";
 
 	enum TestCase {
-		CREATE(5000, 1, 0, 0.73), //
-		WRITE_SMALL(5000, 1, 200, 0.48), //
-		READ_SMALL(5000, 10, 200, 0.14), //
-		WRITE_BIG(2, 1, 50000000, 550.7), //
-		READ_BIG(2, 10, 50000000, 57.92), //
-		ITERATE(5000, 10, 0, 0.12), //
-		READMOD(5000, 10, 0, 0.13), //
-		DELETE(5000, 1, 0, 2.36), //
-		JGIT_ADD_MODIFIED(1, 500, 0, 6.02), //
+		CREATE(0, 0.73), //
+		WRITE_SMALL(200, 0.48), //
+		READ_SMALL(200, 0.14), //
+		WRITE_BIG(50000000, 550.7), //
+		READ_BIG(50000000, 57.92), //
+		ITERATE(0, 0.12), //
+		READMOD(0, 0.13), //
+		DELETE(0, 2.36), //
+		JGIT_ADD_MODIFIED(0, 6.02), //
 		;
-		public int nrOfFiles;
 		public int size;
 		public double standard;
-		public int repetitions;
 
-		TestCase(int nrOfFiles, int repetitions, int size, double standard) {
-			this.nrOfFiles = nrOfFiles;
+		TestCase(int size, double standard) {
 			this.standard = standard;
 			this.size = size;
-			this.repetitions = repetitions;
 		}
 	}
 
-	private static String version = "V2.03";
+	private static String version = "V2.06";
 
 	public static void main(String args[]) throws IOException, GitAPIException {
 		long start, elapsedTime;
@@ -418,23 +414,22 @@ public class JavaFileIOPerf {
 			ObjectInserter inserter = git.getRepository().newObjectInserter();
 
 			start = System.currentTimeMillis();
-			for (int r = 0; r < TestCase.JGIT_ADD_MODIFIED.repetitions; r++)
-				for (int i = 0; i < TestCase.JGIT_ADD_MODIFIED.nrOfFiles; i++) {
-					fos = new FileOutputStream(w);
-					fos.write(65 + i % 32);
-					fos.close();
-					dc = git.getRepository().lockDirCache();
-					builder = dc.builder();
-					dce.setLastModified(w.lastModified());
-					FileInputStream fis = new FileInputStream(w);
-					dce.setObjectId(inserter.insert(Constants.OBJ_BLOB, 1, fis));
-					fis.close();
-					builder.add(dce);
-					builder.commit();
-				}
+			for (int r = 0; r < 500; r++) {
+				fos = new FileOutputStream(w);
+				fos.write(65 + r % 32);
+				fos.close();
+				dc = git.getRepository().lockDirCache();
+				builder = dc.builder();
+				dce.setLastModified(w.lastModified());
+				FileInputStream fis = new FileInputStream(w);
+				dce.setObjectId(inserter.insert(Constants.OBJ_BLOB, 1, fis));
+				fis.close();
+				builder.add(dce);
+				builder.commit();
+			}
 			elapsedTime = System.currentTimeMillis() - start;
 			
-			describe("modify file and add it with jgit", elapsedTime, TestCase.JGIT_ADD_MODIFIED.repetitions*TestCase.JGIT_ADD_MODIFIED.nrOfFiles, TestCase.JGIT_ADD_MODIFIED.standard, TestCase.JGIT_ADD_MODIFIED.size);
+			describe("modify file and add it with jgit", elapsedTime, 500, TestCase.JGIT_ADD_MODIFIED.standard, TestCase.JGIT_ADD_MODIFIED.size);
 		} finally {
 			System.out.println("Cleaning up: please be patient ...");
 			delete(baseDir);
@@ -445,9 +440,9 @@ public class JavaFileIOPerf {
 	private static int calcNewRounds(int rounds, long elapsedTime) {
 		if (elapsedTime < 500)
 			rounds *= 10;
-		else if (elapsedTime < 2000)
-			rounds = (int) (rounds * 2000.0 / elapsedTime + 1.0);
-		return rounds;
+		else if (elapsedTime < 2500)
+			rounds = (int) (rounds * 3000.0 / elapsedTime);
+		return Math.min(200000, rounds);
 	}
 
 	private static void delete(File f) {
@@ -502,15 +497,15 @@ public class JavaFileIOPerf {
 			System.out
 					.printf("%s: #files: %d, overall time: %d(ms), time/file: %.2f(ms), score: %.2f\n",
 							message, rounds, elapsedTime, (double) elapsedTime
-									/ rounds, (double) standard * rounds
+									/ (double)rounds, (double) standard * (double)rounds
 									/ ((double) elapsedTime));
 		} else
 			System.out
 					.printf("%s: #files: %d, filesize: %d(bytes), overall time: %d(ms), time/file: %.2f(ms), throughput: %.2f(Mbyte/s), score: %.2f\n",
 							message, rounds, size, elapsedTime,
-							(double) elapsedTime / rounds,
-							(rounds * size * 1000.0)
-									/ (elapsedTime * 1024.0 * 1024.0),
-							(double) standard * rounds / ((double) elapsedTime));
+							(double) elapsedTime / (double) rounds,
+							((double) rounds * (double) size * 1000.0)
+									/ ((double) elapsedTime * 1024.0 * 1024.0),
+							(double) standard * (double) rounds / ((double) elapsedTime));
 	}
 }
