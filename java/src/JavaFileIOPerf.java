@@ -43,7 +43,7 @@ public class JavaFileIOPerf {
 		}
 	}
 
-	private static String version = "V2.06";
+	private static String version = "V2.07";
 
 	public static void main(String args[]) throws IOException, GitAPIException {
 		long start, elapsedTime;
@@ -105,7 +105,7 @@ public class JavaFileIOPerf {
 			int offset;
 
 			// measure creating files
-			newrounds = 1;
+			newrounds = 3;
 			offset = 0;
 			preparedTo = 0;
 			for (;;) {
@@ -130,7 +130,7 @@ public class JavaFileIOPerf {
 			analyzeFSTimerTicks(subDirs, "creation", rounds, offset-rounds);
 
 			// measure writing small files
-			newrounds = 1;
+			newrounds = 3;
 			offset = 0;
 			preparedTo = offset + rounds;
 			for (;;) {
@@ -165,7 +165,7 @@ public class JavaFileIOPerf {
 			analyzeFSTimerTicks(subDirs, "update", rounds, offset);
 
 			// measure reading small files
-			newrounds = 1;
+			newrounds = 3;
 			offset = 0;
 			preparedTo = offset + rounds;
 			for (;;) {
@@ -215,7 +215,7 @@ public class JavaFileIOPerf {
 					TestCase.READ_SMALL.standard, TestCase.READ_SMALL.size);
 
 			// measure writing big files
-			newrounds = 1;
+			newrounds = 3;
 			offset = 0;
 			for (;;) {
 				rounds = newrounds;
@@ -248,7 +248,7 @@ public class JavaFileIOPerf {
 					TestCase.WRITE_BIG.standard, TestCase.WRITE_BIG.size);
 
 			// measure reading big files
-			newrounds = 1;
+			newrounds = 3;
 			offset = 0;
 			preparedTo = offset + rounds;
 			for (;;) {
@@ -299,7 +299,7 @@ public class JavaFileIOPerf {
 					TestCase.READ_BIG.standard, TestCase.READ_BIG.size);
 
 			// measure listing files
-			newrounds = 1;
+			newrounds = 3;
 			offset = 0;
 			preparedTo = rounds;
 			for (;;) {
@@ -327,7 +327,7 @@ public class JavaFileIOPerf {
 					TestCase.ITERATE.standard, TestCase.ITERATE.size);
 
 			// measure reading of lastmodified of files
-			newrounds = 1;
+			newrounds = 3;
 			offset = 0;
 			preparedTo = offset + rounds;
 			for (;;) {
@@ -359,7 +359,7 @@ public class JavaFileIOPerf {
 					TestCase.READMOD.standard, TestCase.READMOD.size);
 
 			// measure deleting files
-			newrounds = 1;
+			newrounds = 3;
 			offset=0;
 			preparedTo = offset + rounds;
 			for (;;) {
