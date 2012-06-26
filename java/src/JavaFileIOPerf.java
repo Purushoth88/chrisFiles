@@ -43,7 +43,7 @@ public class JavaFileIOPerf {
 		}
 	}
 
-	private static String version = "V2.07";
+	private static String version = "V2.09";
 
 	public static void main(String args[]) throws IOException, GitAPIException {
 		long start, elapsedTime;
@@ -64,17 +64,21 @@ public class JavaFileIOPerf {
 		// print information about the test environment
 		DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Properties sysProps = System.getProperties();
-		System.out.println("Java File I/O perf " + version + ", date:"
-				+ df.format(new Date()) + ", hostName="
-				+ java.net.InetAddress.getLocalHost().getHostName()
+		// @formatter:off
+		System.out.println("Java File I/O perf " 
+				+ version
+				+ ", date:" + df.format(new Date())
+				+ ", hostName="	+ java.net.InetAddress.getLocalHost().getHostName()
 				+ ", java.version=" + sysProps.getProperty("java.version")
-				+ ", os.name=" + sysProps.getProperty("os.name") + ", os.arch="
-				+ sysProps.getProperty("os.arch"));
+				+ ", os.name=" + sysProps.getProperty("os.name")
+				+ ", os.arch=" + sysProps.getProperty("os.arch")
+				+ ", user.name=" + sysProps.getProperty("user.name")
+				);
+		// @formatter:on
 		System.out.println("basedir=" + baseDir.getPath());
 		System.out
-				.println("score: performance compared to Windows7(64bit) Notebook with QuadCore I5, 8 GB Ram, standard NFTS disk, Virusscanner turned off.");
-		System.out
-				.println("       Higher scores mean better performance.");
+				.println("score: performance compared to Windows7(64bit) Notebook with QuadCore I5, 8 GB Ram, standard NTFS disk, Virusscanner turned off.");
+		System.out.println("       Higher scores mean better performance.");
 
 		// fill a buffer with some test data
 		int maxSize = 0;
@@ -124,10 +128,10 @@ public class JavaFileIOPerf {
 				if (newrounds <= rounds)
 					break;
 			}
-			sum += TestCase.CREATE.standard*rounds/elapsedTime;
+			sum += TestCase.CREATE.standard * rounds / elapsedTime;
 			describe("Creating new files", elapsedTime, rounds,
 					TestCase.CREATE.standard, TestCase.CREATE.size);
-			analyzeFSTimerTicks(subDirs, "creation", rounds, offset-rounds);
+			analyzeFSTimerTicks(subDirs, "creation", rounds, offset - rounds);
 
 			// measure writing small files
 			newrounds = 3;
@@ -138,7 +142,7 @@ public class JavaFileIOPerf {
 				for (int i = preparedTo; i < offset + rounds; i++) {
 					File tf = new File(subDirs[i & 0x01FF], Integer.toString(i));
 
-					if (!tf.exists()) 
+					if (!tf.exists())
 						if (!tf.createNewFile())
 							throw new IOException(
 									"Fatal: failed to create file "
@@ -159,7 +163,7 @@ public class JavaFileIOPerf {
 				if (newrounds <= rounds)
 					break;
 			}
-			sum += TestCase.WRITE_SMALL.standard*rounds/elapsedTime;
+			sum += TestCase.WRITE_SMALL.standard * rounds / elapsedTime;
 			describe("Writing small files", elapsedTime, rounds,
 					TestCase.WRITE_SMALL.standard, TestCase.WRITE_SMALL.size);
 			analyzeFSTimerTicks(subDirs, "update", rounds, offset);
@@ -200,17 +204,17 @@ public class JavaFileIOPerf {
 						total += read;
 					} while (total < TestCase.READ_SMALL.size);
 					fis.close();
-					
+
 					j++;
-					if (j==offset+512)
-						j=offset;
+					if (j == offset + 512)
+						j = offset;
 				}
 				elapsedTime = System.currentTimeMillis() - start;
 				newrounds = calcNewRounds(rounds, elapsedTime);
 				if (newrounds <= rounds)
 					break;
 			}
-			sum += TestCase.READ_SMALL.standard*rounds/elapsedTime;
+			sum += TestCase.READ_SMALL.standard * rounds / elapsedTime;
 			describe("Reading small files", elapsedTime, rounds,
 					TestCase.READ_SMALL.standard, TestCase.READ_SMALL.size);
 
@@ -243,7 +247,7 @@ public class JavaFileIOPerf {
 				if (newrounds <= rounds)
 					break;
 			}
-			sum += TestCase.WRITE_BIG.standard*rounds/elapsedTime;
+			sum += TestCase.WRITE_BIG.standard * rounds / elapsedTime;
 			describe("Writing big files", elapsedTime, rounds,
 					TestCase.WRITE_BIG.standard, TestCase.WRITE_BIG.size);
 
@@ -270,7 +274,7 @@ public class JavaFileIOPerf {
 				}
 
 				start = System.currentTimeMillis();
-				int j=offset;
+				int j = offset;
 				for (int i = offset; i < offset + rounds; i++) {
 					File tf = new File(subDirs[j & 0x01FF], Integer.toString(j));
 
@@ -284,17 +288,17 @@ public class JavaFileIOPerf {
 						total += read;
 					} while (total < TestCase.READ_BIG.size);
 					fis.close();
-					
+
 					j++;
-					if (j==offset+16)
-						j=offset;
+					if (j == offset + 16)
+						j = offset;
 				}
 				elapsedTime = System.currentTimeMillis() - start;
 				newrounds = calcNewRounds(rounds, elapsedTime);
 				if (newrounds <= rounds)
 					break;
 			}
-			sum += TestCase.READ_BIG.standard*rounds/elapsedTime;
+			sum += TestCase.READ_BIG.standard * rounds / elapsedTime;
 			describe("Reading big files", elapsedTime, rounds,
 					TestCase.READ_BIG.standard, TestCase.READ_BIG.size);
 
@@ -322,7 +326,7 @@ public class JavaFileIOPerf {
 				if (newrounds <= rounds)
 					break;
 			}
-			sum += TestCase.ITERATE.standard*rounds/elapsedTime;
+			sum += TestCase.ITERATE.standard * rounds / elapsedTime;
 			describe("Listing files in a hierachy", elapsedTime, rounds,
 					TestCase.ITERATE.standard, TestCase.ITERATE.size);
 
@@ -354,13 +358,13 @@ public class JavaFileIOPerf {
 				if (newrounds <= rounds)
 					break;
 			}
-			sum += TestCase.READMOD.standard*rounds/elapsedTime;
+			sum += TestCase.READMOD.standard * rounds / elapsedTime;
 			describe("Reading modification times", elapsedTime, rounds,
 					TestCase.READMOD.standard, TestCase.READMOD.size);
 
 			// measure deleting files
 			newrounds = 3;
-			offset=0;
+			offset = 0;
 			preparedTo = offset + rounds;
 			for (;;) {
 				rounds = newrounds;
@@ -386,14 +390,14 @@ public class JavaFileIOPerf {
 				if (newrounds <= rounds)
 					break;
 			}
-			sum += TestCase.DELETE.standard*rounds/elapsedTime;
+			sum += TestCase.DELETE.standard * rounds / elapsedTime;
 			describe("Deleting files", elapsedTime, rounds,
 					TestCase.DELETE.standard, TestCase.DELETE.size);
 
 			// write summary
-			System.out
-					.printf("Average score: %.2f(ms), chksum:%d\n",
-							sum/8.0, chksum);
+			
+			System.out.printf("Average score: %.2f, chksum:%d\n",
+					sum / 8.0, chksum);
 
 			System.out.println("Additional tests which don't go into sum:");
 			// measure jgit add modified file
@@ -428,8 +432,10 @@ public class JavaFileIOPerf {
 				builder.commit();
 			}
 			elapsedTime = System.currentTimeMillis() - start;
-			
-			describe("modify file and add it with jgit", elapsedTime, 500, TestCase.JGIT_ADD_MODIFIED.standard, TestCase.JGIT_ADD_MODIFIED.size);
+
+			describe("modify file and add it with jgit", elapsedTime, 500,
+					TestCase.JGIT_ADD_MODIFIED.standard,
+					TestCase.JGIT_ADD_MODIFIED.size);
 		} finally {
 			System.out.println("Cleaning up: please be patient ...");
 			delete(baseDir);
@@ -497,8 +503,8 @@ public class JavaFileIOPerf {
 			System.out
 					.printf("%s: #files: %d, overall time: %d(ms), time/file: %.2f(ms), score: %.2f\n",
 							message, rounds, elapsedTime, (double) elapsedTime
-									/ (double)rounds, (double) standard * (double)rounds
-									/ ((double) elapsedTime));
+									/ (double) rounds, (double) standard
+									* (double) rounds / ((double) elapsedTime));
 		} else
 			System.out
 					.printf("%s: #files: %d, filesize: %d(bytes), overall time: %d(ms), time/file: %.2f(ms), throughput: %.2f(Mbyte/s), score: %.2f\n",
@@ -506,6 +512,7 @@ public class JavaFileIOPerf {
 							(double) elapsedTime / (double) rounds,
 							((double) rounds * (double) size * 1000.0)
 									/ ((double) elapsedTime * 1024.0 * 1024.0),
-							(double) standard * (double) rounds / ((double) elapsedTime));
+							(double) standard * (double) rounds
+									/ ((double) elapsedTime));
 	}
 }
