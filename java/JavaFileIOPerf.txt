@@ -112,3 +112,44 @@ Additional tests which don't go into sum:
 modify file and add it with jgit: #files: 500, overall time: 9177(ms), time/file: 18,35(ms), score: 0,33
 Cleaning up: please be patient ...
 Finished. Goodbye!
+
+Java File I/O perf V2.05, date:2012/06/26 10:27:16, hostName=vboxLubuntu120464, java.version=1.6.0_24, os.name=Linux, os.arch=amd64, VIRUSSCAN_ON_VBOX_HOST=ON
+basedir=/tmp/JGitTests_1340699236058
+score: performance compared to Windows7(64bit) Notebook with QuadCore I5, 8 GB Ram, standard NFTS disk, Virusscanner turned off.
+       Higher scores mean better performance.
+Creating new files: #files: 158227, overall time: 4475(ms), time/file: 0.03(ms), score: 25.81
+Detected filesystem timer increases during creation of 158227 files: 5. Minimal increase of the timer: 1000(ms). Average number of files in one timer slot: 37220.25
+Writing small files: #files: 100000, filesize: 200(bytes), overall time: 4631(ms), time/file: 0.05(ms), throughput: 4.12(Mbyte/s), score: 10.36
+Detected filesystem timer increases during update of 100000 files: 4. Minimal increase of the timer: 1000(ms). Average number of files in one timer slot: 19815.33
+Reading small files: #files: 200000, filesize: 200(bytes), overall time: 3594(ms), time/file: 0.02(ms), throughput: 10.61(Mbyte/s), score: 7.79
+Writing big files: #files: 10, filesize: 50000000(bytes), overall time: 15971(ms), time/file: 1597.10(ms), throughput: 29.86(Mbyte/s), score: 0.34
+Reading big files: #files: 49, filesize: 50000000(bytes), overall time: 2505(ms), time/file: 51.12(ms), throughput: -702.39(Mbyte/s), score: 1.13
+Listing files in a hierachy: #files: 200000, overall time: 970(ms), time/file: 0.00(ms), score: 24.74
+Reading modification times: #files: 200000, overall time: 691(ms), time/file: 0.00(ms), score: 37.63
+Deleting files: #files: 100000, overall time: 3340(ms), time/file: 0.03(ms), score: 70.66
+Average score: 22.31(ms), chksum:417106282647528000
+Additional tests which don't go into sum:
+modify file and add it with jgit: #files: 500, overall time: 496(ms), time/file: 0.99(ms), score: 6.07
+Cleaning up: please be patient ...
+Finished. Goodbye!
+
+Java File I/O perf V2.05, date:2012/06/26 10:34:30, hostName=vboxLubuntu120464, java.version=1.6.0_24, os.name=Linux, os.arch=amd64, VIRUSSCAN_ON_VBOX_HOST=OFF
+basedir=/tmp/JGitTests_1340699670913
+score: performance compared to Windows7(64bit) Notebook with QuadCore I5, 8 GB Ram, standard NFTS disk, Virusscanner turned off.
+       Higher scores mean better performance.
+Creating new files: #files: 174825, overall time: 4972(ms), time/file: 0.03(ms), score: 25.67
+Detected filesystem timer increases during creation of 174825 files: 5. Minimal increase of the timer: 1000(ms). Average number of files in one timer slot: 37323.50
+Writing small files: #files: 100000, filesize: 200(bytes), overall time: 4151(ms), time/file: 0.04(ms), throughput: 4.59(Mbyte/s), score: 11.56
+Detected filesystem timer increases during update of 100000 files: 4. Minimal increase of the timer: 1000(ms). Average number of files in one timer slot: 27777.33
+Reading small files: #files: 200000, filesize: 200(bytes), overall time: 3177(ms), time/file: 0.02(ms), throughput: 12.01(Mbyte/s), score: 8.81
+Writing big files: #files: 10, filesize: 50000000(bytes), overall time: 9753(ms), time/file: 975.30(ms), throughput: 48.89(Mbyte/s), score: 0.56
+Reading big files: #files: 54, filesize: 50000000(bytes), overall time: 2817(ms), time/file: 52.17(ms), throughput: -539.96(Mbyte/s), score: 1.11
+Listing files in a hierachy: #files: 200000, overall time: 880(ms), time/file: 0.00(ms), score: 27.27
+Reading modification times: #files: 200000, overall time: 754(ms), time/file: 0.00(ms), score: 34.48
+Deleting files: #files: 200000, overall time: 1866(ms), time/file: 0.01(ms), score: 252.95
+Average score: 45.30(ms), chksum:417106417842708000
+Additional tests which don't go into sum:
+modify file and add it with jgit: #files: 500, overall time: 528(ms), time/file: 1.06(ms), score: 5.70
+Cleaning up: please be patient ...
+Finished. Goodbye!
+
