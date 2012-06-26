@@ -47,7 +47,7 @@ public class JavaFileIOPerf {
 		}
 	}
 
-	private static String version = "V2.03";
+	private static String version = "V2.05";
 
 	public static void main(String args[]) throws IOException, GitAPIException {
 		long start, elapsedTime;
@@ -445,9 +445,9 @@ public class JavaFileIOPerf {
 	private static int calcNewRounds(int rounds, long elapsedTime) {
 		if (elapsedTime < 500)
 			rounds *= 10;
-		else if (elapsedTime < 2000)
-			rounds = (int) (rounds * 2000.0 / elapsedTime + 1.0);
-		return rounds;
+		else if (elapsedTime < 2500)
+			rounds = (int) (rounds * 3000.0 / elapsedTime);
+		return Math.min(200000, rounds);
 	}
 
 	private static void delete(File f) {
