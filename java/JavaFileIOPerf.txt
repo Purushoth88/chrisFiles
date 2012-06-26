@@ -1,6 +1,96 @@
-==========================================================================
-Java File I/O perf (2012/03/22 18:27:07): hostName=lpc2, java.version=1.6.0_23, os.name=Linux, os.arch=i386, basedir=/tmp/JGitTests_1332437227849
-Reading 100000 files of size 1000(bytes): speedFactor: 0.98, overall=1515(ms), time per file=0.02(ms), throughput=62.95(MByte/s)
-Writing 100000 files of size 1000(bytes): speedFactor: 1.02, overall=7193(ms), time per file=0.07(ms), throughput=13.26(MByte/s)
-Reading 10 files of size 50000000(bytes): speedFactor: 1.01, overall=958(ms), time per file=95.80(ms), throughput=497.74(MByte/s)
-Writing 10 files of size 50000000(bytes): speedFactor: 1.07, overall=8622(ms), time per file=862.20(ms), throughput=55.30(MByte/s)
+Java File I/O perf V1.04 (2012/06/24 19:28:53): hostName=WDFN00255410A, java.version=1.6.0_26, os.name=Windows 7, os.arch=amd64, power, VirusScanner=on
+basedir=C:\Users\d032780\AppData\Local\Temp\JGitTests_1340558933686
+speedFactor: Performance compared to Windows7(64bit) Notebook with QuadCore I5, 8 GB Ram, NFTS, Virusscanner turned off
+speedFactor: A value of 2.0 means this computer is twice as fast as the mentioned notebook.
+Creating new files: #files: 5000, overall time: 3905(ms), time/file: 0,78(ms), speedFactor: 0,86
+Detected filesystem timer increases during creation of 5000 files: 2407. Minimal increase of the timer: 1(ms). Average number of files in one timer slot: 2,08
+Writing small files: #files: 5000, filesize: 200(bytes), overall time: 18969(ms), time/file: 3,79(ms), throughput: 0,05(Mbyte/s), speedFactor: 0,11
+Detected filesystem timer increases during update of 5000 files: 4999. Minimal increase of the timer: 2(ms). Average number of files in one timer slot: 1,00
+Reading small files: #files: 50000, filesize: 200(bytes), overall time: 7069(ms), time/file: 0,14(ms), throughput: 1,35(Mbyte/s), speedFactor: 1,02
+Writing big files: #files: 2, filesize: 50000000(bytes), overall time: 10750(ms), time/file: 5375,00(ms), throughput: 8,87(Mbyte/s), speedFactor: 0,89
+Reading big files: #files: 20, filesize: 50000000(bytes), overall time: 1178(ms), time/file: 58,90(ms), throughput: 809,57(Mbyte/s), speedFactor: 1,07
+Listing files in a hierachy: #files: 50000, overall time: 4073(ms), time/file: 0,08(ms), speedFactor: 1,00
+Reading modification times: #files: 50000, overall time: 2580(ms), time/file: 0,05(ms), speedFactor: 1,00
+Deleting files: #files: 5000, overall time: 3614(ms), time/file: 0,72(ms), speedFactor: 0,93
+Checksum: 67027947479420300
+Sum of all measurements: 52138(ms), speedfactor: 1,50
+Additional tests which don't go into sum:
+modify file and add it with jgit: #files: 500, overall time: 5892(ms), time/file: 11,78(ms), speedFactor: 0,50
+
+Java File I/O perf V1.04 (2012/06/24 19:31:56): hostName=WDFN00255410A, java.version=1.6.0_26, os.name=Windows 7, os.arch=amd64, power, VirusScanner=off
+basedir=C:\Users\d032780\AppData\Local\Temp\JGitTests_1340559116305
+speedFactor: Performance compared to Windows7(64bit) Notebook with QuadCore I5, 8 GB Ram, NFTS, Virusscanner turned off
+speedFactor: A value of 2.0 means this computer is twice as fast as the mentioned notebook.
+Creating new files: #files: 5000, overall time: 4008(ms), time/file: 0,80(ms), speedFactor: 0,84
+Detected filesystem timer increases during creation of 5000 files: 2112. Minimal increase of the timer: 1(ms). Average number of files in one timer slot: 2,37
+Writing small files: #files: 5000, filesize: 200(bytes), overall time: 1807(ms), time/file: 0,36(ms), throughput: 0,53(Mbyte/s), speedFactor: 1,16
+Detected filesystem timer increases during update of 5000 files: 1672. Minimal increase of the timer: 1(ms). Average number of files in one timer slot: 2,99
+Reading small files: #files: 50000, filesize: 200(bytes), overall time: 6741(ms), time/file: 0,13(ms), throughput: 1,41(Mbyte/s), speedFactor: 1,07
+Writing big files: #files: 2, filesize: 50000000(bytes), overall time: 9280(ms), time/file: 4640,00(ms), throughput: 10,28(Mbyte/s), speedFactor: 1,03
+Reading big files: #files: 20, filesize: 50000000(bytes), overall time: 1274(ms), time/file: 63,70(ms), throughput: 748,57(Mbyte/s), speedFactor: 0,99
+Listing files in a hierachy: #files: 50000, overall time: 3886(ms), time/file: 0,08(ms), speedFactor: 1,05
+Reading modification times: #files: 50000, overall time: 2412(ms), time/file: 0,05(ms), speedFactor: 1,07
+Deleting files: #files: 5000, overall time: 3099(ms), time/file: 0,62(ms), speedFactor: 1,09
+Checksum: 67027956139995880
+Sum of all measurements: 32507(ms), speedfactor: 0,94
+Additional tests which don't go into sum:
+modify file and add it with jgit: #files: 500, overall time: 2467(ms), time/file: 4,93(ms), speedFactor: 1,20
+
+Java File I/O perf V1.04 (2012/06/24 19:36:52): hostName=vboxLubuntu120464, java.version=1.6.0_24, os.name=Linux, os.arch=amd64, virtualbox on WDFN00255410A, virus=off
+basedir=/tmp/JGitTests_1340559412945
+speedFactor: Performance compared to Windows7(64bit) Notebook with QuadCore I5, 8 GB Ram, NFTS, Virusscanner turned off
+speedFactor: A value of 2.0 means this computer is twice as fast as the mentioned notebook.
+Creating new files: #files: 5000, overall time: 129(ms), time/file: 0.03(ms), speedFactor: 26.07
+Detected filesystem timer increases during creation of 5000 files: 0. Minimal increase of the timer: 9223372036854775807(ms). Average number of files in one timer slot: -0.00
+Writing small files: #files: 5000, filesize: 200(bytes), overall time: 140(ms), time/file: 0.03(ms), throughput: 6.81(Mbyte/s), speedFactor: 15.01
+Detected filesystem timer increases during update of 5000 files: 0. Minimal increase of the timer: 9223372036854775807(ms). Average number of files in one timer slot: -0.00
+Reading small files: #files: 50000, filesize: 200(bytes), overall time: 546(ms), time/file: 0.01(ms), throughput: 17.47(Mbyte/s), speedFactor: 13.16
+Writing big files: #files: 2, filesize: 50000000(bytes), overall time: 22160(ms), time/file: 11080.00(ms), throughput: 4.30(Mbyte/s), speedFactor: 0.43
+Reading big files: #files: 20, filesize: 50000000(bytes), overall time: 1139(ms), time/file: 56.95(ms), throughput: 837.29(Mbyte/s), speedFactor: 1.11
+Listing files in a hierachy: #files: 50000, overall time: 2017(ms), time/file: 0.04(ms), speedFactor: 2.02
+Reading modification times: #files: 50000, overall time: 169(ms), time/file: 0.00(ms), speedFactor: 15.26
+Deleting files: #files: 5000, overall time: 125(ms), time/file: 0.03(ms), speedFactor: 26.98
+Checksum: 67027970650740220
+Sum of all measurements: 26425(ms), speedfactor: 0.76
+Additional tests which don't go into sum:
+modify file and add it with jgit: #files: 500, overall time: 520(ms), time/file: 1.04(ms), speedFactor: 5.68
+
+Java File I/O perf V2.01 (2012/06/25 23:41:00): hostName=WDFN00255410A, java.version=1.6.0_33, os.name=Windows 7, os.arch=amd64
+basedir=C:\Users\d032780\AppData\Local\Temp\JGitTests_1340660460084
+score: Performance compared to Windows7(64bit) Notebook with QuadCore I5, 8 GB Ram, standard NFTS disk, Virusscanner turned off
+score: A value of 2.0 means this computer is twice as fast as the mentioned notebook.
+Creating new files: #files: 10000, overall time: 6302(ms), time/file: 0,63(ms), score: 1,16
+Detected filesystem timer increases during creation of 10000 files: 329. Minimal increase of the timer: 15(ms). Average number of files in one timer slot: 30,38
+Writing small files: #files: 10000, filesize: 200(bytes), overall time: 3915(ms), time/file: 0,39(ms), throughput: 0,49(Mbyte/s), score: 1,23
+Detected filesystem timer increases during update of 10000 files: 243. Minimal increase of the timer: 15(ms). Average number of files in one timer slot: 41,13
+Reading small files: #files: 14362, filesize: 200(bytes), overall time: 2012(ms), time/file: 0,14(ms), throughput: 1,36(Mbyte/s), score: 1,00
+Writing big files: #files: 10, filesize: 50000000(bytes), overall time: 5272(ms), time/file: 527,20(ms), throughput: 90,45(Mbyte/s), score: 1,04
+Reading big files: #files: 32, filesize: 50000000(bytes), overall time: 2028(ms), time/file: 63,38(ms), throughput: 752,41(Mbyte/s), score: 0,91
+Listing files in a hierachy: #files: 26703, overall time: 2777(ms), time/file: 0,10(ms), score: 1,15
+Reading modification times: #files: 33727, overall time: 4665(ms), time/file: 0,14(ms), score: 0,94
+Deleting files: #files: 5726, overall time: 8175(ms), time/file: 1,43(ms), score: 1,65
+Average score: 1,14(ms), chksum:60112535060622843
+Additional tests which don't go into sum:
+modify file and add it with jgit: #files: 500, overall time: 2839(ms), time/file: 5,68(ms), score: 1,06
+
+Java File I/O perf V2.03, date:2012/06/26 08:31:32, hostName=WDFN00255410A, java.version=1.6.0_33, os.name=Windows 7, os.arch=amd64, virus=ON, non-battery
+basedir=C:\Users\d032780\AppData\Local\Temp\JGitTests_1340692292799
+score: performance compared to Windows7(64bit) Notebook with QuadCore I5, 8 GB Ram, standard NFTS disk, Virusscanner turned off.
+       Higher scores mean better performance.
+Creating new files: #files: 1956, overall time: 2365(ms), time/file: 1,21(ms), score: 0,60
+Detected filesystem timer increases during creation of 1956 files: 1088. Minimal increase of the timer: 1(ms). Average number of files in one timer slot: 1,80
+Writing small files: #files: 1000, filesize: 200(bytes), overall time: 3984(ms), time/file: 3,98(ms), throughput: 0,05(Mbyte/s), score: 0,12
+Detected filesystem timer increases during update of 1000 files: 999. Minimal increase of the timer: 3(ms). Average number of files in one timer slot: 1,00
+Reading small files: #files: 13309, filesize: 200(bytes), overall time: 2068(ms), time/file: 0,16(ms), throughput: 1,23(Mbyte/s), score: 0,90
+Writing big files: #files: 2, filesize: 50000000(bytes), overall time: 7778(ms), time/file: 3889,00(ms), throughput: 12,26(Mbyte/s), score: 0,14
+Reading big files: #files: 30, filesize: 50000000(bytes), overall time: 2090(ms), time/file: 69,67(ms), throughput: 684,46(Mbyte/s), score: 0,83
+Listing files in a hierachy: #files: 10000, overall time: 3250(ms), time/file: 0,33(ms), score: 0,37
+Reading modification times: #files: 10000, overall time: 2990(ms), time/file: 0,30(ms), score: 0,43
+Deleting files: #files: 2555, overall time: 2031(ms), time/file: 0,79(ms), score: 2,97
+Average score: 0,80(ms), chksum:14896432544278682
+Additional tests which don't go into sum:
+modify file and add it with jgit: #files: 500, overall time: 11028(ms), time/file: 22,06(ms), score: 0,27
+Cleaning up: please be patient ...
+Finished. Goodbye!
+
+
