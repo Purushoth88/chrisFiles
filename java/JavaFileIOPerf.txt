@@ -193,3 +193,22 @@ modify file and add it with jgit: #files: 500, overall time: 568(ms), time/file:
 Cleaning up: please be patient ...
 Finished. Goodbye!
 
+Java File I/O perf V2.07, date:2012/06/26 12:41:24, hostName=WDFN00288735A, java.version=1.6.0_26, os.name=Windows 7, os.arch=amd64, Jan Sievers
+basedir=C:\Users\d037913\AppData\Local\Temp\JGitTests_1340707284487
+score: performance compared to Windows7(64bit) Notebook with QuadCore I5, 8 GB Ram, standard NFTS disk, Virusscanner turned off.
+       Higher scores mean better performance.
+Creating new files: #files: 7182, overall time: 5348(ms), time/file: 0,74(ms), score: 0,98
+Detected filesystem timer increases during creation of 7182 files: 3038. Minimal increase of the timer: 1(ms). Average number of files in one timer slot: 2,36
+Writing small files: #files: 1380, filesize: 200(bytes), overall time: 2987(ms), time/file: 2,16(ms), throughput: 0,09(Mbyte/s), score: 0,22
+Detected filesystem timer increases during update of 1380 files: 1141. Minimal increase of the timer: 1(ms). Average number of files in one timer slot: 1,21
+Reading small files: #files: 30000, filesize: 200(bytes), overall time: 3177(ms), time/file: 0,11(ms), throughput: 1,80(Mbyte/s), score: 1,32
+Writing big files: #files: 10, filesize: 50000000(bytes), overall time: 3161(ms), time/file: 316,10(ms), throughput: 150,85(Mbyte/s), score: 1,74
+Reading big files: #files: 70, filesize: 50000000(bytes), overall time: 2735(ms), time/file: 39,07(ms), throughput: 1220,42(Mbyte/s), score: 1,48
+Listing files in a hierachy: #files: 42654, overall time: 2963(ms), time/file: 0,07(ms), score: 1,73
+Reading modification times: #files: 44532, overall time: 2998(ms), time/file: 0,07(ms), score: 1,93
+Deleting files: #files: 9695, overall time: 4464(ms), time/file: 0,46(ms), score: 5,13
+Average score: 1,82(ms), chksum:104394174620506439
+Additional tests which don't go into sum:
+modify file and add it with jgit: #files: 500, overall time: 3708(ms), time/file: 7,42(ms), score: 0,81
+Cleaning up: please be patient ...
+Finished. Goodbye!
