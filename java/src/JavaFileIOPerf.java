@@ -22,6 +22,9 @@ import org.eclipse.jgit.lib.ObjectInserter;
  */
 public class JavaFileIOPerf {
 	private static final String TEST_REPO = "testRepo";
+	private static String version = "V2.09";
+	private static boolean verbose = false;
+	private static int ticksPerDot, ticks;
 
 	enum TestCase {
 		CREATE(0, 0.73), //
@@ -43,21 +46,22 @@ public class JavaFileIOPerf {
 		}
 	}
 
-	private static String version = "V2.09";
-
 	public static void main(String args[]) throws IOException, GitAPIException {
 		long start, elapsedTime;
 		byte buffer[];
 		long chksum = 0;
 		double sum = 0;
+		String tmpDirName = System.getProperty("java.io.tmpdir");
 
 		// handle parameters
-		if (args.length > 0 && "-h".equalsIgnoreCase(args[0])) {
-			System.err.println("JavaFileIOPerf [-h] [tmpDir]");
-			System.exit(1);
-		}
-		String tmpDirName = (args.length == 0) ? System
-				.getProperty("java.io.tmpdir") : args[0];
+		for (String arg : args)
+			if (arg.equals("-h")) {
+				System.err.println("JavaFileIOPerf [-h] [-v] [tmpDir]");
+				System.exit(1);
+			} else if (arg.equalsIgnoreCase("-v"))
+				verbose = true;
+			else
+				tmpDirName = arg;
 		File baseDir = new File(tmpDirName, "JGitTests_"
 				+ System.currentTimeMillis());
 
@@ -85,12 +89,18 @@ public class JavaFileIOPerf {
 		for (TestCase c : TestCase.values())
 			maxSize = Math.max(maxSize, c.size);
 		buffer = new byte[maxSize];
-		for (int i = 0; i < buffer.length; i++)
+		verboseStart("fill a buffer with " + maxSize + " bytes",
+				maxSize);
+		for (int i = 0; i < buffer.length; i++) {
 			buffer[i] = (byte) ((97 * i) % 23);
+			verboseTick();
+		}
+		verboseStop();
 
 		File[] subDirs = null;
 		try {
 			// prepare files/folders
+			verboseStart("preparation: create %d empty directories", 8*8*8);
 			subDirs = new File[8 * 8 * 8];
 			for (int i = 0, level0 = 0; level0 < 8; level0++) {
 				for (int level1 = 0; level1 < 8; level1++) {
@@ -99,9 +109,11 @@ public class JavaFileIOPerf {
 								+ "/" + Integer.toString(level1) + "/"
 								+ Integer.toString(level2));
 						subDirs[i++].mkdirs();
+						verboseTick();
 					}
 				}
 			}
+			verboseStop();
 
 			int rounds;
 			int newrounds;
@@ -114,6 +126,7 @@ public class JavaFileIOPerf {
 			preparedTo = 0;
 			for (;;) {
 				rounds = newrounds;
+				verboseStart("measure creation of %d empty files", rounds);
 				start = System.currentTimeMillis();
 				for (int i = offset; i < offset + rounds; i++) {
 					File tf = new File(subDirs[i & 0x01FF], Integer.toString(i));
@@ -123,6 +136,7 @@ public class JavaFileIOPerf {
 								+ tf.getPath());
 				}
 				elapsedTime = System.currentTimeMillis() - start;
+				verboseStop();
 				offset += rounds;
 				newrounds = calcNewRounds(rounds, elapsedTime);
 				if (newrounds <= rounds)
@@ -139,6 +153,7 @@ public class JavaFileIOPerf {
 			preparedTo = offset + rounds;
 			for (;;) {
 				rounds = newrounds;
+				verboseStart("preparation: create %d empty files", offset + rounds - preparedTo);
 				for (int i = preparedTo; i < offset + rounds; i++) {
 					File tf = new File(subDirs[i & 0x01FF], Integer.toString(i));
 
@@ -148,8 +163,11 @@ public class JavaFileIOPerf {
 									"Fatal: failed to create file "
 											+ tf.getPath() + "!");
 					preparedTo++;
+					verboseTick();
 				}
+				verboseStop();
 
+				verboseStart("measure writing "+TestCase.WRITE_SMALL.size+" bytes into each of to %d files", rounds);
 				start = System.currentTimeMillis();
 				for (int i = offset; i < offset + rounds; i++) {
 					File tf = new File(subDirs[i & 0x01FF], Integer.toString(i));
@@ -159,6 +177,7 @@ public class JavaFileIOPerf {
 					fos.close();
 				}
 				elapsedTime = System.currentTimeMillis() - start;
+				verboseStop();
 				newrounds = calcNewRounds(rounds, elapsedTime);
 				if (newrounds <= rounds)
 					break;
@@ -174,6 +193,7 @@ public class JavaFileIOPerf {
 			preparedTo = offset + rounds;
 			for (;;) {
 				rounds = newrounds;
+				verboseStart("preparation: fill %d files with "+TestCase.WRITE_SMALL.size+" bytes", offset+512-preparedTo);
 				for (int i = preparedTo; i < offset + 512; i++) {
 					File tf = new File(subDirs[i & 0x01FF], Integer.toString(i));
 
@@ -188,8 +208,11 @@ public class JavaFileIOPerf {
 						fos.close();
 					}
 					preparedTo++;
+					verboseTick();
 				}
+				verboseStop();
 
+				verboseStart("measure reading "+TestCase.WRITE_SMALL.size+" bytes from each of to %d files", rounds);
 				start = System.currentTimeMillis();
 				int j = offset;
 				for (int i = offset; i < offset + rounds; i++) {
@@ -210,6 +233,7 @@ public class JavaFileIOPerf {
 						j = offset;
 				}
 				elapsedTime = System.currentTimeMillis() - start;
+				verboseStop();
 				newrounds = calcNewRounds(rounds, elapsedTime);
 				if (newrounds <= rounds)
 					break;
@@ -222,6 +246,7 @@ public class JavaFileIOPerf {
 			newrounds = 3;
 			offset = 0;
 			for (;;) {
+				verboseStart("preparation: create %d files", offset+rounds-preparedTo);
 				rounds = newrounds;
 				for (int i = preparedTo; i < offset + rounds; i++) {
 					File tf = new File(subDirs[i & 0x01FF], Integer.toString(i));
@@ -232,8 +257,11 @@ public class JavaFileIOPerf {
 									"Fatal: failed to create file "
 											+ tf.getPath() + "!");
 					preparedTo++;
+					verboseTick();
 				}
+				verboseStop();
 
+				verboseStart("measure writing "+TestCase.WRITE_BIG.size+" bytes to each of to %d files", rounds);
 				start = System.currentTimeMillis();
 				for (int i = offset; i < offset + rounds; i++) {
 					File tf = new File(subDirs[i & 0x01FF], Integer.toString(i));
@@ -243,6 +271,7 @@ public class JavaFileIOPerf {
 					fos.close();
 				}
 				elapsedTime = System.currentTimeMillis() - start;
+				verboseStop();
 				newrounds = calcNewRounds(rounds, elapsedTime);
 				if (newrounds <= rounds)
 					break;
@@ -257,6 +286,7 @@ public class JavaFileIOPerf {
 			preparedTo = offset + rounds;
 			for (;;) {
 				rounds = newrounds;
+				verboseStart("preparation: fill %d files with "+TestCase.WRITE_BIG.size+" bytes", offset+16-preparedTo);
 				for (int i = preparedTo; i < offset + 16; i++) {
 					File tf = new File(subDirs[i & 0x01FF], Integer.toString(i));
 
@@ -271,8 +301,11 @@ public class JavaFileIOPerf {
 						fos.close();
 					}
 					preparedTo++;
+					verboseTick();
 				}
+				verboseStop();
 
+				verboseStart("measure reading "+TestCase.WRITE_BIG.size+" bytes from each of to %d files", rounds);
 				start = System.currentTimeMillis();
 				int j = offset;
 				for (int i = offset; i < offset + rounds; i++) {
@@ -294,6 +327,7 @@ public class JavaFileIOPerf {
 						j = offset;
 				}
 				elapsedTime = System.currentTimeMillis() - start;
+				verboseStop();
 				newrounds = calcNewRounds(rounds, elapsedTime);
 				if (newrounds <= rounds)
 					break;
@@ -308,6 +342,7 @@ public class JavaFileIOPerf {
 			preparedTo = rounds;
 			for (;;) {
 				rounds = newrounds;
+				verboseStart("preparation: check that we have %d files", offset+rounds-preparedTo);
 				for (int i = preparedTo; i < offset + rounds; i++) {
 					File tf = new File(subDirs[i & 0x01FF], Integer.toString(i));
 
@@ -317,11 +352,15 @@ public class JavaFileIOPerf {
 									"Fatal: failed to create file "
 											+ tf.getPath() + "!");
 					preparedTo++;
+					verboseTick();
 				}
+				verboseStop();
 
+				verboseStart("measure listing %d files", rounds);
 				start = System.currentTimeMillis();
 				listDir(baseDir, rounds);
 				elapsedTime = System.currentTimeMillis() - start;
+				verboseStop();
 				newrounds = calcNewRounds(rounds, elapsedTime);
 				if (newrounds <= rounds)
 					break;
@@ -336,6 +375,7 @@ public class JavaFileIOPerf {
 			preparedTo = offset + rounds;
 			for (;;) {
 				rounds = newrounds;
+				verboseStart("preparation: check that we have %d files", offset + rounds-preparedTo);
 				for (int i = preparedTo; i < offset + rounds; i++) {
 					File tf = new File(subDirs[i & 0x01FF], Integer.toString(i));
 
@@ -345,8 +385,11 @@ public class JavaFileIOPerf {
 									"Fatal: failed to create file "
 											+ tf.getPath() + "!");
 					preparedTo++;
+					verboseTick();
 				}
+				verboseStop();
 
+				verboseStart("measure reading lastmodified from %d files", rounds);
 				start = System.currentTimeMillis();
 				for (int i = offset; i < offset + rounds; i++) {
 					File tf = new File(subDirs[i & 0x01FF], Integer.toString(i));
@@ -354,6 +397,7 @@ public class JavaFileIOPerf {
 					chksum += tf.lastModified();
 				}
 				elapsedTime = System.currentTimeMillis() - start;
+				verboseStop();
 				newrounds = calcNewRounds(rounds, elapsedTime);
 				if (newrounds <= rounds)
 					break;
@@ -368,6 +412,7 @@ public class JavaFileIOPerf {
 			preparedTo = offset + rounds;
 			for (;;) {
 				rounds = newrounds;
+				verboseStart("preparation: check that we have %d files", offset+rounds-preparedTo);
 				for (int i = preparedTo; i < offset + rounds; i++) {
 					File tf = new File(subDirs[i & 0x01FF], Integer.toString(i));
 
@@ -377,8 +422,11 @@ public class JavaFileIOPerf {
 									"Fatal: failed to create file "
 											+ tf.getPath() + "!");
 					preparedTo++;
+					verboseTick();
 				}
+				verboseStop();
 
+				verboseStart("measure deleting %d files", rounds);
 				start = System.currentTimeMillis();
 				for (int i = offset; i < offset + rounds; i++) {
 					File tf = new File(subDirs[i & 0x01FF], Integer.toString(i));
@@ -386,6 +434,7 @@ public class JavaFileIOPerf {
 					tf.delete();
 				}
 				elapsedTime = System.currentTimeMillis() - start;
+				verboseStop();
 				newrounds = calcNewRounds(rounds, elapsedTime);
 				if (newrounds <= rounds)
 					break;
@@ -395,9 +444,9 @@ public class JavaFileIOPerf {
 					TestCase.DELETE.standard, TestCase.DELETE.size);
 
 			// write summary
-			
-			System.out.printf("Average score: %.2f, chksum:%d\n",
-					sum / 8.0, chksum);
+
+			System.out.printf("Average score: %.2f, chksum:%d\n", sum / 8.0,
+					chksum);
 
 			System.out.println("Additional tests which don't go into sum:");
 			// measure jgit add modified file
@@ -441,6 +490,29 @@ public class JavaFileIOPerf {
 			delete(baseDir);
 			System.out.println("Finished. Goodbye!");
 		}
+	}
+
+	private static void verboseStart(String message, int maxSize) {
+		if (verbose) {
+			System.out.printf(message, Math.max(0,  maxSize));
+			ticksPerDot = maxSize / 10;
+			ticks = 0;
+		}
+	}
+
+	private static void verboseTick() {
+		if (verbose) {
+			if (ticks >= ticksPerDot) {
+				System.out.print(".");
+				ticks = 0;
+			} else
+				ticks++;
+		}
+	}
+
+	private static void verboseStop() {
+		if (verbose)
+			System.out.println(". Done!");
 	}
 
 	private static int calcNewRounds(int rounds, long elapsedTime) {
