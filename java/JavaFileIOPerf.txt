@@ -293,3 +293,42 @@ modify file and add it with jgit: #files: 500, overall time: 2655(ms), time/file
 Cleaning up: please be patient ...
 Finished. Goodbye!
 
+Java File I/O perf V2.07, date:2012/06/27 13:10:56, hostName=wdfm00293805a.dhcp.wdf.sap.corp, java.version=1.6.0_33, os.name=Mac OS X, os.arch=x86_64, Jens, Virusscanner=ON
+basedir=/var/folders/bZ/bZ6Q4vbwEAOiFM2PS9WSZFtG5-g/-Tmp-/JGitTests_1340795456814
+score: performance compared to Windows7(64bit) Notebook with QuadCore I5, 8 GB Ram, standard NFTS disk, Virusscanner turned off.
+       Higher scores mean better performance.
+Creating new files: #files: 30000, overall time: 13985(ms), time/file: 0.47(ms), score: 1.57
+Detected filesystem timer increases during creation of 30000 files: 14. Minimal increase of the timer: 1000(ms). Average number of files in one timer slot: 2063.69
+Writing small files: #files: 924, filesize: 200(bytes), overall time: 3090(ms), time/file: 3.34(ms), throughput: 0.06(Mbyte/s), score: 0.14
+Detected filesystem timer increases during update of 924 files: 3. Minimal increase of the timer: 1000(ms). Average number of files in one timer slot: 285.50
+Reading small files: #files: 128388, filesize: 200(bytes), overall time: 2810(ms), time/file: 0.02(ms), throughput: 8.71(Mbyte/s), score: 6.40
+Writing big files: #files: 10, filesize: 50000000(bytes), overall time: 2751(ms), time/file: 275.10(ms), throughput: 173.33(Mbyte/s), score: 2.00
+Reading big files: #files: 99, filesize: 50000000(bytes), overall time: 3177(ms), time/file: 32.09(ms), throughput: 1485.89(Mbyte/s), score: 1.80
+Listing files in a hierachy: #files: 200000, overall time: 4257(ms), time/file: 0.02(ms), score: 5.64
+Reading modification times: #files: 200000, overall time: 2834(ms), time/file: 0.01(ms), score: 9.17
+Deleting files: #files: 25711, overall time: 6964(ms), time/file: 0.27(ms), score: 8.71
+Average score: 4.43(ms), chksum:312851840475677000
+Additional tests which don't go into sum:
+modify file and add it with jgit: #files: 500, overall time: 2852(ms), time/file: 5.70(ms), score: 1.06
+Cleaning up: please be patient ...
+Finished. Goodbye!
+
+Java File I/O perf V2.07, date:2012/06/27 13:21:56, hostName=wdfm00293805a.dhcp.wdf.sap.corp, java.version=1.6.0_33, os.name=Mac OS X, os.arch=x86_64, Jens, Virusscanner=OFF
+basedir=/var/folders/bZ/bZ6Q4vbwEAOiFM2PS9WSZFtG5-g/-Tmp-/JGitTests_1340796116493
+score: performance compared to Windows7(64bit) Notebook with QuadCore I5, 8 GB Ram, standard NFTS disk, Virusscanner turned off.
+       Higher scores mean better performance.
+Creating new files: #files: 30000, overall time: 14012(ms), time/file: 0.47(ms), score: 1.56
+Detected filesystem timer increases during creation of 30000 files: 14. Minimal increase of the timer: 1000(ms). Average number of files in one timer slot: 2012.92
+Writing small files: #files: 5002, filesize: 200(bytes), overall time: 2977(ms), time/file: 0.60(ms), throughput: 0.32(Mbyte/s), score: 0.81
+Detected filesystem timer increases during update of 5002 files: 3. Minimal increase of the timer: 1000(ms). Average number of files in one timer slot: 1692.00
+Reading small files: #files: 131964, filesize: 200(bytes), overall time: 2841(ms), time/file: 0.02(ms), throughput: 8.86(Mbyte/s), score: 6.50
+Writing big files: #files: 8, filesize: 50000000(bytes), overall time: 2538(ms), time/file: 317.25(ms), throughput: 150.30(Mbyte/s), score: 1.74
+Reading big files: #files: 96, filesize: 50000000(bytes), overall time: 2966(ms), time/file: 30.90(ms), throughput: 1543.37(Mbyte/s), score: 1.87
+Listing files in a hierachy: #files: 200000, overall time: 4020(ms), time/file: 0.02(ms), score: 5.97
+Reading modification times: #files: 200000, overall time: 2965(ms), time/file: 0.01(ms), score: 8.77
+Deleting files: #files: 25863, overall time: 6888(ms), time/file: 0.27(ms), score: 8.86
+Average score: 4.51(ms), chksum:312851994739430000
+Additional tests which don't go into sum:
+modify file and add it with jgit: #files: 500, overall time: 639(ms), time/file: 1.28(ms), score: 4.71
+Cleaning up: please be patient ...
+Finished. Goodbye!
