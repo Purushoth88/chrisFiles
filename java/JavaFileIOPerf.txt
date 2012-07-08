@@ -354,3 +354,24 @@ Additional tests which don't go into sum:
 modify file and add it with jgit: #files: 500, overall time: 723(ms), time/file: 1.45(ms), score: 4.16
 Cleaning up: please be patient ...
 Finished. Goodbye!
+
+Java File I/O perf V2.09, date:2012/07/05 15:43:45, hostName=s01en22, java.version=1.6.0_24, os.name=Linux, os.arch=i386, user.name=mduft
+basedir=/fast/tmp/JGitTests_1341495825397
+score: performance compared to Windows7(64bit) Notebook with QuadCore I5, 8 GB Ram, standard NTFS disk, Virusscanner turned off.
+       Higher scores mean better performance.
+Creating new files: #files: 101010, overall time: 2957(ms), time/file: 0.03(ms), score: 24.94
+Detected filesystem timer increases during creation of 101010 files: 3. Minimal increase of the timer: 1000(ms). Average number of files in one timer slot: 30182.50
+Writing small files: #files: 5260, filesize: 200(bytes), overall time: 4874(ms), time/file: 0.93(ms), throughput: 0.21(Mbyte/s), score: 0.52
+Detected filesystem timer increases during update of 5260 files: 5. Minimal increase of the timer: 1000(ms). Average number of files in one timer slot: 934.25
+Reading small files: #files: 200000, filesize: 200(bytes), overall time: 1297(ms), time/file: 0.01(ms), throughput: 29.41(Mbyte/s), score: 21.59
+Writing big files: #files: 3, filesize: 50000000(bytes), overall time: 5146(ms), time/file: 1715.33(ms), throughput: 27.80(Mbyte/s), score: 0.32
+Reading big files: #files: 64, filesize: 50000000(bytes), overall time: 2838(ms), time/file: 44.34(ms), throughput: 1075.32(Mbyte/s), score: 1.31
+Listing files in a hierachy: #files: 200000, overall time: 834(ms), time/file: 0.00(ms), score: 28.78
+Reading modification times: #files: 200000, overall time: 554(ms), time/file: 0.00(ms), score: 46.93
+Deleting files: #files: 200000, overall time: 1490(ms), time/file: 0.01(ms), score: 316.78
+Average score: 55.14, chksum:313015247922641000
+Additional tests which don't go into sum:
+modify file and add it with jgit: #files: 500, overall time: 1065(ms), time/file: 2.13(ms), score: 2.83
+Cleaning up: please be patient ...
+Finished. Goodbye!
+
