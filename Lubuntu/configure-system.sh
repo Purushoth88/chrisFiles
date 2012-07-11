@@ -45,8 +45,88 @@ Categories=Development;IDE;Java;
 EOF
 )
 
-# install egit/jgit
-eclipse-juno -application org.eclipse.equinox.p2.director -repository http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/ -repository http://download.eclipse.org/egit/updates -repository http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/ -installIU org.hamcrest -installIU org.apache.log4j -installIU com.google.protobuf -installIU org.kohsuke.args4j -installIU org.mockito -installIU org.eclipse.egit.feature.group -installIU org.eclipse.egit.import.feature.group -installIU org.eclipse.egit.mylyn.feature.group -installIU org.eclipse.egit.psf.feature.group -installIU org.eclipse.jgit.feature.group -installIU org.eclipse.jgit.pgm.feature.group
-eclipse -application org.eclipse.equinox.p2.director -repository http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/ -repository http://download.eclipse.org/egit/updates -repository http://download.eclipse.org/mylyn/releases/latest -installIU org.hamcrest -installIU org.apache.log4j -installIU com.google.protobuf -installIU org.kohsuke.args4j -installIU org.mockito -installIU org.eclipse.egit.feature.group -installIU org.eclipse.egit.mylyn.feature.group -installIU org.eclipse.egit.psf.feature.group -installIU org.eclipse.jgit.feature.group -installIU org.eclipse.jgit.pgm.feature.group
+# install egit/jgit in juno
+eclipse-juno -application org.eclipse.equinox.p2.director \
+	-r http://download.eclipse.org/egit/updates,http://download.eclipse.org/releases/juno \
+	-i org.eclipse.egit.feature.group,org.eclipse.egit.import.feature.group,org.eclipse.egit.mylyn.feature.group,org.eclipse.egit.psf.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group,org.eclipse.mylyn.gerrit.feature.feature.group,org.eclipse.mylyn.git.feature.group,org.eclipse.mylyn.github.feature.feature.group 
+
+# install egit/jgit in indigo (not all components
+eclipse -application org.eclipse.equinox.p2.director \
+	-r http://download.eclipse.org/egit/updates,http://download.eclipse.org/releases/indigo \
+	-i org.eclipse.egit.feature.group,org.eclipse.egit.psf.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group
+
+# prepare API Baselines
+[ -d ~/egit-releases ] || mkdir ~/egit-releases 
+(
+	rel=org.eclipse.egit.repository-2.0.0.201206130900-r
+	[ -d ~/egit-releases/$rel ] || wget -qO- http://download.eclipse.org/egit/updates-2.0/$rel | unzip -d ~/egit-releases/$rel
+)
+
+# add user to group which is allowed to read shared folders
+id -G -n | grep vbox || sudo adduser $USER vboxsf
+
+# write scripts which turn off/on sap proxy usage
+cat <<EOF >~/sap_proxy.sh
+#!/bin/bash
+#
+# Configure a Lubuntu12.04 to use SAP proxy
+#
+
+grep "^http_proxy" /etc/environment || sudo sh -c "echo 'http_proxy=http://proxy:8080' >> /etc/environment"
+grep "^https_proxy" /etc/environment || sudo sh -c "echo 'https_proxy=https://proxy:8080' >> /etc/environment"
+export http_proxy=http://proxy:8080
+export https_proxy=https://proxy:8080
+grep "proxy-pac-url" /usr/share/applications/chromium-browser.desktop || sudo sed -r -i '/^Exec=/s/\/usr\/bin\/chromium-browser/\/usr\/bin\/chromium-browser --proxy-pac-url=http:\/\/proxy:8083\//' /usr/share/applications/chromium-browser.desktop
+[ -d ~/.m2 ] || mkdir ~/.m2
+[ -f ~/.m2/settings_sap_proxy.xml ] || cat <<END >~/.m2/settings_sap_proxy.xml
+<settings>
+  <proxies>
+   <proxy><active>true</active>
+      <protocol>http</protocol>
+      <host>proxy</host>
+      <port>8080</port>
+      <nonProxyHosts>nexus|*.sap.corp</nonProxyHosts>
+    </proxy>
+  </proxies>
+</settings>
+END
+[ -f ~/.m2/settings.xml ] && echo "Couldn't write new ~/.m2/settings.xml because it already existed"
+[ -f ~/.m2/settings.xml ] || cp ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml
+echo "Please logoff/logon to activate the proxy settings"
+EOF
+chmod +x ~/sap_proxy.sh
+
+cat <<EOF >~/no_proxy.sh
+#!/bin/bash
+#
+# Configure a Lubuntu12.04 to use no proxy
+#
+
+sudo sed -i '/^http_proxy/d' /etc/environment
+sudo sed -i '/^https_proxy/d' /etc/environment
+unset http_proxy
+unset https_proxy
+grep "proxy-pac-url" /usr/share/applications/chromium-browser.desktop && sudo sed -r -i '/^Exec=/s/--proxy-pac-url=[^ \t]+[ \t]*//' /usr/share/applications/chromium-browser.desktop
+sudo sed -i '/^https_proxy/d' /etc/environment
+sudo sed -r -i 's/<proxy><active>true</<proxy><active>false</' ~/.m2/settings.xml
+echo "Please logoff/logon to activate the proxy settings"
+EOF
+chmod +x ~/no_proxy.sh
+
+# configured for chris
+git config --global user.name "Christian Halstrick"
+git config --global user.email "christian.halstrick@gmail.com"
+echo "machine git.eclipse.org" >> ~/.netrc
+echo "login chalstrick" >> ~/.netrc
+read -s -p "Enter password for chalstrick at git.eclipse.org: " epass
+echo "password $epass" >> ~/.netrc
+echo >> ~/.netrc
+echo "machine github.com" >> ~/.netrc
+echo "login chalstrick" >> ~/.netrc
+read -s -p "Enter password for chalstrick at github.com: " epass
+echo "password $epass" >> ~/.netrc
+(cd git && git clone http://github.com/chalstrick/chrisFiles)
+cp git/chrisFiles/git/.gitconfig ~
+chmod 600 ~/.netrc
 
 wait
