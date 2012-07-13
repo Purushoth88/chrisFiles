@@ -114,8 +114,6 @@ EOF
 chmod +x ~/no_proxy.sh
 
 # configured for chris
-git config --global user.name "Christian Halstrick"
-git config --global user.email "christian.halstrick@gmail.com"
 if [ -f ~/.netrc ] ;then
 	echo "Don't write ~/.netrc because it already exists"
 else
@@ -126,7 +124,7 @@ else
 	chmod 600 ~/.netrc
 fi
 (cd git && git clone http://github.com/chalstrick/chrisFiles)
-if [ -f ~/.netrc ] ;then
+if [ -f ~/.gitconfig ] ;then
 	echo "Don't write ~/.gitconfig because it already exists"
 else
 	cp git/chrisFiles/git/.gitconfig ~
