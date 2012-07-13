@@ -59,7 +59,10 @@ eclipse -application org.eclipse.equinox.p2.director \
 [ -d ~/egit-releases ] || mkdir ~/egit-releases 
 (
 	rel=org.eclipse.egit.repository-2.0.0.201206130900-r
-	[ -d ~/egit-releases/$rel ] || wget -qO- http://download.eclipse.org/egit/updates-2.0/$rel | unzip -d ~/egit-releases/$rel
+	cd ~/egit-releases
+	wget http://download.eclipse.org/egit/updates-2.0/$rel.zip
+	unzip $rel.zip -d $rel
+	rm $rel.zip
 )
 
 # add user to group which is allowed to read shared folders
