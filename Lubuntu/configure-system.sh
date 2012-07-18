@@ -48,7 +48,7 @@ EOF
 # install egit/jgit in juno
 eclipse-juno -application org.eclipse.equinox.p2.director \
 	-r http://download.eclipse.org/egit/updates,http://download.eclipse.org/releases/juno \
-	-i org.eclipse.egit.feature.group,org.eclipse.egit.import.feature.group,org.eclipse.egit.mylyn.feature.group,org.eclipse.egit.psf.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group,org.eclipse.mylyn.gerrit.feature.feature.group,org.eclipse.mylyn.git.feature.group,org.eclipse.mylyn.github.feature.feature.group 
+	-i org.eclipse.egit.feature.group,org.eclipse.egit.import.feature.group,org.eclipse.egit.mylyn.feature.group,org.eclipse.egit.psf.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group,org.eclipse.mylyn.gerrit.feature.feature.group,org.eclipse.mylyn.git.feature.group,org.eclipse.mylyn.github.feature.feature.group,org.eclipse.cdt.autotools.feature.group,org.eclipse.cdt.feature.group
 
 # install egit/jgit in indigo (not all components
 eclipse -application org.eclipse.equinox.p2.director \
@@ -117,6 +117,8 @@ EOF
 chmod +x ~/no_proxy.sh
 
 # configured for chris
+git config --global user.name "Christian Halstrick"
+git config --global user.email "christian.halstrick@gmail.com"
 if [ -f ~/.netrc ] ;then
 	echo "Don't write ~/.netrc because it already exists"
 else
@@ -139,7 +141,9 @@ else
 fi
 
 (cd git/jgit && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/jgit/jgit)
+(cd git/jgit && git remote add github http://chalstrick@github.com/chalstrick/jgit && git fetch github) 
 (cd git/egit && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit)
+(cd git/egit && git remote add github http://chalstrick@github.com/chalstrick/egit && git fetch github) 
 (cd git/egit-pde && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit-pde)
 (cd git/egit-github && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit-github)
 
