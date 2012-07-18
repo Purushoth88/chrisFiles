@@ -14,8 +14,8 @@
 	st = status -s
 	cm = commit
 	br = branch
-	addchange = !sh -c 'git config --add remote.\"$1\".fetch refs/changes/\"${2: -2}\"/\"$2\"/*:refs/tags/\"$1\"/\"$2\"/*' -
-	getchange = !sh -c 'git fetch \"$1\" refs/changes/\"${2: -2}\"/\"$2\"/*:refs/tags/\"$1\"/\"$2\"/*' -
+	addchange = !bash -c 'git config --add remote.\"$1\".fetch refs/changes/\"${2: -2}\"/\"$2\"/*:refs/tags/\"$1\"/\"$2\"/*' -
+	getchange = !bash -c 'git fetch \"$1\" refs/changes/\"${2: -2}\"/\"$2\"/*:refs/tags/\"$1\"/\"$2\"/*' -
 	rl = reflog --date=local
 [http]
 	sslverify = false
