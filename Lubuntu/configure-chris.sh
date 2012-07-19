@@ -3,23 +3,17 @@
 # Do some configurations for chris
 #
 
-git config --global user.name "Christian Halstrick"
-git config --global user.email "christian.halstrick@gmail.com"
 if [ -f ~/.netrc ] ;then
 	echo "Don't write ~/.netrc because it already exists"
 else
 	read -s -p "Enter password for chalstrick at git.eclipse.org: " epass
 	echo -e "machine git.eclipse.org\nlogin chalstrick\npassword $epass" >> ~/.netrc
+	echo
 	read -s -p "Enter password for chalstrick at github.com: " epass
 	echo -e "machine github.com\nlogin chalstrick\npassword $epass" >> ~/.netrc
 	chmod 600 ~/.netrc
 fi
-(cd git && git clone http://github.com/chalstrick/chrisFiles)
-if [ -f ~/.gitconfig ] ;then
-	echo "Don't write ~/.gitconfig because it already exists"
-else
-	cp git/chrisFiles/git/.gitconfig ~
-fi
+(cd git && git clone http://github.com/chalstrick/chrisFiles && . chrisFiles/git/setGitConfig.sh)
 if [ -f ~/.vimrc ] ;then
 	echo "Don't write ~/.vimrc because it already exists"
 else
