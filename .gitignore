@@ -1,2 +1,3 @@
 /java/bin
 /com.sap.tools.jpicus.calibration.file
+*.bak
