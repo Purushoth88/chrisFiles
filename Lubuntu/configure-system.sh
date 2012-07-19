@@ -9,7 +9,7 @@ sudo apt-get --yes dist-upgrade
 sudo /media/VBOXADDITIONS*/VBoxLinuxAdditions.run
 
 # install applications
-sudo apt-get install --yes git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-jdk eclipse-platform
+sudo apt-get install --yes git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-jdk eclipse-platform gdb libssl-dev
 
 # clone linux & git, build git
 [ -d git ] || mkdir git
