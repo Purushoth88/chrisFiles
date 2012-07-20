@@ -11,12 +11,13 @@ sudo /media/VBOXADDITIONS*/VBoxLinuxAdditions.run
 # install applications
 sudo apt-get install --yes git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-jdk eclipse-platform gdb libssl-dev
 
-# clone linux & git, build git
+# clone linux & git & gerrit, build git & gerrit
 [ -d git ] || mkdir git
 (cd git && git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git) &
+(cd git && git clone https://gerrit.googlesource.com/gerrit && cd gerrit && mvn package) &
 sudo apt-get install --yes autoconf
 sudo apt-get build-dep --yes git
-(cd git && git clone https://github.com/git/git.git && cd git && make configure && ./configure && make)
+(cd git && git clone https://github.com/git/git.git && cd git && make configure && ./configure && make) &
 
 # clone&build egit/jgit
 (cd git && git clone https://git.eclipse.org/r/p/jgit/jgit && cd jgit && git config remote.origin.push HEAD:refs/for/master && mvn clean install -DskipTests && mvn -f org.eclipse.jgit.packaging/pom.xml clean install)
