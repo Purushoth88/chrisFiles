@@ -42,15 +42,15 @@ git clone https://github.com/git/git.git ~/git/git && (cd ~/git/git && make conf
 	# wait until everything is cloned and jgit is build
 	wait
 
+	# configure all gerrit repos to push to the review queue
+	for i in jgit egit egit-pde egit-github ;do git config -f ~/git/$i/.git/config remote.origin.push HEAD:refs/for/master ;done 
+
 	# build the remaining projects
 	mvn -f ~/git/gerrit/pom.xml package &
 	mvn -f ~/git/egit/pom.xml -P skip-ui-tests install -DskipTests
 	mvn -f ~/git/egit-github/pom.xml install &
 	mvn -f ~/git/egit-pde/pom.xml install
 ) &
-
-# configure all gerrit repos to push to the review queue
-for i in (jgit egit egit-pde egit-github) ;do git config -f ~/git/$i/.git/config remote.origin.push HEAD:refs/for/master ;done 
 
 # install eclipse juno
 if [ ! -d /usr/lib/eclipse-juno ] ;then
