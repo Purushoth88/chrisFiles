@@ -3,6 +3,9 @@
 # Configure a Lubuntu12.04 system to my needs
 #
 
+# print out every command
+set -x
+
 # System updates
 sudo apt-get update
 sudo apt-get --yes dist-upgrade
@@ -19,7 +22,6 @@ if [ ! dpkg -s sun-java5-jdk ] ;then
 	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
 	sudo apt-get update
 	sudo apt-get install sun-java5-jdk
-	sudo update-alternatives --config java
 	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
 	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
 	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
@@ -42,15 +44,14 @@ sudo apt-get build-dep --yes git
 (cd git && git clone https://git.eclipse.org/r/p/egit/egit-pde && cd egit-pde && git config remote.origin.push HEAD:refs/for/master && mvn clean install)
 
 # install eclipse juno
-(
-	[ ! -d /usr/lib/eclipse-juno ] &&\
-	[ ! -f ~/.local/share/applications/eclipse-juno.desktop ] &&\
-	sudo mkdir -p /usr/lib/eclipse-juno/download &&\
-	wget -qO- 'http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/juno/R/eclipse-jee-juno-linux-gtk-x86_64.tar.gz&r=1' | sudo tar -C /usr/lib/eclipse-juno/download -xz &&\
-	sudo mv /usr/lib/eclipse-juno/download/eclipse/* /usr/lib/eclipse-juno &&\
-	sudo ln -s /usr/lib/eclipse-juno/eclipse /usr/bin/eclipse-juno &&\
-	mkdir -p ~/.local/share/applications &&\
-	cat <<EOF >~/.local/share/applications/eclipse-juno.desktop
+if [ ! -d /usr/lib/eclipse-juno ] ;then
+	sudo mkdir -p /usr/lib/eclipse-juno/download
+	wget -qO- 'http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/juno/R/eclipse-jee-juno-linux-gtk-x86_64.tar.gz&r=1' | sudo tar -C /usr/lib/eclipse-juno/download -xz
+	sudo mv /usr/lib/eclipse-juno/download/eclipse/* /usr/lib/eclipse-juno
+	sudo ln -s /usr/lib/eclipse-juno/eclipse /usr/bin/eclipse-juno
+	if [ ! -f ~/.local/share/applications/eclipse-juno.desktop ] ;then
+		mkdir -p ~/.local/share/applications
+		cat <<EOF >~/.local/share/applications/eclipse-juno.desktop
 [Desktop Entry]
 Type=Application
 Name=Eclipse (Juno)
@@ -60,7 +61,8 @@ Exec=eclipse-juno
 Terminal=false
 Categories=Development;IDE;Java;
 EOF
-)
+	fi
+fi
 
 # install egit/jgit in juno
 eclipse-juno -application org.eclipse.equinox.p2.director \
@@ -138,5 +140,7 @@ path=/usr/share/themes
 theme=Lubuntu-default
 sudo sed -i 's/tooltip_bg_color:#000000/tooltip_bg_color:#f5f5b5/g' $path/$theme/gtk-3.0/settings.ini
 sudo sed -i 's/tooltip_fg_color:#ffffff/tooltip_fg_color:#1/g' $path/$theme/gtk-3.0/settings.ini
+
+sudo update-alternatives --config java
 
 wait
