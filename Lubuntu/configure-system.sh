@@ -29,25 +29,28 @@ sudo /media/VBOXADDITIONS*/VBoxLinuxAdditions.run
 sudo apt-get --yes install git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-jdk eclipse-platform gdb libssl-dev autoconf
 sudo apt-get --yes build-dep git
 
-# clone linux & git & gerrit, build git & gerrit
+# clone linux&git, build git, all in background
 mkdir ~/git
 git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
-git clone https://github.com/git/git.git ~/git/git &
-git clone https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit && mvn -f ~/git/jgit/pom.xml install -DskipTests && mvn -f ~/git/jgit/org.eclipse.jgit.packaging/pom.xml install &
-git clone https://git.eclipse.org/r/p/egit/egit ~/git/egit &
-git clone https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github &
-git clone https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde &
-git clone https://gerrit.googlesource.com/gerrit ~/git/gerrit &
+git clone https://github.com/git/git.git ~/git/git && (cd ~/git/git && make configure && ./configure && make) &
 
-# wait until everything is cloned and jgit is build
-wait
+# clone and build e/jgit & gerrit
+(
+	git clone https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit && mvn -f ~/git/jgit/pom.xml install -DskipTests && mvn -f ~/git/jgit/org.eclipse.jgit.packaging/pom.xml install &
+	git clone https://git.eclipse.org/r/p/egit/egit ~/git/egit &
+	git clone https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github &
+	git clone https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde &
+	git clone https://gerrit.googlesource.com/gerrit ~/git/gerrit &
 
-# build the remaining projects
-(cd ~/git/git && make configure && ./configure && make) &
-mvn -f ~/git/gerrit/pom.xml package &
-mvn -f ~/git/egit/pom.xml -P skip-ui-tests install -DskipTests
-mvn -f ~/git/egit-github/pom.xml install
-mvn -f ~/git/egit-pde/pom.xml install &
+	# wait until everything is cloned and jgit is build
+	wait
+
+	# build the remaining projects
+	mvn -f ~/git/gerrit/pom.xml package &
+	mvn -f ~/git/egit/pom.xml -P skip-ui-tests install -DskipTests
+	mvn -f ~/git/egit-github/pom.xml install &
+	mvn -f ~/git/egit-pde/pom.xml install
+) &
 
 # configure all gerrit repos to push to the review queue
 for i in (jgit egit egit-pde egit-github) ;do git config -f ~/git/$i/.git/config remote.origin.push HEAD:refs/for/master ;done 
