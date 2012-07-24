@@ -54,12 +54,14 @@ git clone https://github.com/git/git.git ~/git/git && (cd ~/git/git && make conf
 
 # install eclipse juno
 if [ ! -d /usr/lib/eclipse-juno ] ;then
-	wget -qO- 'http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/juno/R/eclipse-jee-juno-linux-gtk-x86_64.tar.gz&r=1' | tar -xz
-	sudo mv /usr/lib/eclipse-juno/download/eclipse/* /usr/lib/eclipse-juno
-	sudo ln -s /usr/lib/eclipse-juno/eclipse /usr/bin/eclipse-juno
-	if [ ! -f ~/.local/share/applications/eclipse-juno.desktop ] ;then
-		mkdir -p ~/.local/share/applications
-		cat <<EOF >~/.local/share/applications/eclipse-juno.desktop
+	tmp=$(mktemp -d)
+	wget -qO- 'http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/juno/R/eclipse-jee-juno-linux-gtk-x86_64.tar.gz&r=1' | tar -C $tmp -xz
+	sudo mv $tmp/eclipse /usr/lib/eclipse-juno
+fi
+sudo ln -s /usr/lib/eclipse-juno/eclipse /usr/bin/eclipse-juno
+if [ ! -f ~/.local/share/applications/eclipse-juno.desktop ] ;then
+	mkdir -p ~/.local/share/applications
+	cat <<EOF >~/.local/share/applications/eclipse-juno.desktop
 [Desktop Entry]
 Type=Application
 Name=Eclipse (Juno)
@@ -69,7 +71,6 @@ Exec=eclipse-juno
 Terminal=false
 Categories=Development;IDE;Java;
 EOF
-	fi
 fi
 
 # install egit/jgit in juno
@@ -105,13 +106,20 @@ if [ ! -f ~/sap_proxy.sh ] ;then
 # Configure a Lubuntu12.04 to use SAP proxy
 #
 
-grep "^http_proxy" /etc/environment || sudo sh -c "echo 'http_proxy=http://proxy:8080' >> /etc/environment"
-grep "^https_proxy" /etc/environment || sudo sh -c "echo 'https_proxy=https://proxy:8080' >> /etc/environment"
+if ! grep "^http_proxy" /etc/environment ;then
+	sudo sh -c "echo 'http_proxy=http://proxy:8080' >> /etc/environment"
+fi
+if ! grep "^https_proxy" /etc/environment ;then
+	sudo sh -c "echo 'https_proxy=https://proxy:8080' >> /etc/environment"
+fi
 export http_proxy=http://proxy:8080
 export https_proxy=https://proxy:8080
-grep "proxy-pac-url" /usr/share/applications/chromium-browser.desktop || sudo sed -r -i '/^Exec=/s/\/usr\/bin\/chromium-browser/\/usr\/bin\/chromium-browser --proxy-pac-url=http:\/\/proxy:8083\//' /usr/share/applications/chromium-browser.desktop
-[ -d ~/.m2 ] || mkdir ~/.m2
-[ -f ~/.m2/settings_sap_proxy.xml ] || cat <<END >~/.m2/settings_sap_proxy.xml
+if ! grep "proxy-pac-url" /usr/share/applications/chromium-browser.desktop ;then
+	sudo sed -r -i '/^Exec=/s/\/usr\/bin\/chromium-browser/\/usr\/bin\/chromium-browser --proxy-pac-url=http:\/\/proxy:8083\//' /usr/share/applications/chromium-browser.desktop
+fi
+mkdir ~/.m2
+if [ ! -f ~/.m2/settings_sap_proxy.xml ] ;then
+	cat <<END >~/.m2/settings_sap_proxy.xml
 <settings>
   <proxies>
    <proxy><active>true</active>
@@ -123,8 +131,11 @@ grep "proxy-pac-url" /usr/share/applications/chromium-browser.desktop || sudo se
   </proxies>
 </settings>
 END
-[ -f ~/.m2/settings.xml ] && echo "Couldn't write new ~/.m2/settings.xml because it already existed"
-[ -f ~/.m2/settings.xml ] || cp ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml
+if [ -f ~/.m2/settings.xml ] ;then
+	echo "Couldn't write new ~/.m2/settings.xml because it already existed"
+else
+	cp ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml
+fi
 echo "Please logoff/logon to activate the proxy settings"
 EOF
 	chmod +x ~/sap_proxy.sh
@@ -142,7 +153,9 @@ sudo sed -i '/^http_proxy/d' /etc/environment
 sudo sed -i '/^https_proxy/d' /etc/environment
 unset http_proxy
 unset https_proxy
-grep "proxy-pac-url" /usr/share/applications/chromium-browser.desktop && sudo sed -r -i '/^Exec=/s/--proxy-pac-url=[^ \t]+[ \t]*//' /usr/share/applications/chromium-browser.desktop
+if grep "proxy-pac-url" /usr/share/applications/chromium-browser.desktop ;then
+	sudo sed -r -i '/^Exec=/s/--proxy-pac-url=[^ \t]+[ \t]*//' /usr/share/applications/chromium-browser.desktop
+fi
 sudo sed -i '/^https_proxy/d' /etc/environment
 sudo sed -r -i 's/<proxy><active>true</<proxy><active>false</' ~/.m2/settings.xml
 echo "Please logoff/logon to activate the proxy settings"
