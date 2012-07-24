@@ -6,47 +6,55 @@
 # print out every command
 set -x
 
+# install java5 (can only be found on old repos)
+if ! dpkg -s sun-java5-jdk ;then
+	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
+	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates multiverse"
+	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
+	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
+	sudo apt-get update
+	sudo apt-get --yes install sun-java5-jdk
+	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
+	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
+	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
+	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates multiverse"
+fi
+
 # System updates
 sudo apt-get update
 sudo apt-get --yes dist-upgrade
 sudo /media/VBOXADDITIONS*/VBoxLinuxAdditions.run
 
 # install applications
-sudo apt-get install --yes git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-jdk eclipse-platform gdb libssl-dev
-
-# install java5 (can only be found on old repos)
-if [ ! dpkg -s sun-java5-jdk ] ;then
-	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
-	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates multiverse"
-	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
-	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
-	sudo apt-get update
-	sudo apt-get install sun-java5-jdk
-	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
-	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
-	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
-	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates multiverse"
-	sudo apt-get update
-fi
+sudo apt-get --yes install git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-jdk eclipse-platform gdb libssl-dev autoconf
+sudo apt-get --yes build-dep git
 
 # clone linux & git & gerrit, build git & gerrit
-[ -d git ] || mkdir git
-(cd git && git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git) &
-(cd git && git clone https://gerrit.googlesource.com/gerrit && cd gerrit && mvn package) &
-sudo apt-get install --yes autoconf
-sudo apt-get build-dep --yes git
-(cd git && git clone https://github.com/git/git.git && cd git && make configure && ./configure && make) &
+mkdir ~/git
+git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
+git clone https://github.com/git/git.git ~/git/git &
+git clone https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit && mvn -f ~/git/jgit/pom.xml clean install -DskipTests && mvn -f ~/git/jgit/org.eclipse.jgit.packaging/pom.xml clean install &
+git clone https://git.eclipse.org/r/p/egit/egit ~/git/egit &
+git clone https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github &
+git clone https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde &
+git clone https://gerrit.googlesource.com/gerrit ~/git/gerrit &
 
-# clone&build egit/jgit
-(cd git && git clone https://git.eclipse.org/r/p/jgit/jgit && cd jgit && git config remote.origin.push HEAD:refs/for/master && mvn clean install -DskipTests && mvn -f org.eclipse.jgit.packaging/pom.xml clean install)
-(cd git && git clone https://git.eclipse.org/r/p/egit/egit && cd egit && git config remote.origin.push HEAD:refs/for/master && mvn -P skip-ui-tests clean install -DskipTests)
-(cd git && git clone https://git.eclipse.org/r/p/egit/egit-github && cd egit-github && git config remote.origin.push HEAD:refs/for/master && mvn clean install)
-(cd git && git clone https://git.eclipse.org/r/p/egit/egit-pde && cd egit-pde && git config remote.origin.push HEAD:refs/for/master && mvn clean install)
+# wait until everything is cloned and jgit is build
+wait
+
+# build the remaining projects
+(cd ~/git/git && make configure && ./configure && make) &
+mvn -f ~/git/gerrit/pom.xml package &
+mvn -f ~/git/egit/pom.xml -P skip-ui-tests clean install -DskipTests
+mvn -f ~/git/egit-github/pom.xml clean install
+mvn -f ~/git/egit-pde/pom.xml clean install &
+
+# configure all gerrit repos to push to the review queue
+for i in (jgit egit egit-pde egit-github) ;do git config -f ~/git/$i/.git/config remote.origin.push HEAD:refs/for/master ;done 
 
 # install eclipse juno
 if [ ! -d /usr/lib/eclipse-juno ] ;then
-	sudo mkdir -p /usr/lib/eclipse-juno/download
-	wget -qO- 'http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/juno/R/eclipse-jee-juno-linux-gtk-x86_64.tar.gz&r=1' | sudo tar -C /usr/lib/eclipse-juno/download -xz
+	wget -qO- 'http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/juno/R/eclipse-jee-juno-linux-gtk-x86_64.tar.gz&r=1' | tar -xz
 	sudo mv /usr/lib/eclipse-juno/download/eclipse/* /usr/lib/eclipse-juno
 	sudo ln -s /usr/lib/eclipse-juno/eclipse /usr/bin/eclipse-juno
 	if [ ! -f ~/.local/share/applications/eclipse-juno.desktop ] ;then
@@ -75,20 +83,23 @@ eclipse -application org.eclipse.equinox.p2.director \
 	-i org.eclipse.egit.feature.group,org.eclipse.egit.psf.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group
 
 # prepare API Baselines
-[ -d ~/egit-releases ] || mkdir ~/egit-releases 
-(
-	rel=org.eclipse.egit.repository-2.0.0.201206130900-r
-	cd ~/egit-releases
+mkdir ~/egit-releases 
+rel=org.eclipse.egit.repository-2.0.0.201206130900-r
+if [ ! -d ~/egit-releases/$rel ] ;then
 	wget http://download.eclipse.org/egit/updates-2.0/$rel.zip
-	unzip $rel.zip -d $rel
+	unzip $rel.zip -d ~/egit-releases/$rel
 	rm $rel.zip
-)
+fi
 
 # add user to group which is allowed to read shared folders
-id -G -n | grep vbox || sudo adduser $USER vboxsf
+if id -G -n | grep vbox ;then 
+	sudo adduser $USER vboxsf
+fi
 
-# write scripts which turn off/on sap proxy usage
-cat <<EOF >~/sap_proxy.sh
+# write sap_proxy.sh to switch to sap proxies
+if [ ! -f ~/sap_proxy.sh ] ;then
+	# write scripts which turn off/on sap proxy usage
+	cat <<EOF >~/sap_proxy.sh
 #!/bin/bash
 #
 # Configure a Lubuntu12.04 to use SAP proxy
@@ -116,9 +127,12 @@ END
 [ -f ~/.m2/settings.xml ] || cp ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml
 echo "Please logoff/logon to activate the proxy settings"
 EOF
-chmod +x ~/sap_proxy.sh
+	chmod +x ~/sap_proxy.sh
+fi
 
-cat <<EOF >~/no_proxy.sh
+# write no_proxy.sh to switch to use no proxies
+if [ ! -f ~/no_proxy.sh ] ;then
+	cat <<EOF >~/no_proxy.sh
 #!/bin/bash
 #
 # Configure a Lubuntu12.04 to use no proxy
@@ -133,14 +147,7 @@ sudo sed -i '/^https_proxy/d' /etc/environment
 sudo sed -r -i 's/<proxy><active>true</<proxy><active>false</' ~/.m2/settings.xml
 echo "Please logoff/logon to activate the proxy settings"
 EOF
-chmod +x ~/no_proxy.sh
-
-# fix wrong colors in default scheme of Lubuntu 12.04
-path=/usr/share/themes
-theme=Lubuntu-default
-sudo sed -i 's/tooltip_bg_color:#000000/tooltip_bg_color:#f5f5b5/g' $path/$theme/gtk-3.0/settings.ini
-sudo sed -i 's/tooltip_fg_color:#ffffff/tooltip_fg_color:#1/g' $path/$theme/gtk-3.0/settings.ini
-
-sudo update-alternatives --config java
+	chmod +x ~/no_proxy.sh
+fi
 
 wait
