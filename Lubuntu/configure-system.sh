@@ -16,12 +16,28 @@ mkdir -p ~/git
 git clone -q git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux
 git clone -q https://github.com/git/git.git ~/git/git 
 
+# install java5 (can only be found on old repos)
+if [ ! dpkg -s sun-java5-jdk ] ;then
+	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
+	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates multiverse"
+	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
+	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
+	sudo apt-get update
+	sudo apt-get install sun-java5-jdk
+	sudo update-alternatives --config java
+	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
+	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
+	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
+	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates multiverse"
+	sudo apt-get update
+fi
+
 # clone e/jgit & gerrit
-git clone -q https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit
-git clone -q https://git.eclipse.org/r/p/egit/egit ~/git/egit
-git clone -q https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github
-git clone -q https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde
-git clone -q https://gerrit.googlesource.com/gerrit ~/git/gerrit
+[ -d ~/git/jgit ] || git clone -q https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit
+[ -d ~/git/egit ] || git clone -q https://git.eclipse.org/r/p/egit/egit ~/git/egit
+[ -d ~/git/egit-github ] || git clone -q https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github
+[ -d ~/git/egit-pde ] || git clone -q https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde
+[ -d ~/git/gerrit ] || git clone -q https://gerrit.googlesource.com/gerrit ~/git/gerrit
 
 # configure all gerrit repos to push to the review queue
 for i in jgit egit egit-pde egit-github ;do git config -f ~/git/$i/.git/config remote.origin.push HEAD:refs/for/master ;done 
@@ -41,9 +57,7 @@ if id -G -n | grep vbox ;then
 fi
 
 # write sap_proxy.sh to switch to sap proxies
-if [ ! -f ~/sap_proxy.sh ] ;then
-	# write scripts which turn off/on sap proxy usage
-	cat <<EOF >~/sap_proxy.sh
+cat <<EOF >~/sap_proxy.sh
 #!/bin/bash
 #
 # Configure a Lubuntu12.04 to use SAP proxy
@@ -93,12 +107,10 @@ fi
 
 echo "Please logout/login to activate the proxy settings"
 EOF
-	chmod +x ~/sap_proxy.sh
-fi
+chmod +x ~/sap_proxy.sh
 
 # write no_proxy.sh to switch to use no proxies
-if [ ! -f ~/no_proxy.sh ] ;then
-	cat <<EOF >~/no_proxy.sh
+cat <<EOF >~/no_proxy.sh
 #!/bin/bash
 #
 # Configure a Lubuntu12.04 to use no proxy
@@ -119,5 +131,4 @@ fi
 sudo rm -f /etc/apt/apt.conf.d/80proxy
 echo "Please logout/logon to activate the proxy settings"
 EOF
-	chmod +x ~/no_proxy.sh
-fi
+chmod +x ~/no_proxy.sh
