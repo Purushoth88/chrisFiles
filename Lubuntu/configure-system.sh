@@ -11,6 +11,22 @@ sudo /media/VBOXADDITIONS*/VBoxLinuxAdditions.run
 # install applications
 sudo apt-get install --yes git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-jdk eclipse-platform gdb libssl-dev
 
+# install java5 (can only be found on old repos)
+if [ ! dpkg -s sun-java5-jdk ] ;then
+	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
+	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates multiverse"
+	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
+	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
+	sudo apt-get update
+	sudo apt-get install sun-java5-jdk
+	sudo update-alternatives --config java
+	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
+	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
+	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
+	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates multiverse"
+	sudo apt-get update
+fi
+
 # clone linux & git & gerrit, build git & gerrit
 [ -d git ] || mkdir git
 (cd git && git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git) &
