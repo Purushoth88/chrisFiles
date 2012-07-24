@@ -3,9 +3,6 @@
 # Configure a Lubuntu12.04 system to my needs
 #
 
-# print out every command
-set -x
-
 # install java5 (can only be found on old repos)
 if ! dpkg -s sun-java5-jdk ;then
 	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
