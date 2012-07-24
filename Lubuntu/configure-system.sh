@@ -33,7 +33,7 @@ sudo apt-get --yes build-dep git
 mkdir ~/git
 git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
 git clone https://github.com/git/git.git ~/git/git &
-git clone https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit && mvn -f ~/git/jgit/pom.xml clean install -DskipTests && mvn -f ~/git/jgit/org.eclipse.jgit.packaging/pom.xml clean install &
+git clone https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit && mvn -f ~/git/jgit/pom.xml install -DskipTests && mvn -f ~/git/jgit/org.eclipse.jgit.packaging/pom.xml install &
 git clone https://git.eclipse.org/r/p/egit/egit ~/git/egit &
 git clone https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github &
 git clone https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde &
@@ -45,9 +45,9 @@ wait
 # build the remaining projects
 (cd ~/git/git && make configure && ./configure && make) &
 mvn -f ~/git/gerrit/pom.xml package &
-mvn -f ~/git/egit/pom.xml -P skip-ui-tests clean install -DskipTests
-mvn -f ~/git/egit-github/pom.xml clean install
-mvn -f ~/git/egit-pde/pom.xml clean install &
+mvn -f ~/git/egit/pom.xml -P skip-ui-tests install -DskipTests
+mvn -f ~/git/egit-github/pom.xml install
+mvn -f ~/git/egit-pde/pom.xml install &
 
 # configure all gerrit repos to push to the review queue
 for i in (jgit egit egit-pde egit-github) ;do git config -f ~/git/$i/.git/config remote.origin.push HEAD:refs/for/master ;done 
