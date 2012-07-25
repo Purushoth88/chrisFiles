@@ -9,8 +9,8 @@ if ! dpkg -s sun-java5-jdk ;then
 	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates multiverse"
 	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
 	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
-	sudo apt-get update
-	sudo apt-get --yes install sun-java5-jdk
+	sudo apt-get -q update
+	sudo apt-get -q --yes install sun-java5-jdk
 	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
 	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
 	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
@@ -18,26 +18,26 @@ if ! dpkg -s sun-java5-jdk ;then
 fi
 
 # System updates
-sudo apt-get update
-sudo apt-get --yes dist-upgrade
+sudo apt-get -q update
+sudo apt-get -q --yes dist-upgrade
 sudo /media/VBOXADDITIONS*/VBoxLinuxAdditions.run
 
 # install applications
-sudo apt-get --yes install git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-jdk eclipse-platform gdb libssl-dev autoconf
-sudo apt-get --yes build-dep git
+sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-jdk eclipse-platform gdb libssl-dev autoconf
+sudo apt-get -q --yes build-dep git
 
 # clone linux&git, build git, all in background
 mkdir ~/git
-git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
-git clone https://github.com/git/git.git ~/git/git && (cd ~/git/git && make configure && ./configure && make) &
+git clone -q http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
+git clone -q https://github.com/git/git.git ~/git/git && (cd ~/git/git && make configure && ./configure && make) &
 
 # clone and build e/jgit & gerrit
 (
-	git clone https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit && mvn -f ~/git/jgit/pom.xml install -DskipTests && mvn -f ~/git/jgit/org.eclipse.jgit.packaging/pom.xml install &
-	git clone https://git.eclipse.org/r/p/egit/egit ~/git/egit &
-	git clone https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github &
-	git clone https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde &
-	git clone https://gerrit.googlesource.com/gerrit ~/git/gerrit &
+	git clone -q https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit && mvn -q -f ~/git/jgit/pom.xml install -DskipTests && mvn -q -f ~/git/jgit/org.eclipse.jgit.packaging/pom.xml install &
+	git clone -q https://git.eclipse.org/r/p/egit/egit ~/git/egit &
+	git clone -q https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github &
+	git clone -q https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde &
+	git clone -q https://gerrit.googlesource.com/gerrit ~/git/gerrit &
 
 	# wait until everything is cloned and jgit is build
 	wait
@@ -46,10 +46,10 @@ git clone https://github.com/git/git.git ~/git/git && (cd ~/git/git && make conf
 	for i in jgit egit egit-pde egit-github ;do git config -f ~/git/$i/.git/config remote.origin.push HEAD:refs/for/master ;done 
 
 	# build the remaining projects
-	mvn -f ~/git/gerrit/pom.xml package &
-	mvn -f ~/git/egit/pom.xml -P skip-ui-tests install -DskipTests
-	mvn -f ~/git/egit-github/pom.xml install &
-	mvn -f ~/git/egit-pde/pom.xml install
+	mvn -q -f ~/git/gerrit/pom.xml package &
+	mvn -q -f ~/git/egit/pom.xml -P skip-ui-tests install -DskipTests
+	mvn -q -f ~/git/egit-github/pom.xml install &
+	mvn -q -f ~/git/egit-pde/pom.xml install
 ) &
 
 # install eclipse juno
@@ -87,7 +87,7 @@ eclipse -application org.eclipse.equinox.p2.director \
 mkdir ~/egit-releases 
 rel=org.eclipse.egit.repository-2.0.0.201206130900-r
 if [ ! -d ~/egit-releases/$rel ] ;then
-	wget http://download.eclipse.org/egit/updates-2.0/$rel.zip && unzip $rel.zip -d ~/egit-releases/$rel && rm $rel.zip &
+	wget -q http://download.eclipse.org/egit/updates-2.0/$rel.zip && unzip $rel.zip -d ~/egit-releases/$rel && rm $rel.zip &
 fi
 
 # add user to group which is allowed to read shared folders
