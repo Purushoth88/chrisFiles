@@ -46,10 +46,10 @@ git clone -q https://github.com/git/git.git ~/git/git && (cd ~/git/git && make c
 	for i in jgit egit egit-pde egit-github ;do git config -f ~/git/$i/.git/config remote.origin.push HEAD:refs/for/master ;done 
 
 	# build the remaining projects
-	mvn -q -f ~/git/gerrit/pom.xml package &
+	mvn -q -f ~/git/gerrit/pom.xml package -DskipTests &
 	mvn -q -f ~/git/egit/pom.xml -P skip-ui-tests install -DskipTests
-	mvn -q -f ~/git/egit-github/pom.xml install &
-	mvn -q -f ~/git/egit-pde/pom.xml install
+	mvn -q -f ~/git/egit-github/pom.xml install -DskipTests &
+	mvn -q -f ~/git/egit-pde/pom.xml install -DskipTests
 ) &
 
 # install eclipse juno
@@ -133,7 +133,16 @@ fi
 if [ ! -f ~/.m2/settings.xml ] ;then
 	cp ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml
 fi
-echo "Please logoff/logon to activate the proxy settings"
+if [ ! -f /etc/apt/apt.conf.d/80proxy ] ;then
+	cat <<END >80proxy
+Acquire::http::proxy "http://proxy:8080/";
+Acquire::https::proxy "https://proxy:8080/";
+END
+	sudo mkdir -p /etc/apt/apt.conf.d
+	sudo mv 80proxy /etc/apt/apt.conf.d
+fi
+
+echo "Please reboot to activate the proxy settings"
 EOF
 	chmod +x ~/sap_proxy.sh
 fi
@@ -157,6 +166,7 @@ sudo sed -i '/^https_proxy/d' /etc/environment
 if [ -f ~/.m2/settings.xml ] ;then
 	sudo sed -r -i 's/<proxy><active>true</<proxy><active>false</' ~/.m2/settings.xml
 fi
+sudo rm -f /etc/apt/apt.conf.d/80proxy
 echo "Please logoff/logon to activate the proxy settings"
 EOF
 	chmod +x ~/no_proxy.sh
