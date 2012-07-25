@@ -128,10 +128,9 @@ if [ ! -f ~/.m2/settings_sap_proxy.xml ] ;then
     </proxy>
   </proxies>
 </settings>
+fi
 END
-if [ -f ~/.m2/settings.xml ] ;then
-	echo "Couldn't write new ~/.m2/settings.xml because it already existed"
-else
+if [ ! -f ~/.m2/settings.xml ] ;then
 	cp ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml
 fi
 echo "Please logoff/logon to activate the proxy settings"
@@ -155,7 +154,9 @@ if grep "proxy-pac-url" /usr/share/applications/chromium-browser.desktop ;then
 	sudo sed -r -i '/^Exec=/s/--proxy-pac-url=[^ \t]+[ \t]*//' /usr/share/applications/chromium-browser.desktop
 fi
 sudo sed -i '/^https_proxy/d' /etc/environment
-sudo sed -r -i 's/<proxy><active>true</<proxy><active>false</' ~/.m2/settings.xml
+if [ -f ~/.m2/settings.xml ] ;then
+	sudo sed -r -i 's/<proxy><active>true</<proxy><active>false</' ~/.m2/settings.xml
+fi
 echo "Please logoff/logon to activate the proxy settings"
 EOF
 	chmod +x ~/no_proxy.sh
