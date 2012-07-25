@@ -27,7 +27,7 @@ sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-jdk op
 sudo apt-get -q --yes build-dep git
 
 # clone linux&git, build git, all in background
-mkdir ~/git
+mkdir -p ~/git
 git clone -q http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
 git clone -q https://github.com/git/git.git ~/git/git && (cd ~/git/git && make configure && ./configure && make) &
 
@@ -84,7 +84,7 @@ eclipse -application org.eclipse.equinox.p2.director \
 	-i org.eclipse.egit.feature.group,org.eclipse.egit.psf.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group &
 
 # prepare API Baselines
-mkdir ~/egit-releases 
+mkdir -p ~/egit-releases 
 rel=org.eclipse.egit.repository-2.0.0.201206130900-r
 if [ ! -d ~/egit-releases/$rel ] ;then
 	wget -q http://download.eclipse.org/egit/updates-2.0/$rel.zip && unzip $rel.zip -d ~/egit-releases/$rel && rm $rel.zip &
@@ -115,7 +115,7 @@ export https_proxy=https://proxy:8080
 if ! grep "proxy-pac-url" /usr/share/applications/chromium-browser.desktop ;then
 	sudo sed -r -i '/^Exec=/s/\/usr\/bin\/chromium-browser/\/usr\/bin\/chromium-browser --proxy-pac-url=http:\/\/proxy:8083\//' /usr/share/applications/chromium-browser.desktop
 fi
-mkdir ~/.m2
+mkdir -p ~/.m2
 if [ ! -f ~/.m2/settings_sap_proxy.xml ] ;then
 	cat <<END >~/.m2/settings_sap_proxy.xml
 <settings>
@@ -128,8 +128,8 @@ if [ ! -f ~/.m2/settings_sap_proxy.xml ] ;then
     </proxy>
   </proxies>
 </settings>
-fi
 END
+fi
 if [ ! -f ~/.m2/settings.xml ] ;then
 	cp ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml
 fi
