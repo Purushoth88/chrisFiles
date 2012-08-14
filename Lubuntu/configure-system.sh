@@ -172,4 +172,10 @@ EOF
 	chmod +x ~/no_proxy.sh
 fi
 
+# fix wrong colors in default scheme of Lubuntu 12.04
+path=/usr/share/themes
+theme=Lubuntu-default
+sudo sed -i 's/tooltip_bg_color:#000000/tooltip_bg_color:#f5f5b5/g' $path/$theme/gtk-3.0/settings.ini
+sudo sed -i 's/tooltip_fg_color:#ffffff/tooltip_fg_color:#1/g' $path/$theme/gtk-3.0/settings.ini
+
 wait
