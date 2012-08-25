@@ -3,54 +3,34 @@
 # Configure a Lubuntu12.04 system to my needs
 #
 
-# install java5 (can only be found on old repos)
-if ! dpkg -s sun-java5-jdk ;then
-	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
-	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates multiverse"
-	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
-	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
-	sudo apt-get -q update
-	sudo apt-get -q --yes install sun-java5-jdk
-	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
-	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
-	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
-	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates multiverse"
-fi
-
 # System updates
 sudo apt-get -q update
 sudo apt-get -q --yes dist-upgrade
-sudo /media/VBOXADDITIONS*/VBoxLinuxAdditions.run
 
 # install applications
-sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-jdk eclipse-platform gdb libssl-dev autoconf
+sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-jdk eclipse-platform gdb libssl-dev autoconf visualvm
 sudo apt-get -q --yes build-dep git
 
-# clone linux&git, build git, all in background
+# clone linux&git, build git
 mkdir -p ~/git
-git clone -q http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
-git clone -q https://github.com/git/git.git ~/git/git && (cd ~/git/git && make configure && ./configure && make) &
+git clone -q http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux
+git clone -q https://github.com/git/git.git ~/git/git && (cd ~/git/git && make configure && ./configure && make)
 
 # clone and build e/jgit & gerrit
-(
-	git clone -q https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit && mvn -q -f ~/git/jgit/pom.xml install -DskipTests && mvn -q -f ~/git/jgit/org.eclipse.jgit.packaging/pom.xml install &
-	git clone -q https://git.eclipse.org/r/p/egit/egit ~/git/egit &
-	git clone -q https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github &
-	git clone -q https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde &
-	git clone -q https://gerrit.googlesource.com/gerrit ~/git/gerrit &
+git clone -q https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit && mvn -q -f ~/git/jgit/pom.xml install -DskipTests && mvn -q -f ~/git/jgit/org.eclipse.jgit.packaging/pom.xml install
+git clone -q https://git.eclipse.org/r/p/egit/egit ~/git/egit
+git clone -q https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github
+git clone -q https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde
+git clone -q https://gerrit.googlesource.com/gerrit ~/git/gerrit
 
-	# wait until everything is cloned and jgit is build
-	wait
+# configure all gerrit repos to push to the review queue
+for i in jgit egit egit-pde egit-github ;do git config -f ~/git/$i/.git/config remote.origin.push HEAD:refs/for/master ;done 
 
-	# configure all gerrit repos to push to the review queue
-	for i in jgit egit egit-pde egit-github ;do git config -f ~/git/$i/.git/config remote.origin.push HEAD:refs/for/master ;done 
-
-	# build the remaining projects
-	mvn -q -f ~/git/gerrit/pom.xml package -DskipTests &
-	mvn -q -f ~/git/egit/pom.xml -P skip-ui-tests install -DskipTests
-	mvn -q -f ~/git/egit-github/pom.xml install -DskipTests &
-	mvn -q -f ~/git/egit-pde/pom.xml install -DskipTests
-) &
+# build the remaining projects
+mvn -q -f ~/git/gerrit/pom.xml package -DskipTests
+mvn -q -f ~/git/egit/pom.xml -P skip-ui-tests install -DskipTests
+mvn -q -f ~/git/egit-github/pom.xml install -DskipTests
+mvn -q -f ~/git/egit-pde/pom.xml install -DskipTests
 
 # install eclipse juno
 if [ ! -d /usr/lib/eclipse-juno ] ;then
@@ -171,11 +151,3 @@ echo "Please logoff/logon to activate the proxy settings"
 EOF
 	chmod +x ~/no_proxy.sh
 fi
-
-# fix wrong colors in default scheme of Lubuntu 12.04
-path=/usr/share/themes
-theme=Lubuntu-default
-sudo sed -i 's/tooltip_bg_color:#000000/tooltip_bg_color:#f5f5b5/g' $path/$theme/gtk-3.0/settings.ini
-sudo sed -i 's/tooltip_fg_color:#ffffff/tooltip_fg_color:#1/g' $path/$theme/gtk-3.0/settings.ini
-
-wait
