@@ -8,16 +8,16 @@ sudo apt-get -q update
 sudo apt-get -q --yes dist-upgrade
 
 # install applications
-sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-jdk eclipse-platform gdb libssl-dev autoconf visualvm
+sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-jdk gdb libssl-dev autoconf visualvm
 sudo apt-get -q --yes build-dep git
 
-# clone linux&git, build git
+# clone linux&git
 mkdir -p ~/git
-git clone -q http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux
-git clone -q https://github.com/git/git.git ~/git/git && (cd ~/git/git && make configure && ./configure && make)
+git clone -q git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux
+git clone -q https://github.com/git/git.git ~/git/git 
 
-# clone and build e/jgit & gerrit
-git clone -q https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit && mvn -q -f ~/git/jgit/pom.xml install -DskipTests && mvn -q -f ~/git/jgit/org.eclipse.jgit.packaging/pom.xml install
+# clone e/jgit & gerrit
+git clone -q https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit
 git clone -q https://git.eclipse.org/r/p/egit/egit ~/git/egit
 git clone -q https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github
 git clone -q https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde
@@ -26,49 +26,14 @@ git clone -q https://gerrit.googlesource.com/gerrit ~/git/gerrit
 # configure all gerrit repos to push to the review queue
 for i in jgit egit egit-pde egit-github ;do git config -f ~/git/$i/.git/config remote.origin.push HEAD:refs/for/master ;done 
 
-# build the remaining projects
-mvn -q -f ~/git/gerrit/pom.xml package -DskipTests
-mvn -q -f ~/git/egit/pom.xml -P skip-ui-tests install -DskipTests
-mvn -q -f ~/git/egit-github/pom.xml install -DskipTests
-mvn -q -f ~/git/egit-pde/pom.xml install -DskipTests
-
-# install eclipse juno
-if [ ! -d /usr/lib/eclipse-juno ] ;then
-	tmp=$(mktemp -d)
-	wget -qO- 'http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/juno/R/eclipse-jee-juno-linux-gtk-x86_64.tar.gz&r=1' | tar -C $tmp -xz
-	sudo mv $tmp/eclipse /usr/lib/eclipse-juno
-fi
-sudo ln -s /usr/lib/eclipse-juno/eclipse /usr/bin/eclipse-juno
-if [ ! -f ~/.local/share/applications/eclipse-juno.desktop ] ;then
-	mkdir -p ~/.local/share/applications
-	cat <<EOF >~/.local/share/applications/eclipse-juno.desktop
-[Desktop Entry]
-Type=Application
-Name=Eclipse (Juno)
-Comment=Eclipse Integrated Development Environment
-Icon=eclipse
-Exec=eclipse-juno
-Terminal=false
-Categories=Development;IDE;Java;
-EOF
-fi
-
-# install egit/jgit in juno
-eclipse-juno -application org.eclipse.equinox.p2.director \
-	-r http://download.eclipse.org/egit/updates,http://download.eclipse.org/releases/juno,http://download.eclipse.org/eclipse/updates/4.2-I-builds  \
-	-i org.eclipse.egit.feature.group,org.eclipse.egit.import.feature.group,org.eclipse.egit.mylyn.feature.group,org.eclipse.egit.psf.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group,org.eclipse.mylyn.gerrit.feature.feature.group,org.eclipse.mylyn.git.feature.group,org.eclipse.mylyn.github.feature.feature.group,org.eclipse.cdt.autotools.feature.group,org.eclipse.cdt.feature.group,org.eclipse.m2e.feature.feature.group,org.eclipse.pde.api.tools.ee.j2se15.group,org.eclipse.pde.api.tools.ee.javase16.group,org.eclipse.pde.api.tools.ee.javase17.group
-
-# install egit/jgit in indigo (not all components
-eclipse -application org.eclipse.equinox.p2.director \
-	-r http://download.eclipse.org/egit/updates,http://download.eclipse.org/releases/indigo \
-	-i org.eclipse.egit.feature.group,org.eclipse.egit.psf.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group
-
-# prepare API Baselines
-mkdir -p ~/egit-releases 
-rel=org.eclipse.egit.repository-2.0.0.201206130900-r
-if [ ! -d ~/egit-releases/$rel ] ;then
-	wget -q http://download.eclipse.org/egit/updates-2.0/$rel.zip && unzip $rel.zip -d ~/egit-releases/$rel && rm $rel.zip
-fi
+# build the projects
+cd ~/git/git && make configure && ./configure && make
+cd ~/git/jgit && mvn install -DskipTests
+cd ~/git/jgit/org.eclipse.jgit.packaging && mvn install
+cd ~/git/egit && mvn -P skip-ui-tests install -DskipTests
+cd ~/git/egit-github && mvn install -DskipTests
+cd ~/git/egit-pde && mvn install -DskipTests
+cd ~/git/gerrit && mvn package -DskipTests
 
 # add user to group which is allowed to read shared folders
 if id -G -n | grep vbox ;then 
