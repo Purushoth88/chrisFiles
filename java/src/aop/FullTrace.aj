@@ -12,26 +12,29 @@ public aspect FullTrace {
 	public static boolean justEntered = false;
 	private int level = 0;
 	public PrintStream out;
-	private long line=0;
-
+	
 	public FullTrace() throws IOException {
-		out = new PrintStream(new File(new File(System.getProperty("java.io.tmpdir")), "FullTrace.log"));
+		out = new PrintStream(new File(new File(
+				System.getProperty("java.io.tmpdir")), "FullTrace.log"));
 	}
 
-
 	pointcut git() : execution(* org.eclipse.jgit..*(..));
+
 	pointcut gerrit() : execution(* com.google.gerrit..*(..));
+
 	pointcut jetty() : execution(* org.eclipse.jetty..*(..));
+
 	pointcut io() : execution(* java.io..*(..));
+
 	pointcut all() : execution(* *..*(..));
 
 	pointcut whiteList() : 
-	//	(git() || gerrit() || jetty() || io()) ;
-		(io()) ;
+	    (git() || gerrit() || jetty() || io()) ;
+		// (io()) ;
 
 	pointcut blackList() : 
 		execution(* org.aspectj..*(..))
-		|| execution(* FullTrace..*(..))
+		|| execution(* prefixedAfter..*(..))
 		|| execution(* *..toString(..))
 		|| execution(* org.eclipse.jgit.lib.AnyObjectId.*(..))
 		|| execution(* org.eclipse.jgit.aspects..*(..))
@@ -54,7 +57,7 @@ public aspect FullTrace {
 		|| cflowbelow(execution(* org.eclipse.jgit.treewalk.TreeWalk.getPathString()))
 		|| cflowbelow(execution(* org.eclipse.jgit.treewalk.AbstractTreeIterator.pathCompare(..)))
 		|| cflowbelow(execution(* org.eclipse.jgit.lib.RefComparator.compare* (..)))
-		|| cflow(execution(* org.eclipse.jgit.aspects.FullTrace.*(..)))
+		|| cflow(execution(* org.eclipse.jgit.aspects.prefixedAfter.*(..)))
 		;
 
 	pointcut processed() : if(enabled) && whiteList() && !blackList();
@@ -63,35 +66,28 @@ public aspect FullTrace {
 		StringBuilder args = new StringBuilder();
 		boolean first = true;
 		for (Object arg : thisJoinPoint.getArgs()) {
-			if (!first) args.append(',');
+			if (!first)
+				args.append(',');
 			first = false;
 			args.append(describe(arg));
 		}
 		println();
 		indent(level++);
 		Signature sig = thisJoinPointStaticPart.getSignature();
-		print(sig.getDeclaringType().getCanonicalName() + "." + sig.getName() + "("
-				//    	    print(sig.getDeclaringType().getSimpleName() + "." + sig.getName() + "("
+		print(sig.getDeclaringType().getCanonicalName() + "." + sig.getName()
+				+ "("
+				// print(sig.getDeclaringType().getSimpleName() + "." +
+				// sig.getName() + "("
 				+ args + ") {");
 		justEntered = true;
 	}
 
-	private void after(Object o, String prefix) {
-		level--;
-		if (!justEntered) {
-			println();
-			indent(level);
-		}
-		print("} " + prefix + " " + describe(o));
-		justEntered = false;
-	}
-
 	after() returning (Object o): processed() {
-		after(o, "->");
+		prefixedAfter(o, "->");
 	}
 
 	after() throwing (Exception e): processed() {
-		after(e, "!");
+		prefixedAfter(e, "!");
 	}
 
 	private final void indent(int level) {
@@ -100,14 +96,16 @@ public aspect FullTrace {
 	}
 
 	private final static String describe(final Object o) {
-		if (o == null) return "<null>";
+		if (o == null)
+			return "<null>";
 		try {
-			if (o instanceof X509Certificate) 
-				return ((X509Certificate)o).getIssuerDN().getName();
+			if (o instanceof X509Certificate)
+				return ((X509Certificate) o).getIssuerDN().getName();
 			return (o.toString().replace('\r', '.').replace('\n', '#'));
 		} catch (Exception e) {
-			return ("Excetion("+e.toString()+": "+o.getClass().getSimpleName() + "@" + Integer.toHexString(o
-					.hashCode()));
+			return ("Excetion(" + e.toString() + ": "
+					+ o.getClass().getSimpleName() + "@" + Integer
+						.toHexString(o.hashCode()));
 		}
 	}
 
@@ -117,11 +115,16 @@ public aspect FullTrace {
 	}
 
 	private void print(String s) {
-		out.print(s);  
+		out.print(s);
 	}
 
-	private void println(String s) {
-		print(s);
-		println();
+	private void prefixedAfter(Object o, String prefix) {
+		level--;
+		if (!justEntered) {
+			println();
+			indent(level);
+		}
+		print("} " + prefix + " " + describe(o));
+		justEntered = false;
 	}
 }

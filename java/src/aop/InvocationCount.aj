@@ -29,12 +29,13 @@ public aspect InvocationCount {
 	pointcut all() : execution(* *..*(..));
 
 	pointcut whiteList() : 
-//		(git() || gerrit() || jetty() || io()) ;
-	    (io()) ;
+		(git() || gerrit() || jetty() || io()) ;
+
+	// (io()) ;
 
 	pointcut blackList() : 
 		execution(* org.aspectj..*(..))
-		|| execution(* FullTrace..*(..))
+		|| execution(* prefixedAfter..*(..))
 		|| execution(* *..toString(..))
 		|| execution(* org.eclipse.jgit.lib.AnyObjectId.*(..))
 		|| execution(* org.eclipse.jgit.aspects..*(..))
@@ -57,7 +58,7 @@ public aspect InvocationCount {
 		|| cflowbelow(execution(* org.eclipse.jgit.treewalk.TreeWalk.getPathString()))
 		|| cflowbelow(execution(* org.eclipse.jgit.treewalk.AbstractTreeIterator.pathCompare(..)))
 		|| cflowbelow(execution(* org.eclipse.jgit.lib.RefComparator.compare* (..)))
-		|| cflow(execution(* org.eclipse.jgit.aspects.FullTrace.*(..)))
+		|| cflow(execution(* org.eclipse.jgit.aspects.prefixedAfter.*(..)))
 		;
 
 	// execution(* org.eclipse.jetty.util..*(..)) ||
@@ -103,13 +104,13 @@ public aspect InvocationCount {
 		for (Signature s : sigCount.keySet()) {
 			Integer cnt = sigCount.get(s);
 			out.println(s.toLongString() + ": " + cnt);
-//			packageCounter
-//					.inc(s.getDeclaringType().getPackage().getName(), cnt);
+			packageCounter
+					.inc(s.getDeclaringType().getPackage().getName(), cnt);
 		}
 		out.println("Package Invocations:");
-//		LinkedHashMap<String, Integer> packagesByCount = packageCounter
-//				.sortByCount();
-//		for (String s : packagesByCount.keySet())
-//			out.println(s + ": " + packagesByCount.get(s));
+		LinkedHashMap<String, Integer> packagesByCount = packageCounter
+				.sortByCount();
+		for (String s : packagesByCount.keySet())
+			out.println(s + ": " + packagesByCount.get(s));
 	}
 }
