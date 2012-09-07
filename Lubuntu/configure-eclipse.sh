@@ -3,6 +3,9 @@
 # Configure a Eclipse(Juno) on a Lubuntu12.04 system to my needs
 #
 
+# install eclipse indigo
+sudo apt-get install eclipse-platform
+
 # install eclipse juno
 if [ ! -d /usr/lib/eclipse-juno ] ;then
 	tmp=$(mktemp -d)
