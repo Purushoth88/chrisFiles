@@ -8,14 +8,17 @@ import java.util.LinkedHashMap;
 import org.aspectj.lang.Signature;
 
 public aspect InvocationCount {
-	public final static boolean enabled = true;
+	public final static boolean enabled = false;
 	public PrintStream out;
 
 	public InvocationCount() throws IOException {
-		File tmpFile = new File(new File(System.getProperty("java.io.tmpdir")),
-				"InvocationCount.log");
-		out = new PrintStream(tmpFile);
-		System.out.println("Log goes to " + tmpFile.getCanonicalPath());
+		if (enabled) {
+			File tmpFile = new File(new File(
+					System.getProperty("java.io.tmpdir")),
+					"InvocationCount.log");
+			out = new PrintStream(tmpFile);
+			System.out.println("Log goes to " + tmpFile.getCanonicalPath());
+		}
 	}
 
 	pointcut git() : execution(* org.eclipse.jgit..*(..));
@@ -92,7 +95,8 @@ public aspect InvocationCount {
 	}
 
 	after() : execution(* *.main(..)) {
-		printCounts();
+		if (enabled)
+			printCounts();
 	}
 
 	public void printCounts() {

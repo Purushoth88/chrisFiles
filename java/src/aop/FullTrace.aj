@@ -8,14 +8,14 @@ import java.security.cert.X509Certificate;
 import org.aspectj.lang.Signature;
 
 public aspect FullTrace {
-	public static boolean enabled = true;
+	public static boolean enabled = false;
 	public static boolean justEntered = false;
 	private int level = 0;
 	public PrintStream out;
 	
 	public FullTrace() throws IOException {
-		out = new PrintStream(new File(new File(
-				System.getProperty("java.io.tmpdir")), "FullTrace.log"));
+		if (enabled)
+			out = new PrintStream(new File(new File(System.getProperty("java.io.tmpdir")), "FullTrace.log"));
 	}
 
 	pointcut git() : execution(* org.eclipse.jgit..*(..));
