@@ -8,7 +8,7 @@ sudo apt-get -q update
 sudo apt-get -q --yes dist-upgrade
 
 # install applications
-sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-jdk gdb libssl-dev autoconf visualvm eclipse-platform
+sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-jdk gdb libssl-dev autoconf visualvm
 sudo apt-get -q --yes build-dep git
 
 # clone linux&git
