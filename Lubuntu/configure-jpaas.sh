@@ -3,6 +3,7 @@
 # Configure a Lubuntu12.04 system for jpaas development 
 #
 
+no_proxy='wdf.sap.corp, nexus, wiki, git.wdf.sap.corp'
 # setup mavens settings.xml
 if [ ! -f ~/.m2/settings.xml.jpaas ] ;then
         mkdir -p ~/.m2
@@ -16,7 +17,7 @@ fi
 
 # clone & build metering
 mkdir -p ~/git
-GIT_SSL_NO_VERIFY=true git clone https://git.wdf.sap.corp:8080/NGJP/Services/metering ~/git/metering
+https_proxy="" GIT_SSL_NO_VERIFY=true git clone https://git.wdf.sap.corp:8080/NGJP/Services/metering ~/git/metering
 cd ~/git/metering/com.sap.core.metering.parent && mvn install -DskipTests
 
 # setup a jpaas sdk
@@ -25,9 +26,4 @@ if [ ! -d ~/jpaas/sdk1.9 ] ;then
         echo "Please download a juno SDK from https://tools.prod.jpaas.sapbydesign.com/index.html to ~/jpaas"
 fi
 
-# install jpaas tools in juno
-eclipse-juno -application org.eclipse.equinox.p2.director \
-        -r https://tools.prod.jpaas.sapbydesign.com/juno \
-        -i com.sap.core.tools.eclipse.help.feature.feature.group,com.sap.core.tools.eclipse.server.feature.feature.group,com.sap.ide.ui5.cloud.feature.feature.group
 exit
-~                                      
