@@ -6,6 +6,9 @@
 if [ -f ~/.netrc ] ;then
 	echo "Don't write ~/.netrc because it already exists"
 else
+	read -s -p "Enter password for d032780 at git.wdf.sap.corp: " epass
+	echo -e "machine git.wdf.sap.corp\nlogin d032780\npassword $epass" >> ~/.netrc
+	echo
 	read -s -p "Enter password for chalstrick at git.eclipse.org: " epass
 	echo -e "machine git.eclipse.org\nlogin chalstrick\npassword $epass" >> ~/.netrc
 	echo
@@ -26,3 +29,4 @@ fi
 (cd git/egit && git remote add github http://chalstrick@github.com/chalstrick/egit && git fetch github) 
 (cd git/egit-pde && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit-pde)
 (cd git/egit-github && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit-github)
+(cd git/metering && git config remote.origin.pushurl https://d032780@git.wdf.sap.corp:8080/NGJP/Services/metering)
