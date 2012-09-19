@@ -11,11 +11,6 @@ sudo apt-get -q --yes dist-upgrade
 sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-{jdk,doc,source} openjdk-7-{jdk,doc,source} gdb libssl-dev autoconf visualvm firefox
 sudo apt-get -q --yes build-dep git
 
-# clone linux&git
-mkdir -p ~/git
-git clone -q git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux
-git clone -q https://github.com/git/git.git ~/git/git 
-
 # install java5 (can only be found on old repos)
 if [ ! dpkg -s sun-java5-jdk ] ;then
 	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
@@ -32,24 +27,32 @@ if [ ! dpkg -s sun-java5-jdk ] ;then
 	sudo apt-get update
 fi
 
-# clone e/jgit & gerrit
-[ -d ~/git/jgit ] || git clone -q https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit
-[ -d ~/git/egit ] || git clone -q https://git.eclipse.org/r/p/egit/egit ~/git/egit
-[ -d ~/git/egit-github ] || git clone -q https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github
-[ -d ~/git/egit-pde ] || git clone -q https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde
-[ -d ~/git/gerrit ] || git clone -q https://gerrit.googlesource.com/gerrit ~/git/gerrit
+
+# clone git e/jgit & gerrit
+mkdir -p ~/git
+[ -d ~/git/git ] || git clone -q https://github.com/git/git.git ~/git/git &
+[ -d ~/git/jgit ] || git clone -q https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit &
+[ -d ~/git/egit ] || git clone -q https://git.eclipse.org/r/p/egit/egit ~/git/egit &
+[ -d ~/git/egit-github ] || git clone -q https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github &
+[ -d ~/git/egit-pde ] || git clone -q https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde &
+[ -d ~/git/gerrit ] || git clone -q https://gerrit.googlesource.com/gerrit ~/git/gerrit &
+
+wait
+
+# clone linux
+git clone -q git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
 
 # configure all gerrit repos to push to the review queue
 for i in jgit egit egit-pde egit-github ;do git config -f ~/git/$i/.git/config remote.origin.push HEAD:refs/for/master ;done 
 
 # build the projects
-(cd ~/git/git && make configure && ./configure && make)
+(cd ~/git/gerrit && mvn package -DskipTests) &
+(cd ~/git/git && make configure && ./configure && make) &
 (cd ~/git/jgit && mvn install -DskipTests)
 (cd ~/git/jgit/org.eclipse.jgit.packaging && mvn install)
 (cd ~/git/egit && mvn -P skip-ui-tests install -DskipTests)
-(cd ~/git/egit-github && mvn install -DskipTests)
-(cd ~/git/egit-pde && mvn install -DskipTests)
-(cd ~/git/gerrit && mvn package -DskipTests)
+(cd ~/git/egit-github && mvn install -DskipTests) &
+(cd ~/git/egit-pde && mvn install -DskipTests) &
 
 # add user to group which is allowed to read shared folders
 if id -G -n | grep vbox ;then 
@@ -132,3 +135,5 @@ sudo rm -f /etc/apt/apt.conf.d/80proxy
 echo "Please logout/logon to activate the proxy settings"
 EOF
 chmod +x ~/no_proxy.sh
+
+wait
