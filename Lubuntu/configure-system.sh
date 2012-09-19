@@ -12,7 +12,7 @@ sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-{jdk,d
 sudo apt-get -q --yes build-dep git
 
 # install java5 (can only be found on old repos)
-if [ ! dpkg -s sun-java5-jdk ] ;then
+dpkg -s sun-java5-jdk || {
 	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
 	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates multiverse"
 	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
@@ -25,8 +25,7 @@ if [ ! dpkg -s sun-java5-jdk ] ;then
 	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
 	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates multiverse"
 	sudo apt-get update
-fi
-
+}
 
 # clone git e/jgit & gerrit
 mkdir -p ~/git
