@@ -8,7 +8,7 @@ sudo apt-get -q update
 sudo apt-get -q --yes dist-upgrade
 
 # install applications
-sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-{jdk,doc,source} openjdk-7-{jdk,doc,source} gdb libssl-dev autoconf visualvm
+sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-{jdk,doc,source} openjdk-7-{jdk,doc,source} gdb libssl-dev autoconf visualvm firefox
 sudo apt-get -q --yes build-dep git
 
 # clone linux&git
@@ -27,13 +27,13 @@ git clone -q https://gerrit.googlesource.com/gerrit ~/git/gerrit
 for i in jgit egit egit-pde egit-github ;do git config -f ~/git/$i/.git/config remote.origin.push HEAD:refs/for/master ;done 
 
 # build the projects
-cd ~/git/git && make configure && ./configure && make
-cd ~/git/jgit && mvn install -DskipTests
-cd ~/git/jgit/org.eclipse.jgit.packaging && mvn install
-cd ~/git/egit && mvn -P skip-ui-tests install -DskipTests
-cd ~/git/egit-github && mvn install -DskipTests
-cd ~/git/egit-pde && mvn install -DskipTests
-cd ~/git/gerrit && mvn package -DskipTests
+(cd ~/git/git && make configure && ./configure && make)
+(cd ~/git/jgit && mvn install -DskipTests)
+(cd ~/git/jgit/org.eclipse.jgit.packaging && mvn install)
+(cd ~/git/egit && mvn -P skip-ui-tests install -DskipTests)
+(cd ~/git/egit-github && mvn install -DskipTests)
+(cd ~/git/egit-pde && mvn install -DskipTests)
+(cd ~/git/gerrit && mvn package -DskipTests)
 
 # add user to group which is allowed to read shared folders
 if id -G -n | grep vbox ;then 
@@ -55,8 +55,12 @@ fi
 if ! grep "^https_proxy" /etc/environment ;then
 	sudo sh -c "echo 'https_proxy=https://proxy:8080' >> /etc/environment"
 fi
+if ! grep "^no_proxy" /etc/environment ;then
+	sudo sh -c "echo 'no_proxy=.wdf.sap.corp,nexus,jtrack' >> /etc/environment"
+fi
 export http_proxy=http://proxy:8080
 export https_proxy=https://proxy:8080
+export no_proxy=.wdf.sap.corp,nexus,jtrack
 if ! grep "proxy-pac-url" /usr/share/applications/chromium-browser.desktop ;then
 	sudo sed -r -i '/^Exec=/s/\/usr\/bin\/chromium-browser/\/usr\/bin\/chromium-browser --proxy-pac-url=http:\/\/proxy:8083\//' /usr/share/applications/chromium-browser.desktop
 fi
@@ -87,7 +91,7 @@ END
 	sudo mv 80proxy /etc/apt/apt.conf.d
 fi
 
-echo "Please reboot to activate the proxy settings"
+echo "Please logout/login to activate the proxy settings"
 EOF
 	chmod +x ~/sap_proxy.sh
 fi
@@ -102,17 +106,18 @@ if [ ! -f ~/no_proxy.sh ] ;then
 
 sudo sed -i '/^http_proxy/d' /etc/environment
 sudo sed -i '/^https_proxy/d' /etc/environment
+sudo sed -i '/^no_proxy/d' /etc/environment
 unset http_proxy
 unset https_proxy
+unset no_proxy
 if grep "proxy-pac-url" /usr/share/applications/chromium-browser.desktop ;then
 	sudo sed -r -i '/^Exec=/s/--proxy-pac-url=[^ \t]+[ \t]*//' /usr/share/applications/chromium-browser.desktop
 fi
-sudo sed -i '/^https_proxy/d' /etc/environment
 if [ -f ~/.m2/settings.xml ] ;then
 	sudo sed -r -i 's/<proxy><active>true</<proxy><active>false</' ~/.m2/settings.xml
 fi
 sudo rm -f /etc/apt/apt.conf.d/80proxy
-echo "Please logoff/logon to activate the proxy settings"
+echo "Please logout/logon to activate the proxy settings"
 EOF
 	chmod +x ~/no_proxy.sh
 fi
