@@ -18,6 +18,7 @@ set laststatus=2		" show a status line always
 "============================================================================
 " Presentation
 "----------------------------------------------------------------------------
+set background=dark
 set hidden
 set showmatch
 set visualbell			" dont ring the bell
@@ -26,7 +27,6 @@ set scrolloff=5			" keep some context around text cursor
 set sidescrolloff=5		" keep some context around text cursor
 set sidescroll=1		" scroll by one column
 syntax on
-colorscheme desert
 
 "============================================================================
 " Search and Replace
