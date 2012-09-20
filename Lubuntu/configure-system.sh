@@ -18,7 +18,7 @@ dpkg -s sun-java5-jdk || {
 	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
 	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
 	sudo apt-get update
-	sudo apt-get install sun-java5-jdk
+	sudo apt-get install sun-java5-{jdk,doc,source}
 	sudo update-alternatives --config java
 	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
 	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
