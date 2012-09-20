@@ -39,7 +39,7 @@ mkdir -p ~/git
 wait
 
 # clone linux
-git clone -q git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
+git clone -q http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
 
 # configure all gerrit repos to push to the review queue
 for i in jgit egit egit-pde egit-github ;do git config -f ~/git/$i/.git/config remote.origin.push HEAD:refs/for/master ;done 

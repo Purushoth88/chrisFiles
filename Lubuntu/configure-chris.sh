@@ -33,10 +33,10 @@ else
 	cp git/chrisFiles/vim/_vimrc ~/.vimrc
 fi
 
-(cd git/jgit && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/jgit/jgit)
-(cd git/jgit && git remote add github http://chalstrick@github.com/chalstrick/jgit && git fetch github) 
-(cd git/egit && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit)
-(cd git/egit && git remote add github http://chalstrick@github.com/chalstrick/egit && git fetch github) 
-(cd git/egit-pde && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit-pde)
-(cd git/egit-github && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit-github)
-(cd git/metering && git config remote.origin.pushurl https://d032780@git.wdf.sap.corp:8080/NGJP/Services/metering)
+(cd git/jgit && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/jgit/jgit.git)
+(cd git/jgit && git remote add github https://chalstrick@github.com/chalstrick/jgit.git && git fetch github) 
+(cd git/egit && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit.git)
+(cd git/egit && git remote add github https://chalstrick@github.com/chalstrick/egit.git && git fetch github) 
+(cd git/egit-pde && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit-pde.git)
+(cd git/egit-github && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit-github.git)
+(cd git/metering && git config remote.origin.pushurl https://d032780@git.wdf.sap.corp:8080/NGJP/Services/metering.git)
