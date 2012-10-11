@@ -77,8 +77,8 @@ fi
 export http_proxy=http://proxy:8080
 export https_proxy=https://proxy:8080
 export no_proxy='wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost'
-if ! grep "proxy-pac-url" /usr/share/applications/chromium-browser.desktop ;then
-	sudo sed -r -i '/^Exec=/s/\/usr\/bin\/chromium-browser/\/usr\/bin\/chromium-browser --proxy-pac-url=http:\/\/proxy:8083\//' /usr/share/applications/chromium-browser.desktop
+if ! grep "--proxy-" /usr/share/applications/chromium-browser.desktop ;then
+	sudo sed -r -i '/^Exec=/s/\/usr\/bin\/chromium-browser/\/usr\/bin\/chromium-browser --proxy-server=proxy.wdf.sap.corp:8080 --proxy-bypass-list="*.wdf.sap.corp;nexus;jtrack;localhost;127.0.0.1"/' /usr/share/applications/chromium-browser.desktop
 fi
 mkdir -p ~/.m2
 if [ ! -f ~/.m2/settings_sap_proxy.xml ] ;then
@@ -124,8 +124,8 @@ sudo sed -i '/^no_proxy/d' /etc/environment
 unset http_proxy
 unset https_proxy
 unset no_proxy
-if grep "proxy-pac-url" /usr/share/applications/chromium-browser.desktop ;then
-	sudo sed -r -i '/^Exec=/s/--proxy-pac-url=[^ \t]+[ \t]*//' /usr/share/applications/chromium-browser.desktop
+if grep "--proxy-" /usr/share/applications/chromium-browser.desktop ;then
+	sudo sed -r -i '/^Exec=/s/--proxy[^ \t]+[ \t]*//' /usr/share/applications/chromium-browser.desktop
 fi
 if [ -f ~/.m2/settings.xml ] ;then
 	sudo sed -r -i 's/<proxy><active>true</<proxy><active>false</' ~/.m2/settings.xml
