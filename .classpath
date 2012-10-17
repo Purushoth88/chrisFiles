@@ -7,21 +7,14 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.ant"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.ant.test"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.console"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.generated.storage.dht.proto"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.http.server"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.http.test"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.iplog"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.junit"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.junit.http"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.pgm"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.storage.dht"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.storage.dht.test"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.test"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.ui"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.jetty.server_7.4.2.v20110526.jar"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/javax.servlet_2.5.0.v201103041518.jar"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.jetty.util_7.4.2.v20110526.jar"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.jetty.http_7.4.2.v20110526.jar"/>
-	<classpathentry kind="con" path="org.eclipse.ajdt.core.ASPECTJRT_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.pgm.test"/>
 	<classpathentry kind="output" path="java/bin"/>
 </classpath>

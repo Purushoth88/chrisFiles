@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Properties;
 
 import org.eclipse.jgit.api.Git;
@@ -13,6 +14,7 @@ import org.eclipse.jgit.lib.TextProgressMonitor;
 public class CloneBranchExample {
 	public static void main(String args[]) throws IOException, GitAPIException,
 			JGitInternalException {
+		Arrays.copyOf(original, newLength);
 		File tmpDir = new File(System.getProperty("java.io.tmpdir"), "tmp"
 				+ System.currentTimeMillis());
 		tmpDir.mkdirs();
