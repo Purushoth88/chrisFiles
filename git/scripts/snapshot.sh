@@ -1,30 +1,32 @@
 #!/bin/bash
 
 [ -d .git ] || ( echo ".git folder not found" ; exit -1 )
-[ -d .git/snapshot ] || ( mkdir .git/snapshot ; git init .git/snapshot )
+[ -d .git/snapshot ] || ( mkdir -p .git/snapshot/_git ; git init .git/snapshot; touch -d "1974-01-01 00:00:00" .git/.snapshot_tmsp )
 
-for src in $(ls -A) ;do
-	[ "$src" == ".git" ] && continue
-	rm -fr .git/snapshot/$src
-	cp -R $src .git/snapshot/$src
+find . -newer .git/.snapshot_tmsp -a ! -path './.git/snapshot*' | while read file ;do
+	echo "file:<<$file>>"
+	tgt=".git/snapshot/${file/#.\/.git\//_git/}"
+	if [ -d "$file" ] ;then
+		mkdir "$tgt"
+	else
+		[ "$file" = ./.git/index ] && git ls-files --cached -s > "$tgt" && continue
+		[[ "$file" =~ ./.git/objects/[0-9a-f]{2}/[0-9a-f]{38}$ ]] && git cat-file -p ${file:15:2}${file:18:38} > "$tgt" && continue
+		cp "$file" "$tgt"
+	fi
 done
-
-for src in $(ls -A .git) ;do
-	[ "$src" == "snapshot" ] && continue
-	rm -fr .git/snapshot/_git/$src
-	cp -R $src .git/snapshot/_git/$src
-done
-
-git ls-files --cached -s > .git/snapshot/_git/index
-find .git/objects/ -type f -path '[a-f0-9][a-f0-9]/[a-f0-9][a-f0-9]*[a-f0-9]'
 (
-	cd .git
-	for i in $(find objects -type f -path 'objects/[a-f0-9][a-f0-9]/[a-f0-9][a-f0-9]*[a-f0-9]') ;do
-		git cat-file -p ${i:8:2}${i:11:38} > .git/snapshot/_git/$i
+	cd .git/snapshot
+	find . -depth -a ! -path './.git/*' | while read file ;do
+		src="../../${file/#.\/_git\//.git/}"
+		echo "tgt=<<<$file>>>, src=<<<$src>>>"
+		if [ ! -e "$src" ] ;then
+			rm "$file"
+		fi
 	done
 )
+touch .git/.snapshot_tmsp
 (
-	cd .git/snapshot/_git
+	cd .git/snapshot
 	git add .
 	defname="snapshot taken at $(date)"
 	git commit -m "${1-$defname}"
