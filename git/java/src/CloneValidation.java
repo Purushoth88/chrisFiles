@@ -11,7 +11,7 @@ public class CloneValidation {
 	public static void main(String args[]) throws IOException, GitAPIException,
 			JGitInternalException {
 		System.out.println("Start cloning repo");
-		Git r = Git.cloneRepository().setDirectory(new File("C:/tmp/abc")).setURI("c:/git/NGP/LDI/validation.git").setProgressMonitor(new TextProgressMonitor()).call();
-		System.out.println("cloned the repo");
+		Git r = Git.cloneRepository().setDirectory(new File("./validation")).setURI("c:/git/NGP/LDI/validation.git").setProgressMonitor(new TextProgressMonitor()).call();
+		System.out.println("cloned the repo to "+r.getRepository().getWorkTree());
 	}
 }

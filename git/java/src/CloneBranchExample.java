@@ -14,14 +14,14 @@ import org.eclipse.jgit.lib.TextProgressMonitor;
 public class CloneBranchExample {
 	public static void main(String args[]) throws IOException, GitAPIException,
 			JGitInternalException {
-		Arrays.copyOf(original, newLength);
 		File tmpDir = new File(System.getProperty("java.io.tmpdir"), "tmp"
 				+ System.currentTimeMillis());
 		tmpDir.mkdirs();
+		System.out.println("Working dir: "+tmpDir);
 		try {
 			Git r = Git.cloneRepository().setDirectory(tmpDir)
 					.setURI("http://github.com/chalstrick/dondalfi.git")
-					.setProgressMonitor(new TextProgressMonitor()).call();
+					.call();
 			r.checkout().setName("origin/test").call();
 			for (Ref f : r.branchList().setListMode(ListMode.ALL).call()) {
 				r.checkout().setName(f.getName()).call();
