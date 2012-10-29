@@ -9,10 +9,12 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 
 public class CreateBranchConfig {
 	public static void main(String[] args) throws GitAPIException, IOException {
-		File root = new File("C:/Temp/gitTest"+System.currentTimeMillis());
-		root.mkdir();
-		Git git=Git.init().setDirectory(root).call();
-		File f = new File(root, "a");
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"),
+				"JGitTest_CreateBranchConfig_"+System.currentTimeMillis());
+		tmpDir.mkdirs();
+		System.out.println("Working dir: "+tmpDir);
+		Git git=Git.init().setDirectory(tmpDir).call();
+		File f = new File(tmpDir, "a");
 		f.createNewFile();
 		FileOutputStream fos = new FileOutputStream(f);
 		fos.write(65);

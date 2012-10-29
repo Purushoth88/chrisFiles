@@ -14,14 +14,12 @@ import org.eclipse.jgit.revwalk.RevWalk;
 
 public class DetermineWetherOneCommitIsMergedIntoAnother {
 	public static void main(String args[]) throws IOException, GitAPIException {
-		// create a temporary directory for our test repo
-		File baseDir = new File(System.getProperty("java.io.tmpdir"),
-				"JGitTests_" + System.currentTimeMillis());
-		if (!baseDir.mkdir())
-			throw new IOException("Couldn't create temporary directory "
-					+ baseDir.getPath());
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"),
+				"JGitTest_DetermineWetherOneCommitIsMergedIntoAnother_"+System.currentTimeMillis());
+		tmpDir.mkdirs();
+		System.out.println("Working dir: "+tmpDir);
 
-		Git git = Git.init().setDirectory(baseDir).call();
+		Git git = Git.init().setDirectory(tmpDir).call();
 		RevCommit firstCommit = git.commit().setMessage("initial empty commit")
 				.call();
 		git.commit().setMessage("next empty commit").call();

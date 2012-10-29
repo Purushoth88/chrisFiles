@@ -13,9 +13,14 @@ import org.eclipse.jgit.transport.URIish;
 public class JGitTestSshCloneWithPassphrase {
 	public static void main(String args[]) throws InvalidRemoteException,
 			TransportException, GitAPIException {
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"),
+				"JGitTest_JGitTestSshCloneWithPassphrase_"+System.currentTimeMillis());
+		tmpDir.mkdirs();
+		System.out.println("Working dir: "+tmpDir);
+
 		Git clonedRepo = Git
 				.cloneRepository()
-				.setDirectory(new File("C:/git/tmp/egitTraining"))
+				.setDirectory(tmpDir)
 				.setURI("ssh://d032780@git.wdf.sap.corp:29418/sandbox/git/egit-training.git")
 				.setCredentialsProvider(
 						new PassPhraseCredentialsProvider("omaoma")).call();

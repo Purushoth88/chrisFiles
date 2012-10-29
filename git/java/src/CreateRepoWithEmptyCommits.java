@@ -7,15 +7,12 @@ import org.eclipse.jgit.revwalk.RevCommit;
 
 public class CreateRepoWithEmptyCommits {
 	public static void main(String args[]) throws IOException, GitAPIException {
-		// create a temporary directory for our test repo
-		File baseDir = new File(System.getProperty("java.io.tmpdir"),
-				"JGitTests_" + System.currentTimeMillis());
-		if (!baseDir.mkdir())
-			throw new IOException("Couldn't create temporary directory "
-					+ baseDir.getPath());
-		System.out.println("Created a repo in " + baseDir);
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"),
+				"JGitTest_CreateRepoWithEmptyCommits_"+System.currentTimeMillis());
+		tmpDir.mkdirs();
+		System.out.println("Working dir: "+tmpDir);
 
-		Git git = Git.init().setDirectory(baseDir).call();
+		Git git = Git.init().setDirectory(tmpDir).call();
 		git.commit().setMessage("initial empty commit").call();
 		git.commit().setMessage("next empty commit").call();
 		for (RevCommit c : git.log().all().call())

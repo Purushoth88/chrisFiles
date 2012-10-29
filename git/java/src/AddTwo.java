@@ -10,9 +10,10 @@ import org.eclipse.jgit.lib.Ref;
 public class AddTwo {
 	public static void main(String args[]) throws IOException, GitAPIException,
 			JGitInternalException {
-		File tmpDir = new File(System.getProperty("java.io.tmpdir"), "tmp"
-				+ System.currentTimeMillis());
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"),
+				"JGitTest_AddTwo_"+System.currentTimeMillis());
 		tmpDir.mkdirs();
+		System.out.println("Working dir: "+tmpDir);
 
 		Git r = Git.init().setDirectory(tmpDir).call();
 		new FileWriter(new File(tmpDir, "a")).write("content of a");

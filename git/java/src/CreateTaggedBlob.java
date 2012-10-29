@@ -14,12 +14,12 @@ import org.eclipse.jgit.lib.RefUpdate.Result;
 public class CreateTaggedBlob {
 	public static void main(String args[]) throws IOException, GitAPIException,
 			JGitInternalException {
-		/* create a new git repo in a temporary folder */ 
-		File tmpDir = new File(System.getProperty("java.io.tmpdir"), "tmp"
-				+ System.currentTimeMillis());
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"),
+				"JGitTest_CreateTaggedBlob_"+System.currentTimeMillis());
 		tmpDir.mkdirs();
-		Git r = Git.init().setDirectory(tmpDir).call();
+		System.out.println("Working dir: "+tmpDir);
 		
+		Git r = Git.init().setDirectory(tmpDir).call();
 		/* create a blob not related to any tree or commit */
 		ObjectInserter inserter = r.getRepository().newObjectInserter();
 		ObjectId blobId = inserter.insert(Constants.OBJ_BLOB, new byte[] { 65, 66, 67 });

@@ -14,8 +14,8 @@ import org.eclipse.jgit.lib.TextProgressMonitor;
 public class CloneBranchExample {
 	public static void main(String args[]) throws IOException, GitAPIException,
 			JGitInternalException {
-		File tmpDir = new File(System.getProperty("java.io.tmpdir"), "tmp"
-				+ System.currentTimeMillis());
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"),
+				"JGitTest_CloneBranchExample_"+System.currentTimeMillis());
 		tmpDir.mkdirs();
 		System.out.println("Working dir: "+tmpDir);
 		try {

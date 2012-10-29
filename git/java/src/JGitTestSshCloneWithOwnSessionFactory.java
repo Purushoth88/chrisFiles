@@ -19,6 +19,11 @@ import com.jcraft.jsch.Session;
 public class JGitTestSshCloneWithOwnSessionFactory {
 	public static void main(String args[]) throws InvalidRemoteException,
 			GitAPIException {
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"),
+				"JGitTest_JGitTestSshCloneWithOwnSessionFactory_"+System.currentTimeMillis());
+		tmpDir.mkdirs();
+		System.out.println("Working dir: "+tmpDir);
+		
 		SshSessionFactory.setInstance(new SshSessionFactory() {
 			File knownHostsFile = new File("/tmp/.ssh2/known_hosts");
 			File privKeyFile = new File("/tmp/.ssh2/id_rsa");
@@ -54,7 +59,7 @@ public class JGitTestSshCloneWithOwnSessionFactory {
 
 		Git clonedRepo = Git
 				.cloneRepository()
-				.setDirectory(new File("/tmp/egitTraining"))
+				.setDirectory(tmpDir)
 				.setURI("ssh://d032780@git.wdf.sap.corp:29418/sandbox/git/egit-training.git")
 				.call();
 		for (RevCommit c : clonedRepo.log().setMaxCount(10).call())

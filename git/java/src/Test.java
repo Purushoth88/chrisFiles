@@ -69,17 +69,19 @@ public class Test {
 		// }
 	}
 
-	public static void useNotes() throws NoWorkTreeException, IOException,
-			NoFilepatternException, GitAPIException {
-		File tmpDir = new File(System.getProperty("java.io.tmpdir"), "tmp"
-				+ System.currentTimeMillis());
+	public static void useNotes() throws IOException, GitAPIException {
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"),
+				"JGitTest_Test_useNotes_"+System.currentTimeMillis());
+		tmpDir.mkdirs();
+		System.out.println("Working dir: "+tmpDir);
 
 		try {
 			Git repo = Git.init().setDirectory(new File(tmpDir, "repo1"))
 					.call();
-			new FileWriter(
-					new File(repo.getRepository().getWorkTree(), "f.txt"))
-					.write("hello world");
+			FileWriter fw = new FileWriter(
+					new File(repo.getRepository().getWorkTree(), "f.txt"));
+			fw.write("hello world");
+			fw.close();
 			repo.add().addFilepattern("f.txt").call();
 			RevCommit commit = repo.commit().setMessage("tests").call();
 			System.out.println("created commit with id: "+commit.getId());
@@ -94,25 +96,29 @@ public class Test {
 
 	}
 
-	public static void bug339610() throws NoWorkTreeException, IOException,
-			NoFilepatternException {
-		File tmpDir = new File(System.getProperty("java.io.tmpdir"), "tmp"
-				+ System.currentTimeMillis());
+	public static void bug339610() throws IOException,
+			GitAPIException {
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"),
+				"JGitTest_Test_bug339610_"+System.currentTimeMillis());
+		tmpDir.mkdirs();
+		System.out.println("Working dir: "+tmpDir);
 
 		Git repo = Git.init().setDirectory(new File(tmpDir, "repo1")).call();
 		System.out.println(repo.getRepository().getWorkTree());
-		new FileWriter(new File(repo.getRepository().getWorkTree(), "f.txt"))
-				.write("hello world");
+		FileWriter fw = new FileWriter(new File(repo.getRepository().getWorkTree(), "f.txt"));
+		fw.write("hello world");
+		fw.close();
 		repo.add().addFilepattern("f.txt").call();
 		// repo.reset().addPath("f.txt").setRef("HEAD").call();
 		repo.rm().addFilepattern("f.txt").call();
 
 	}
 
-	public static void pullTest() throws GitAPIException, NoWorkTreeException,
-			IOException {
-		File tmpDir = new File(System.getProperty("java.io.tmpdir"), "tmp"
-				+ System.currentTimeMillis());
+	public static void pullTest() throws GitAPIException, IOException {
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"),
+				"JGitTest_Test_pullTest_"+System.currentTimeMillis());
+		tmpDir.mkdirs();
+		System.out.println("Working dir: "+tmpDir);
 
 		Git repo = Git.init().setDirectory(new File(tmpDir, "1")).call();
 		repo.fetch()
@@ -131,9 +137,11 @@ public class Test {
 
 	}
 
-	public static void cloneRepoAndListBranches(String uri) {
-		File tmpDir = new File(System.getProperty("java.io.tmpdir"), "tmp"
-				+ System.currentTimeMillis());
+	public static void cloneRepoAndListBranches(String uri) throws GitAPIException {
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"),
+				"JGitTest_Test_cloneRepoAndListBranches_"+System.currentTimeMillis());
+		tmpDir.mkdirs();
+		System.out.println("Working dir: "+tmpDir);
 
 		Git repo = Git.cloneRepository().setURI(uri)
 				.setDirectory(new File(tmpDir, "repo1")).setBare(true).call();
