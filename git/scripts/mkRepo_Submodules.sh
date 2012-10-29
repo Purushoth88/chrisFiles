@@ -6,26 +6,21 @@ for i in main feature1 feature2 subfeature1a subfeature1b ;do mkdir $i; cd $i; g
 cd main
 ../snapshot.sh "after initializing all repos"
 for i in feature1 feature2 ;do git submodule add $base/$i $i ;done
-../snapshot.sh "after adding submodules feature1, feature2 to main"
-git commit -m "adding feature1, feature2 to main"
-../snapshot.sh "after commiting the addition of submodules"
+../snapshot.sh "after <submodule add> of feature1, feature2"
+git submodule update --init
+../snapshot.sh "after <submodule update --init>"
+git commit -m "adding feature1, feature2"
+../snapshot.sh "after <commit> the addition of submodules feature1,feature2"
 cd ..
 cd feature1
 for i in subfeature1b subfeature1a ;do git submodule add $base/$i $i ;done
-git commit -m "adding subfeature1a and subfeature1b to feature1"
+echo "WithSubmodules" > e
+git add e
+git commit -m "adding e, subfeature1a and subfeature1b to feature1"
 cd ../main
-git submodule update --recursive
-../snapshot.sh "after modifying all submodule feature1 and calling submodule update recursive"
+git submodule update --recursive --init
+../snapshot.sh "after modifying submodule feature1 and <submodule update recursive init>"
 git submodule foreach --recursive git pull
-../snapshot.sh "after calling git submodule foreach recurssive git pull"
-cd feature1
-echo B > b
-git add b
-git commit -m "adding b"
-cd subfeature1b
-echo C > c
-git add c
-git commit -m "adding c"
-cd ../..
-git submodule update --recursive
-../snapshot.sh "after changing feature1,subfeature1b and calling git submodule update"
+../snapshot.sh "after <submodule foreach recursive git pull>"
+git submodule update --recursive --init
+../snapshot.sh "after <submodule update recursive init>"
