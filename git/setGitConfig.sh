@@ -19,3 +19,5 @@ git config --global alias.addchange '!bash -c '\''git config --add remote."$1".f
 git config --global alias.getchange '!bash -c '\''git fetch "$1" refs/changes/"${2: -2}"/"$2"/*:refs/tags/"$1"/"$2"/*'\'' -'
 git config --global http.sslverify false
 git config --global color.ui auto
+git config --global alias.snap '!bash -c '\''~/git/chrisFiles/git/scripts/snapshot.sh $*'\'' -'
+git config --global alias.lssnap '!bash -c '\''~/git/chrisFiles/git/scripts/lssnap.sh $*'\'' -'
