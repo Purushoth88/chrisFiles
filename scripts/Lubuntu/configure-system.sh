@@ -75,12 +75,12 @@ if ! grep "^no_proxy" /etc/environment ;then
 	sudo sh -c "echo 'no_proxy=wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost' >> /etc/environment"
 fi
 if ! grep "^LOCALDOMAIN" /etc/environment ;then
-	sudo sh -c "echo 'LOCALDOMAIN=dhcp.wdf.sap.corp wdf.sap.corp' >> /etc/environment"
+	sudo sh -c "echo 'LOCALDOMAIN="dhcp.wdf.sap.corp wdf.sap.corp"' >> /etc/environment"
 fi
 export http_proxy=http://proxy:8080
 export https_proxy=https://proxy:8080
 export no_proxy='wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost'
-export LOCALDOMAIN='dhcp.wdf.sap.corp wdf.sap.corp'
+export LOCALDOMAIN="dhcp.wdf.sap.corp wdf.sap.corp"
 if ! grep -e "--proxy-" /usr/share/applications/chromium-browser.desktop ;then
 	sudo sed -r -i '/^Exec=/s/\/usr\/bin\/chromium-browser/\/usr\/bin\/chromium-browser --proxy-server=proxy.wdf.sap.corp:8080 --proxy-bypass-list="*.wdf.sap.corp;nexus;jtrack;localhost;127.0.0.1"/' /usr/share/applications/chromium-browser.desktop
 fi
