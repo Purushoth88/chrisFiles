@@ -115,4 +115,13 @@ echo "Please logout/logon to activate the proxy settings"
 EOF
 chmod +x ~/no_proxy.sh
 
+if [ ! -d ~/bin ] ;then
+	mkdir ~/bin
+	if ! grep "^PATH=" /etc/environment ;then
+		echo "FATAL: no PATH in /etc/environment. Stopping!"
+		exit 1
+	else
+		sudo sed -r -i '/^PATH=/s@"$@:'$HOME'/bin"@' /etc/environment
+	fi
+fi
 wait
