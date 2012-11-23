@@ -8,7 +8,7 @@ sudo apt-get -q update
 sudo apt-get -q --yes dist-upgrade
 
 # install applications
-sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-{jdk,doc,source} openjdk-7-{jdk,doc,source} gdb libssl-dev autoconf visualvm firefox
+sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-{jdk,doc,source} openjdk-7-{jdk,doc,source} gdb libssl-dev autoconf visualvm firefox curl
 sudo apt-get -q --yes build-dep git
 
 # install java5 (can only be found on old repos)
