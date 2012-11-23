@@ -26,7 +26,7 @@ if [ ! -d ~/jpaas/sdk1.9 ] ;then
         echo "Please download a juno SDK from https://tools.prod.jpaas.sapbydesign.com/index.html to ~/jpaas"
 fi
 
-# install egit/jgit in juno
+# install sap tools in juno
 eclipse-juno -application org.eclipse.equinox.p2.director \
 	-r https://tools.prod.jpaas.sapbydesign.com/juno \
 	-i com.sap.ide.ui5.cloud.feature.feature.group,com.sap.core.tools.eclipse.server.feature.feature.group,com.sap.core.tools.eclipse.help.feature.feature.group
