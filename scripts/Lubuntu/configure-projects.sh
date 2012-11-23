@@ -31,5 +31,12 @@ for i in jgit egit egit-pde egit-github ;do cp ~/tmp/commit-msg ~/git/$i/.git/ho
 (cd ~/git/egit-github && mvn install -DskipTests) &
 (cd ~/git/egit-pde && mvn install -DskipTests) &
 
+if [ -d ~/bin -a ! -f ~/bin/jgit ] ;then
+	cat <<EOF >~/bin/jgit
+#!/bin/sh
+java -jar ~/git/jgit/org.eclipse.jgit.pgm/target/jgit-cli.jar $*
+EOF
+	chmod +x ~/bin/jgit
+fi
 wait
 
