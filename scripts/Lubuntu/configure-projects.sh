@@ -23,13 +23,13 @@ chmod +x /tmp/commit-msg
 for i in jgit egit egit-pde egit-github ;do cp ~/tmp/commit-msg ~/git/$i/.git/hooks/commit-msg ; git config -f ~/git/$i/.git/config remote.origin.push HEAD:refs/for/master ;done
 
 # build the projects
-(cd ~/git/gerrit && mvn package -DskipTests) &
-(cd ~/git/git && make configure && ./configure && make) &
-(cd ~/git/jgit && mvn install -DskipTests)
-(cd ~/git/jgit/org.eclipse.jgit.packaging && mvn install)
-(cd ~/git/egit && mvn -P skip-ui-tests install -DskipTests)
-(cd ~/git/egit-github && mvn install -DskipTests) &
-(cd ~/git/egit-pde && mvn install -DskipTests) &
+(cd ~/git/gerrit && git fetch && git pull && mvn package -DskipTests) &
+(cd ~/git/git && git fetch && git pull && make configure && ./configure && make) &
+(cd ~/git/jgit && git fetch && git pull && mvn install -DskipTests)
+(cd ~/git/jgit/org.eclipse.jgit.packaging && git fetch && git pull && mvn install)
+(cd ~/git/egit && git fetch && git pull && mvn -P skip-ui-tests install -DskipTests)
+(cd ~/git/egit-github && git fetch && git pull && mvn install -DskipTests) &
+(cd ~/git/egit-pde && git fetch && git pull && mvn install -DskipTests) &
 
 if [ -d ~/bin -a ! -f ~/bin/jgit ] ;then
 	cat <<EOF >~/bin/jgit
