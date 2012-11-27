@@ -43,7 +43,7 @@ if [ -f ~/git/gerrit/gerrit-war/target/gerrit*.war ] ;then
 	[ -d ~/gerrit ] || mkdir ~/gerrit
 	java -jar ~/git/gerrit/gerrit-war/target/gerrit*.war init --batch -d ~/gerrit/gerrit-testsite
 	~/gerrit/gerrit-testsite/bin/gerrit.sh stop
-	set -r -i 's/type.*=.*OpenID/type = DEVELOPMENT_BECOME_ANY_ACCOUNT/' ~/gerrit/gerrit-testsite/etc/gerrit.conf
+	sed -r -i 's/type.*=.*OPENID/type = DEVELOPMENT_BECOME_ANY_ACCOUNT/' ~/gerrit/gerrit-testsite/etc/gerrit.config
 fi
 
 if [ -d ~/bin -a ! -f ~/bin/jgit ] ;then
