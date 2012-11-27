@@ -125,4 +125,10 @@ if [ ! -d ~/bin ] ;then
 		sudo sed -r -i '/^PATH=/s@"$@:'$HOME'/bin"@' /etc/environment
 	fi
 fi
+
+# fix errors regarding keyring e.g. during git https communication
+if ! grep '^OnlyShowIn=.*LXDE' ;then
+	sudo sed -r -i 's/^OnlyShowIn=/OnlyShowIn=LXDE;/' /etc/xdg/autostart/gnome-keyring-pkcs11.desktop
+fi
+
 wait

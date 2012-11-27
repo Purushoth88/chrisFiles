@@ -16,16 +16,16 @@ wait
 
 # clone/fetch linux
 if [ -d ~/git/linux ] ;then
-	git clone -q http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
-else
 	(cd ~/git/linux; git fetch)
+else
+	git clone -q http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
 fi
 
 
 # configure all gerrit repos to push to the review queue and add commit msg hooks
 curl -o /tmp/commit-msg https://git.eclipse.org/r/tools/hooks/commit-msg
 chmod +x /tmp/commit-msg
-for i in jgit egit egit-pde egit-github ;do cp ~/tmp/commit-msg ~/git/$i/.git/hooks/commit-msg ; git config -f ~/git/$i/.git/config remote.origin.push HEAD:refs/for/master ;done
+for i in jgit egit egit-pde egit-github ;do cp /tmp/commit-msg ~/git/$i/.git/hooks/commit-msg ; git config -f ~/git/$i/.git/config remote.origin.push HEAD:refs/for/master ;done
 
 # build the projects
 (cd ~/git/gerrit && git fetch && git pull && mvn package -DskipTests) &
@@ -43,5 +43,5 @@ java -jar ~/git/jgit/org.eclipse.jgit.pgm/target/jgit-cli.jar $*
 EOF
 	chmod +x ~/bin/jgit
 fi
-wait
 
+wait
