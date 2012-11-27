@@ -125,7 +125,7 @@ if [ ! -d ~/bin ] ;then
 fi
 
 # fix errors regarding keyring e.g. during git https communication
-if ! grep '^OnlyShowIn=.*LXDE' ;then
+if ! grep '^OnlyShowIn=.*LXDE' /etc/xdg/autostart/gnome-keyring-pkcs11.desktop ;then
 	sudo sed -r -i 's/^OnlyShowIn=/OnlyShowIn=LXDE;/' /etc/xdg/autostart/gnome-keyring-pkcs11.desktop
 fi
 
