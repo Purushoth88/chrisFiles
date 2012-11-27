@@ -14,8 +14,13 @@ mkdir -p ~/git
 
 wait
 
-# clone linux
-git clone -q http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
+# clone/fetch linux
+if [ -d ~/git/linux ] ;then
+	git clone -q http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
+else
+	(cd ~/git/linux; git fetch)
+fi
+
 
 # configure all gerrit repos to push to the review queue and add commit msg hooks
 curl -o /tmp/commit-msg https://git.eclipse.org/r/tools/hooks/commit-msg

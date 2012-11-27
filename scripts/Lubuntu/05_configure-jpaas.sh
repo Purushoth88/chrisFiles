@@ -18,7 +18,7 @@ fi
 # clone & build metering
 mkdir -p ~/git
 https_proxy="" GIT_SSL_NO_VERIFY=true git clone https://git.wdf.sap.corp:8080/NGJP/Services/metering ~/git/metering
-cd ~/git/metering/com.sap.core.metering.parent && mvn install -DskipTests
+(cd ~/git/metering/com.sap.core.metering.parent && git config remote.origin.pushurl https://d032780@git.wdf.sap.corp:8080/NGJP/Services/metering.git && mvn install -DskipTests)
 
 # install sap tools in juno
 eclipse-juno -application org.eclipse.equinox.p2.director \

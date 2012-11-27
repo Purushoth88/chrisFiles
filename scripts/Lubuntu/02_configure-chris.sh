@@ -8,9 +8,7 @@ sudo apt-get install -q --yes terminator
 if [ -f ~/.netrc ] ;then
 	echo "Don't write ~/.netrc because it already exists"
 else
-machine meteringd032780bsap.prop.jpaas.sapbydesign.com
-login d032780
-p	read -s -p "Enter password for d032780 at meteringd032780bsap.prop.jpaas.sapbydesign.com: " epass
+	read -s -p "Enter password for d032780 at meteringd032780bsap.prop.jpaas.sapbydesign.com: " epass
 	echo -e "machine meteringd032780bsap.prop.jpaas.sapbydesign.com\nlogin d032780\npassword $epass" >> ~/.netrc
 	echo
 	read -s -p "Enter password for P1323864547 at servermetermeter-meter.prod.jpaas.sapbydesign.com: " epass
@@ -26,7 +24,7 @@ p	read -s -p "Enter password for d032780 at meteringd032780bsap.prop.jpaas.sapby
 	echo -e "machine github.com\nlogin chalstrick\npassword $epass" >> ~/.netrc
 	chmod 600 ~/.netrc
 fi
-(cd git && git clone http://github.com/chalstrick/chrisFiles && . chrisFiles/git/setGitConfig.sh)
+(cd ~/git && git clone http://github.com/chalstrick/chrisFiles && . chrisFiles/git/setGitConfig.sh)
 if [ -f ~/.vimrc ] ;then
 	echo "Don't write ~/.vimrc because it already exists"
 else
@@ -39,4 +37,3 @@ fi
 (cd ~/git/egit && git remote add github https://chalstrick@github.com/chalstrick/egit.git && git fetch github) 
 (cd ~/git/egit-pde && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit-pde.git)
 (cd ~/git/egit-github && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit-github.git)
-(cd ~/git/metering && git config remote.origin.pushurl https://d032780@git.wdf.sap.corp:8080/NGJP/Services/metering.git)
