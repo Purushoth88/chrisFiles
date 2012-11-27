@@ -3,7 +3,7 @@
 # Configure a Lubuntu12.04 system for jpaas development 
 #
 
-no_proxy='wdf.sap.corp, nexus, wiki, git.wdf.sap.corp'
+no_proxy='wdf.sap.corp,nexus,wiki,git.wdf.sap.corp'
 # setup mavens settings.xml
 if [ ! -f ~/.m2/settings.xml.jpaas ] ;then
         mkdir -p ~/.m2
