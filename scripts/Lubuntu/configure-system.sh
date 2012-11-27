@@ -33,7 +33,7 @@ if id -G -n | grep vbox ;then
 fi
 
 if ! grep "^search" /etc/resolvconf/resolv.conf.d/base ;then
-	sudo sh -c "echo 'search wdf.sap.corp'" >> /etc/resolvconf/resolv.conf.d/base
+	sudo sh -c 'echo "search wdf.sap.corp" >> /etc/resolvconf/resolv.conf.d/base'
 fi
 
 # write sap_proxy.sh to switch to sap proxies
@@ -44,13 +44,13 @@ cat <<EOF >~/sap_proxy.sh
 #
 
 if ! grep "^http_proxy" /etc/environment ;then
-	sudo sh -c "echo 'http_proxy=http://proxy:8080' >> /etc/environment"
+	sudo sh -c 'echo http_proxy=http://proxy:8080 >> /etc/environment'
 fi
 if ! grep "^https_proxy" /etc/environment ;then
-	sudo sh -c "echo 'https_proxy=https://proxy:8080' >> /etc/environment"
+	sudo sh -c 'echo https_proxy=https://proxy:8080 >> /etc/environment'
 fi
 if ! grep "^no_proxy" /etc/environment ;then
-	sudo sh -c "echo 'no_proxy=wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost' >> /etc/environment"
+	sudo sh -c 'echo no_proxy=wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost >> /etc/environment'
 fi
 export http_proxy=http://proxy:8080
 export https_proxy=https://proxy:8080
