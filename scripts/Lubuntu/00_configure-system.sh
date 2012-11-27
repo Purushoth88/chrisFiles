@@ -31,9 +31,7 @@ dpkg -s sun-java5-jdk || {
 }
 
 # add user to group which is allowed to read shared folders
-if id -G -n | grep vbox ;then 
-	sudo adduser $USER vboxsf
-fi
+id -G -n | grep vbox || sudo adduser $USER vboxsf
 
 if ! grep "^search" /etc/resolvconf/resolv.conf.d/base ;then
 	sudo sh -c 'echo "search wdf.sap.corp" >> /etc/resolvconf/resolv.conf.d/base'
