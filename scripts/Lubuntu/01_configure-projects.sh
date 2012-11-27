@@ -36,6 +36,16 @@ for i in jgit egit egit-pde egit-github ;do cp /tmp/commit-msg ~/git/$i/.git/hoo
 (cd ~/git/egit-github && git fetch && git pull && mvn install -DskipTests) &
 (cd ~/git/egit-pde && git fetch && git pull && mvn install -DskipTests) &
 
+wait
+
+# Create a gerrit test site
+if [ -f ~/git/gerrit/gerrit-war/target/gerrit*.war ] ;then
+	[ -d ~/gerrit ] || mkdir ~/gerrit
+	java -jar ~/git/gerrit/gerrit-war/target/gerrit*.war init --batch -d ~/gerrit/gerrit-testsite
+	~/gerrit/gerrit-testsite/bin/gerrit.sh stop
+	set -r -i 's/type.*=.*OpenID/type = DEVELOPMENT_BECOME_ANY_ACCOUNT/' ~/gerrit/gerrit-testsite/etc/gerrit.conf
+fi
+
 if [ -d ~/bin -a ! -f ~/bin/jgit ] ;then
 	cat <<EOF >~/bin/jgit
 #!/bin/sh
