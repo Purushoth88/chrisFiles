@@ -8,8 +8,11 @@ sudo apt-get -q update
 sudo apt-get -q --yes dist-upgrade
 
 # install applications
-sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-{jdk,doc,source} openjdk-7-{jdk,doc,source} gdb libssl-dev autoconf visualvm firefox curl
+sudo apt-get -q --yes install gcc make git gitk vim vim-gui-common maven openjdk-6-{jdk,doc,source} openjdk-7-{jdk,doc,source} gdb libssl-dev autoconf visualvm firefox curl
 sudo apt-get -q --yes build-dep git
+
+# install guest additions if available
+[ -x /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run ] && sudo /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run
 
 # install java5 (can only be found on old repos)
 dpkg -s sun-java5-jdk || {
