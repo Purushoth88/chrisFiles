@@ -4,27 +4,28 @@
 #
 
 no_proxy='wdf.sap.corp,nexus,wiki,git.wdf.sap.corp'
+
+# clone metering
+mkdir -p ~/git
+https_proxy="" GIT_SSL_NO_VERIFY=true git clone https://git.wdf.sap.corp:8080/NGJP/Services/metering ~/git/metering
+(cd ~/git/metering/com.sap.core.metering.parent && git config remote.origin.pushurl https://git.wdf.sap.corp:8080/NGJP/Services/metering.git && git config remote.origin.push HEAD:refs/for/master)
+
 # setup mavens settings.xml
 if [ ! -f ~/.m2/settings.xml.jpaas ] ;then
         mkdir -p ~/.m2
         wget -O ~/.m2/settings.xml.jpaas http://nexus.wdf.sap.corp:8081/nexus/service/local/templates/settings/LeanDI/content
         if [ ! -f ~/.m2/settings.xml ] ;then
                 cp ~/.m2/settings.xml.jpaas ~/.m2/settings.xml
+		(cd ~/git/metering/com.sap.core.metering.parent && mvn install -DskipTests)
         else
                 echo "Couldn't set ~/.m2/settings.xml because there is already an settings.xml. Copied the jpaas settings.xml to ~/.m2/settings.xml.jpaas"
         fi
 fi
 
-# clone & build metering
-mkdir -p ~/git
-https_proxy="" GIT_SSL_NO_VERIFY=true git clone https://git.wdf.sap.corp:8080/NGJP/Services/metering ~/git/metering
-(cd ~/git/metering/com.sap.core.metering.parent && git config remote.origin.pushurl https://git.wdf.sap.corp:8080/NGJP/Services/metering.git && git config remote.origin.push HEAD:refs/for/master && mvn install -DskipTests)
-
 # install sap tools in juno
 eclipse-juno -application org.eclipse.equinox.p2.director \
 	-r https://tools.prod.jpaas.sapbydesign.com/juno \
 	-i com.sap.ide.ui5.cloud.feature.feature.group,com.sap.core.tools.eclipse.server.feature.feature.group,com.sap.core.tools.eclipse.help.feature.feature.group
-
 
 # setup a jpaas sdk
 if [ ! -d ~/jpaas/sdk1.9 ] ;then
