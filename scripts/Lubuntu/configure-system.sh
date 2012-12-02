@@ -38,7 +38,7 @@ if ! grep "^search" /etc/resolvconf/resolv.conf.d/base ;then
 fi
 
 # write sap_proxy.sh to switch to sap proxies
-cat <<EOF >~/sap_proxy.sh
+cat <<EOF >~/bin/sap_proxy.sh
 #!/bin/bash
 #
 # Configure a Lubuntu12.04 to use SAP proxy
@@ -88,10 +88,10 @@ fi
 
 echo "Please logout/login to activate the proxy settings"
 EOF
-chmod +x ~/sap_proxy.sh
+chmod +x ~/bin/sap_proxy.sh
 
 # write no_proxy.sh to switch to use no proxies
-cat <<EOF >~/no_proxy.sh
+cat <<EOF >~/bin/no_proxy.sh
 #!/bin/bash
 #
 # Configure a Lubuntu12.04 to use no proxy
@@ -112,7 +112,7 @@ fi
 sudo rm -f /etc/apt/apt.conf.d/80proxy
 echo "Please logout/logon to activate the proxy settings"
 EOF
-chmod +x ~/no_proxy.sh
+chmod +x ~/bin/no_proxy.sh
 
 if [ ! -d ~/bin ] ;then
 	mkdir ~/bin
