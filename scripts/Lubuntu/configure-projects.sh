@@ -18,7 +18,7 @@ wait
 if [ -d ~/git/linux ] ;then
 	(cd ~/git/linux; git fetch)
 else
-	git clone -q http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
+	git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
 fi
 
 
@@ -55,7 +55,7 @@ EOF
 fi
 
 [ -d ~/lib ] || mkdir ~/lib
-if [ -f ~/lib/git_bookmarks.html ] ;then
+if [ ! -f ~/lib/git_bookmarks.html ] ;then
 	cat <<EOF >~/lib/git_bookmarks.html
 <!DOCTYPE NETSCAPE-Bookmark-file-1>
 <!-- This is an automatically generated file.
