@@ -132,4 +132,7 @@ fi
 # fix errors in jvisualvm
 sudo sed -r -i 's&/usr/share/netbeans/platform12/&/usr/share/netbeans/platform13/&' /usr/bin/jvisualvm
 
+# set the default colorscheme of vim to desert
+[ -f ~/.vimrc ] || echo "colorscheme desert" > ~/.vimrc
+
 wait
