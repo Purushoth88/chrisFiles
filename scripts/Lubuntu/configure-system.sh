@@ -11,9 +11,6 @@ sudo apt-get -q --yes dist-upgrade
 sudo apt-get -q --yes install gcc make git gitk vim vim-gui-common maven openjdk-6-{jdk,doc,source} openjdk-7-{jdk,doc,source} gdb libssl-dev autoconf visualvm firefox curl
 sudo apt-get -q --yes build-dep git
 
-# install guest additions if available
-[ -x /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run ] && sudo /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run
-
 # install java5 (can only be found on old repos)
 dpkg -s sun-java5-jdk || {
 	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
@@ -29,9 +26,6 @@ dpkg -s sun-java5-jdk || {
 	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates multiverse"
 	sudo apt-get update
 }
-
-# add user to group which is allowed to read shared folders
-id -G -n | grep vbox || sudo adduser $USER vboxsf
 
 if ! grep "^search" /etc/resolvconf/resolv.conf.d/base ;then
 	sudo sh -c 'echo "search wdf.sap.corp" >> /etc/resolvconf/resolv.conf.d/base'
