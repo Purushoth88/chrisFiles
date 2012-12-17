@@ -65,6 +65,12 @@ if [ ! -f ~/.m2/settings_sap_proxy.xml ] ;then
       <nonProxyHosts>nexus|*.sap.corp</nonProxyHosts>
     </proxy>
   </proxies>
+   <proxy><active>true</active>
+      <protocol>https</protocol>
+      <host>proxy</host>
+      <port>8080</port>
+      <nonProxyHosts>nexus|*.sap.corp</nonProxyHosts>
+    </proxy>
 </settings>
 END
 fi
