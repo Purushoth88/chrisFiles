@@ -16,5 +16,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.test"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.ui"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.pgm.test"/>
+	<classpathentry kind="con" path="org.eclipse.ajdt.core.ASPECTJRT_CONTAINER"/>
 	<classpathentry kind="output" path="java/bin"/>
 </classpath>
