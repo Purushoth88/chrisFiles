@@ -88,9 +88,9 @@ public class LoopPerformance {
 
 	static String[] createArray() {
 
-		String sArray[] = new String[15000000];
+		String sArray[] = new String[150000];
 
-		for (int i = 0; i < 15000000; i++)
+		for (int i = 0; i < 150000; i++)
 			sArray[i] = "Array " + i;
 
 		return sArray;

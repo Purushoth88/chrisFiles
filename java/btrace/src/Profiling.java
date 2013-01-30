@@ -23,8 +23,6 @@
  * have any questions.
  */
 
-package com.sun.btrace.samples;
-
 import com.sun.btrace.BTraceUtils;
 import com.sun.btrace.Profiler;
 import com.sun.btrace.annotations.*;
@@ -47,12 +45,14 @@ import com.sun.btrace.annotations.*;
     @Property
     Profiler jgitProfiler = BTraceUtils.Profiling.newProfiler();
     
-    @OnMethod(clazz="/org\\.eclipse\\.jgit\\..*/", method="/.*/")
+//    @OnMethod(clazz="/org\\.eclipse\\.jgit\\..*/", method="/.*/")
+	@OnMethod(clazz = "/org\\.eclipse\\.orion\\..*/", method = "/.*/")
     void entry(@ProbeMethodName(fqn=true) String probeMethod) { 
         BTraceUtils.Profiling.recordEntry(jgitProfiler, probeMethod);
     }
     
-    @OnMethod(clazz="/org\\.eclipse\\.jgit\\..*/", method="/.*/", location=@Location(value=Kind.RETURN))
+//    @OnMethod(clazz="/org\\.eclipse\\.jgit\\..*/", method="/.*/", location=@Location(value=Kind.RETURN))
+    @OnMethod(clazz="/org\\.eclipse\\.orion\\..*/", method="/.*/", location=@Location(value=Kind.RETURN))
     void exit(@ProbeMethodName(fqn=true) String probeMethod, @Duration long duration) { 
         BTraceUtils.Profiling.recordExit(jgitProfiler, probeMethod, duration);
     }
