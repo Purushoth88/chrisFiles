@@ -3,38 +3,48 @@
 # Clone and build projects
 #
 
-# clone git e/jgit & gerrit
-mkdir -p ~/git
-[ -d ~/git/git ] || git clone -q https://github.com/git/git.git ~/git/git &
-[ -d ~/git/jgit ] || git clone -q https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit &
-[ -d ~/git/egit ] || git clone -q https://git.eclipse.org/r/p/egit/egit ~/git/egit &
-[ -d ~/git/egit-github ] || git clone -q https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github &
-[ -d ~/git/egit-pde ] || git clone -q https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde &
-[ -d ~/git/gerrit ] || git clone -q https://gerrit.googlesource.com/gerrit ~/git/gerrit &
+# Clones a non-bare git repo or (if it already exists) fetches updates
+# usage: getOrFetch <url> <localDir> [<gerritBranchToPush>]
+cloneOrFetch() {
+	[ -d "$2" ] || mkdir -p "$2"	
+	if git rev-parse --resolve-git-dir "$1/.git" >/dev/null 2>&1 ;then
+		git fetch --git-dir "$1/.git" -q --all	
+		if [ `git rev-parse --symbolic-full-name --abbrev-ref HEAD` == "master" ] ;then
+			git pull -q	
+		fi
+	else
+		git clone -q "$1" "$2"
+	fi
+	if [ ! -z "$3" ] ;then
+		git config -f "$2/.git/config" remote.origin.push HEAD:refs/for/$3 
+		if [ ! -f "$2/.git/hooks/commit-msg" ] ;then 
+			echo "Won't download a commit-msg hook for repo $2 because such a hook already exists"
+		else
+			curl -o "$2/.git/hooks/commit-msg" https://git.eclipse.org/r/tools/hooks/commit-msg
+			chmod +x "$2/.git/hooks/commit-msg"
+		fi
+	fi
+}
 
+# clone git e/jgit & gerrit
+cloneOrFetch https://github.com/git/git.git ~/git/git &
+cloneOrFetch https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit master &
+cloneOrFetch https://git.eclipse.org/r/p/egit/egit ~/git/egit master &
+cloneOrFetch https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github master &
+cloneOrFetch https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde master &
+cloneOrFetch https://gerrit.googlesource.com/gerrit ~/git/gerrit master &
 wait
 
 # clone/fetch linux
-if [ -d ~/git/linux ] ;then
-	(cd ~/git/linux; git fetch)
-else
-	git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
-fi
-
-
-# configure all gerrit repos to push to the review queue and add commit msg hooks
-curl -o /tmp/commit-msg https://git.eclipse.org/r/tools/hooks/commit-msg
-chmod +x /tmp/commit-msg
-for i in jgit egit egit-pde egit-github ;do cp /tmp/commit-msg ~/git/$i/.git/hooks/commit-msg ; git config -f ~/git/$i/.git/config remote.origin.push HEAD:refs/for/master ;done
+cloneOrFetch http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
 
 # build the projects
-(cd ~/git/gerrit && git fetch && git pull && mvn package -DskipTests) &
-(cd ~/git/git && git fetch && git pull && make configure && ./configure && make) &
-(cd ~/git/jgit && git fetch && git pull && mvn install -DskipTests)
-(cd ~/git/jgit/org.eclipse.jgit.packaging && git fetch && git pull && mvn install)
-(cd ~/git/egit && git fetch && git pull && mvn -P skip-ui-tests install -DskipTests)
-(cd ~/git/egit-github && git fetch && git pull && mvn install -DskipTests) &
-(cd ~/git/egit-pde && git fetch && git pull && mvn install -DskipTests) &
+(cd ~/git/gerrit && mvn package -DskipTests) &
+(cd ~/git/git && mvn install -DskipTests)
+(cd ~/git/jgit/org.eclipse.jgit.packaging && mvn install)
+(cd ~/git/egit && mvn -P skip-ui-tests install -DskipTests)
+(cd ~/git/egit-github && mvn install -DskipTests) &
+(cd ~/git/egit-pde && mvn install -DskipTests) &
 
 wait
 

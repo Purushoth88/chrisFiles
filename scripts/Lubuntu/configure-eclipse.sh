@@ -3,6 +3,12 @@
 # Configure a Eclipse(Juno) on a Lubuntu12.04 system to my needs
 #
 
+# Install plugins to eclipse 
+# usage: installInEclipse <eclipse> <url> <commaSeperatedFeatures>
+installInEclipse() {
+	"$1" -application org.eclipse.equinox.p2.director -r "$2" -i $3
+}
+
 # install eclipse indigo
 sudo apt-get -q --yes install eclipse-platform
 
@@ -35,11 +41,11 @@ if [ ! -d ~/egit-releases/$rel ] ;then
 fi
 
 # install egit/jgit, cdt,...  in juno
-eclipse-juno -application org.eclipse.equinox.p2.director \
-	-r http://download.eclipse.org/egit/updates,http://download.eclipse.org/releases/juno,http://download.eclipse.org/eclipse/updates/4.2,http://update.eclemma.org/ \
-	-i org.eclipse.egit.feature.group,org.eclipse.egit.import.feature.group,org.eclipse.egit.mylyn.feature.group,org.eclipse.egit.psf.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group,org.eclipse.mylyn.gerrit.feature.feature.group,org.eclipse.mylyn.git.feature.group,org.eclipse.mylyn.github.feature.feature.group,org.eclipse.cdt.autotools.feature.group,org.eclipse.cdt.feature.group,org.eclipse.m2e.feature.feature.group,org.eclipse.pde.api.tools.ee.j2se15.group,org.eclipse.pde.api.tools.ee.javase16.group,org.eclipse.pde.api.tools.ee.javase17.group,com.mountainminds.eclemma.feature.feature.group
+installInEclipse eclipse-juno \
+	http://download.eclipse.org/egit/updates,http://download.eclipse.org/releases/juno,http://download.eclipse.org/eclipse/updates/4.2,http://update.eclemma.org/ \
+	org.eclipse.egit.feature.group,org.eclipse.egit.import.feature.group,org.eclipse.egit.mylyn.feature.group,org.eclipse.egit.psf.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group,org.eclipse.mylyn.gerrit.feature.feature.group,org.eclipse.mylyn.git.feature.group,org.eclipse.mylyn.github.feature.feature.group,org.eclipse.cdt.autotools.feature.group,org.eclipse.cdt.feature.group,org.eclipse.m2e.feature.feature.group,org.eclipse.pde.api.tools.ee.j2se15.group,org.eclipse.pde.api.tools.ee.javase16.group,org.eclipse.pde.api.tools.ee.javase17.group,com.mountainminds.eclemma.feature.feature.group
 
 # install egit/jgit in indigo
-eclipse -application org.eclipse.equinox.p2.director \
-	-r http://download.eclipse.org/egit/updates,http://download.eclipse.org/releases/indigo \
-	-i org.eclipse.egit.feature.group,org.eclipse.egit.psf.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group
+installInEclipse eclipse \
+	http://download.eclipse.org/egit/updates,http://download.eclipse.org/releases/indigo \
+	org.eclipse.egit.feature.group,org.eclipse.egit.psf.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group

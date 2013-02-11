@@ -3,12 +3,54 @@
 # Configure a Lubuntu12.04 system for jpaas development 
 #
 
-no_proxy='wdf.sap.corp,nexus,wiki,git.wdf.sap.corp'
+# Clones a non-bare git repo or (if it already exists) fetches updates
+# usage: getOrFetch <url> <localDir> [<gerritBranchToPush>]
+cloneOrFetch() {
+	[ -d "$2" ] || mkdir -p "$2"	
+	if git rev-parse --resolve-git-dir "$1/.git" >/dev/null 2>&1 ;then
+		git fetch --git-dir "$1/.git" -q --all	
+		if [ `git rev-parse --symbolic-full-name --abbrev-ref HEAD` == "master" ] ;then
+			git pull -q	
+		fi
+	else
+		git clone -q "$1" "$2"
+	fi
+	if [ ! -z "$3" ] ;then
+		git config -f "$2/.git/config" remote.origin.push HEAD:refs/for/$3 
+		if [ ! -f "$2/.git/hooks/commit-msg" ] ;then 
+			echo "Won't download a commit-msg hook for repo $2 because such a hook already exists"
+		else
+			curl -o "$2/.git/hooks/commit-msg" https://git.eclipse.org/r/tools/hooks/commit-msg
+			chmod +x "$2/.git/hooks/commit-msg"
+		fi
+	fi
+}
+
+# Install plugins to eclipse 
+# usage: installInEclipse <eclipse> <url> <commaSeperatedFeatures>
+installInEclipse() {
+	"$1" -application org.eclipse.equinox.p2.director -r "$2" -i $3
+}
+
+# setup a jpaas sdk
+if [ ! -d ~/jpaas/sdk1.9 ] ;then
+	mkdir -p ~/jpaas
+	read -p "Please download and extract a juno SDK from https://tools.prod.jpaas.sapbydesign.com/index.html to ~/jpaas . Hit <Return when done"
+	read -p "Please download and extract a maxdb from https://downloads.sdn.sap.com/maxdb/7_8/maxdb-all-linux-64bit-x86_64-7_8_02_28.tgz . Hit <Return when done" 
+	read -p "Please download and extract a RemoteJDBC driver and war from https://wiki.wdf.sap.corp/wiki/display/JavaPersistence/Remote+Access+to+Databases+in+the+NetWeaver+Cloud . Hit <Return when done"
+	read -p "Please download a hana studio installer from \\\\production.wdf.sap.corp\\newdb\NewDB100\\rel . Hit <Return when done"
+fi
+
+GIT_SSL_NO_VERIFY=true
+https_proxy=""
 
 # clone metering
-mkdir -p ~/git
-https_proxy="" GIT_SSL_NO_VERIFY=true git clone https://git.wdf.sap.corp:8080/NGJP/Services/metering ~/git/metering
-(cd ~/git/metering/com.sap.core.metering.parent && git config remote.origin.pushurl https://git.wdf.sap.corp:8080/NGJP/Services/metering.git && git config remote.origin.push HEAD:refs/for/master)
+cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/Services/metering ~/git/metering master
+
+# clone orion
+cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/LeanDI/jpaas.org.eclipse.orion.server ~/git/jpaas.org.eclipse.orion.server master
+cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/LeanDI/jpaas.org.eclipse.orion.client ~/git/jpaas.org.eclipse.orion.client master
+cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/LeanDI/jpaas.orion ~/git/jpaas.orion master
 
 # setup mavens settings.xml
 if [ ! -f ~/.m2/settings.xml.jpaas ] ;then
@@ -23,18 +65,9 @@ if [ ! -f ~/.m2/settings.xml.jpaas ] ;then
 fi
 
 # install sap tools in juno
-eclipse-juno -application org.eclipse.equinox.p2.director \
-	-r https://tools.prod.jpaas.sapbydesign.com/juno \
-	-i com.sap.ide.ui5.cloud.feature.feature.group,com.sap.core.tools.eclipse.server.feature.feature.group,com.sap.core.tools.eclipse.help.feature.feature.group
-
-# setup a jpaas sdk
-if [ ! -d ~/jpaas/sdk1.9 ] ;then
-	mkdir -p ~/jpaas
-	echo "Please download and extract a juno SDK from https://tools.prod.jpaas.sapbydesign.com/index.html to ~/jpaas"
-	echo "Please download and extract a maxdb from https://downloads.sdn.sap.com/maxdb/7_8/maxdb-all-linux-64bit-x86_64-7_8_02_28.tgz" }
-	echo "Please download and extract a RemoteJDBC driver and war from https://wiki.wdf.sap.corp/wiki/display/JavaPersistence/Remote+Access+to+Databases+in+the+NetWeaver+Cloud"
-	echo "Please download a hana studio installer from \\production.wdf.sap.corp\newdb\NewDB100\rel"
-fi
+installInEclipse eclipse-juno \
+	https://tools.prod.jpaas.sapbydesign.com/juno \
+	com.sap.ide.ui5.cloud.feature.feature.group,com.sap.core.tools.eclipse.server.feature.feature.group,com.sap.core.tools.eclipse.help.feature.feature.group
 
 [ -d ~/lib ] || mkdir ~/lib
 if [ -f ~/lib/git_bookmarks.html ] ;then
