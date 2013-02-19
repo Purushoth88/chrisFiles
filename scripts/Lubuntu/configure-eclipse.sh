@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Configure a Eclipse(Juno) on a Lubuntu12.04 system to my needs
+# Configure a Eclipse(Juno,Kepler) on a Lubuntu12.04 system to my needs
 #
 
 # Install plugins to eclipse 
@@ -28,6 +28,27 @@ Name=Eclipse (Juno)
 Comment=Eclipse Integrated Development Environment
 Icon=eclipse
 Exec=eclipse-juno
+Terminal=false
+Categories=Development;IDE;Java;
+EOF
+fi
+
+# install eclipse kepler
+if [ ! -d /usr/lib/eclipse-kepler ] ;then
+	tmp=$(mktemp -d)
+	wget -qO- 'http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/S-4.3M5a-201302041400/eclipse-SDK-4.3M5a-linux-gtk-x86_64.tar.gz&mirror_id=17' | tar -C $tmp -xz
+	sudo mv $tmp/eclipse /usr/lib/eclipse-kepler
+fi
+sudo ln -s /usr/lib/eclipse-kepler/eclipse /usr/bin/eclipse-kepler
+if [ ! -f ~/.local/share/applications/eclipse-kepler.desktop ] ;then
+	mkdir -p ~/.local/share/applications
+	cat <<EOF >~/.local/share/applications/eclipse-kepler.desktop
+[Desktop Entry]
+Type=Application
+Name=Eclipse (Kepler)
+Comment=Eclipse Integrated Development Environment
+Icon=eclipse
+Exec=eclipse-kepler
 Terminal=false
 Categories=Development;IDE;Java;
 EOF
