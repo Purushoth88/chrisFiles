@@ -41,6 +41,7 @@ cloneOrFetch http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~
 # build the projects
 (cd ~/git/gerrit && mvn package -DskipTests) 
 (cd ~/git/git && make configure && ./configure && make) 
+(cd ~/git/jgit && mvn install -DskipTests)
 (cd ~/git/jgit/org.eclipse.jgit.packaging && mvn install)
 (cd ~/git/egit && mvn -P skip-ui-tests install -DskipTests)
 (cd ~/git/egit-github && mvn install -DskipTests) 
