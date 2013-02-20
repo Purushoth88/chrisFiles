@@ -58,19 +58,19 @@ if [ ! -f ~/.m2/settings_sap_proxy.xml ] ;then
 	cat <<END >~/.m2/settings_sap_proxy.xml
 <settings>
   <proxies>
-   <proxy><active>true</active>
+    <proxy><active>true</active>
       <protocol>http</protocol>
       <host>proxy</host>
       <port>8080</port>
       <nonProxyHosts>nexus|*.sap.corp</nonProxyHosts>
     </proxy>
-  </proxies>
-   <proxy><active>true</active>
+    <proxy><active>true</active>
       <protocol>https</protocol>
       <host>proxy</host>
       <port>8080</port>
       <nonProxyHosts>nexus|*.sap.corp</nonProxyHosts>
     </proxy>
+  </proxies>
 </settings>
 END
 fi
