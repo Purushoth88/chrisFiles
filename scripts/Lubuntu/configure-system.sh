@@ -77,6 +77,9 @@ fi
 if [ ! -f ~/.m2/settings.xml ] ;then
 	cp ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml
 fi
+if [ -f ~/.m2/settings.xml ] ;then
+	sudo sed -r -i 's/<proxy><active>false</<proxy><active>true</' ~/.m2/settings.xml
+fi
 if [ ! -f /etc/apt/apt.conf.d/80proxy ] ;then
 	cat <<END >80proxy
 Acquire::http::proxy "http://proxy:8080/";
