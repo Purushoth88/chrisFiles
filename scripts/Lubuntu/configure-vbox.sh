@@ -5,4 +5,4 @@
 
 # install guest additions if available
 sudo apt-get -q update
-sudo apt-get -q install dkms && [ -x /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run ] && sudo /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run
+sudo apt-get -q --yes install dkms && [ -x /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run ] && sudo /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run

@@ -5,17 +5,17 @@
 
 # System updates
 sudo apt-get -q update
-sudo apt-get -q --yes dist-upgrade
 
 # install applications
-sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-{jdk,doc,source} visualvm firefox curl
+sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-{jdk,doc,source} visualvm firefox curl dkms
+[ -x /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run ] && sudo /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run
 
 # add user to group which is allowed to read shared folders
 id -G -n | grep vbox || sudo adduser $USER vboxsf
 
 # mount indep data automatically
-if ! grep "/dev/sdb1" /etc/fstab ;then
-	sudo echo "LABEL=Indep /media/$USER/Indep ext4 rw,nosuid,nodev,uhelper=udisks2 0 0" >> /etc/fstab
+if ! grep "LABEL=Indep" /etc/fstab ;then
+        sudo sh -c 'echo "LABEL=Indep /media/'$USER'/Indep ext4 rw,nosuid,nodev,uhelper=udisks2 0 0" >> /etc/fstab'
 fi
 
 # install java5 (can only be found on old repos)
