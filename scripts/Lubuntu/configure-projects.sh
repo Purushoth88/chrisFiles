@@ -26,6 +26,9 @@ cloneOrFetch() {
 	fi
 }
 
+sudo apt-get -q --yes install gdb autoconf libssl-dev 
+sudo apt-get -q --yes build-dep git
+
 # clone git e/jgit & gerrit
 cloneOrFetch https://github.com/git/git.git ~/git/git 
 cloneOrFetch https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit master 
