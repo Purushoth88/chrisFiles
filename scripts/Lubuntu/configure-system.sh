@@ -11,6 +11,17 @@ sudo apt-get -q --yes dist-upgrade
 sudo apt-get -q --yes install gcc make git gitk vim vim-gui-common maven openjdk-6-{jdk,doc,source} openjdk-7-{jdk,doc,source} gdb libssl-dev autoconf visualvm firefox curl meld dkms
 sudo apt-get -q --yes build-dep git
 
+# install guest additions if available
+[ -x /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run ] && sudo /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run
+
+# add user to group which is allowed to read shared folders
+id -G -n | grep vbox || sudo adduser $USER vboxsf
+
+# mount indep data automatically
+if ! grep "/dev/sdb1" /etc/fstab ;then
+	echo "/dev/sdb1 /media/user/Indep ext4 rw,nosuid,nodev,uhelper=udisks2 0 0" >> /etc/fstab
+fi
+
 # install java5 (can only be found on old repos)
 dpkg -s sun-java5-jdk || {
 	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
