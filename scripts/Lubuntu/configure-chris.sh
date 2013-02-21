@@ -7,17 +7,17 @@
 # usage: getOrFetch <url> <localDir> [<gerritBranchToPush>]
 cloneOrFetch() {
 	[ -d "$2" ] || mkdir -p "$2"	
-	if git rev-parse --resolve-git-dir "$1/.git" >/dev/null 2>&1 ;then
-		git fetch --git-dir "$1/.git" -q --all	
-		if [ `git rev-parse --symbolic-full-name --abbrev-ref HEAD` == "master" ] ;then
-			git pull -q	
+	if git rev-parse --resolve-git-dir "$2/.git" >/dev/null 2>&1 ;then
+		git --git-dir "$2/.git" fetch -q --all
+		if [ `git rev-parse --git-dir "$2/.git" --symbolic-full-name --abbrev-ref HEAD` == "master" ] ;then
+			git --git-dir "$2/.git" --work-tree "$2" pull -q
 		fi
 	else
 		git clone -q "$1" "$2"
 	fi
 	if [ ! -z "$3" ] ;then
 		git config -f "$2/.git/config" remote.origin.push HEAD:refs/for/$3 
-		if [ ! -f "$2/.git/hooks/commit-msg" ] ;then 
+		if [ -f "$2/.git/hooks/commit-msg" ] ;then
 			echo "Won't download a commit-msg hook for repo $2 because such a hook already exists"
 		else
 			curl -o "$2/.git/hooks/commit-msg" https://git.eclipse.org/r/tools/hooks/commit-msg
