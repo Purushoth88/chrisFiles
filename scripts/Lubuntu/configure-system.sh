@@ -8,17 +8,17 @@ sudo apt-get -q update
 sudo apt-get -q --yes dist-upgrade
 
 # install applications
-sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-{jdk,doc,source} openjdk-7-{jdk,doc,source} visualvm firefox curl meld dkms
+sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-{jdk,doc,source} visualvm firefox curl dkms
 
 # install guest additions if available
-[ -x /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run ] && sudo /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run
+[ -x /media/$USER/VBOXADDITIONS*/VBoxLinuxAdditions.run ] && sudo /media/$USER/VBOXADDITIONS*/VBoxLinuxAdditions.run
 
 # add user to group which is allowed to read shared folders
 id -G -n | grep vbox || sudo adduser $USER vboxsf
 
 # mount indep data automatically
 if ! grep "/dev/sdb1" /etc/fstab ;then
-	echo "/dev/sdb1 /media/user/Indep ext4 rw,nosuid,nodev,uhelper=udisks2 0 0" >> /etc/fstab
+	echo "LABEL=Indep /media/$USER/Indep ext4 rw,nosuid,nodev,uhelper=udisks2 0 0" >> /etc/fstab
 fi
 
 # install java5 (can only be found on old repos)
@@ -28,7 +28,7 @@ dpkg -s sun-java5-jdk || {
 	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
 	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
 	sudo apt-get -q --yes update
-	sudo apt-get -q --yes install sun-java5-{jdk,doc,source}
+	sudo apt-get -q --yes install sun-java5-jdk
 	sudo update-alternatives --config java
 	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
 	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
