@@ -26,8 +26,8 @@ cloneOrFetch() {
 	fi
 }
 
-sudo apt-get -q --yes install gdb autoconf libssl-dev 
-sudo apt-get -q --yes build-dep git
+sudo apt-get -q=2 install gdb autoconf libssl-dev 
+sudo apt-get -q=2 build-dep git
 
 # clone git e/jgit & gerrit
 cloneOrFetch https://github.com/git/git.git ~/git/git 
@@ -48,7 +48,6 @@ cloneOrFetch http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~
 (cd ~/git/egit && mvn -q -P skip-ui-tests install -DskipTests)
 (cd ~/git/egit-github && mvn -q install -DskipTests) 
 (cd ~/git/egit-pde && mvn -q install -DskipTests) 
-wait
 
 # Create a gerrit test site
 if [ -f ~/git/gerrit/gerrit-war/target/gerrit*.war ] ;then
@@ -87,7 +86,5 @@ if [ ! -f ~/lib/git_bookmarks.html ] ;then
     </DL><p>
 </DL><p>
 EOF
-echo "Please import bookmarks into your browser from ~/lib/git_bookmarks.html"
+read -p "Please import bookmarks into your browser from ~/lib/git_bookmarks.html"
 fi
-
-wait

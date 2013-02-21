@@ -10,7 +10,7 @@ installInEclipse() {
 }
 
 # install eclipse indigo
-sudo apt-get -q --yes install eclipse-platform
+sudo apt-get -q=2 install eclipse-platform
 
 # install eclipse juno
 if [ ! -d /usr/lib/eclipse-juno ] ;then

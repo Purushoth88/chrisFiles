@@ -4,14 +4,14 @@
 #
 
 # System updates
-sudo apt-get -q update
+sudo apt-get -q=2 update
 
 # install applications
-sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-{jdk,doc,source} visualvm firefox curl dkms
+sudo apt-get -q=2 install git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-{jdk,doc,source} visualvm firefox curl dkms
 [ -x /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run ] && sudo /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run
 
 # do an upgrade of the installation
-sudo apt-get -q --yes dist-upgrade
+sudo apt-get -q=2 dist-upgrade
 
 # add user to group which is allowed to read shared folders
 id -G -n | grep vbox || sudo adduser $USER vboxsf
@@ -27,14 +27,13 @@ dpkg -s sun-java5-jdk || {
 	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates multiverse"
 	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
 	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
-	sudo apt-get -q --yes update
-	sudo apt-get -q --yes install sun-java5-jdk
-	sudo update-alternatives --config java
+	sudo apt-get -q=2 update
+	sudo apt-get -q=2 install sun-java5-jdk
 	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
 	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
 	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
 	sudo add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates multiverse"
-	sudo apt-get -q update
+	sudo apt-get -q=2 update
 }
 
 if ! grep "^search" /etc/resolvconf/resolv.conf.d/base ;then
@@ -147,5 +146,3 @@ sudo sed -r -i 's&/usr/share/netbeans/platform12/&/usr/share/netbeans/platform13
 
 # set the default colorscheme of vim to desert
 [ -f ~/.vimrc ] || echo "colorscheme desert" > ~/.vimrc
-
-wait

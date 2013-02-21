@@ -26,7 +26,7 @@ cloneOrFetch() {
 	fi
 }
 
-sudo apt-get install -q --yes terminator 
+sudo apt-get -q=2 install terminator 
 
 if [ -f ~/.netrc ] ;then
 	echo "Don't write ~/.netrc because it already exists"
