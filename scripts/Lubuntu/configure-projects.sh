@@ -27,25 +27,24 @@ cloneOrFetch() {
 }
 
 # clone git e/jgit & gerrit
-cloneOrFetch https://github.com/git/git.git ~/git/git &
-cloneOrFetch https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit master &
-cloneOrFetch https://git.eclipse.org/r/p/egit/egit ~/git/egit master &
-cloneOrFetch https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github master &
-cloneOrFetch https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde master &
-cloneOrFetch https://gerrit.googlesource.com/gerrit ~/git/gerrit master &
-wait
+cloneOrFetch https://github.com/git/git.git ~/git/git 
+cloneOrFetch https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit master 
+cloneOrFetch https://git.eclipse.org/r/p/egit/egit ~/git/egit master 
+cloneOrFetch https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github master 
+cloneOrFetch https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde master 
+cloneOrFetch https://gerrit.googlesource.com/gerrit ~/git/gerrit master 
 
 # clone/fetch linux
-cloneOrFetch http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
+cloneOrFetch http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux 
 
 # build the projects
-(cd ~/git/gerrit && mvn package -DskipTests) 
+(cd ~/git/gerrit && mvn -q package -DskipTests) 
 (cd ~/git/git && make configure && ./configure && make) 
-(cd ~/git/jgit && mvn install -DskipTests)
-(cd ~/git/jgit/org.eclipse.jgit.packaging && mvn install)
-(cd ~/git/egit && mvn -P skip-ui-tests install -DskipTests)
-(cd ~/git/egit-github && mvn install -DskipTests) 
-(cd ~/git/egit-pde && mvn install -DskipTests) 
+(cd ~/git/jgit && mvn -q install -DskipTests)
+(cd ~/git/jgit/org.eclipse.jgit.packaging && mvn -q install)
+(cd ~/git/egit && mvn -q -P skip-ui-tests install -DskipTests)
+(cd ~/git/egit-github && mvn -q install -DskipTests) 
+(cd ~/git/egit-pde && mvn -q install -DskipTests) 
 wait
 
 # Create a gerrit test site
@@ -85,6 +84,7 @@ if [ ! -f ~/lib/git_bookmarks.html ] ;then
     </DL><p>
 </DL><p>
 EOF
+echo "Please import bookmarks into your browser from ~/lib/git_bookmarks.html"
 fi
 
 wait
