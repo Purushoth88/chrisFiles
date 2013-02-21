@@ -10,6 +10,9 @@ sudo apt-get -q update
 sudo apt-get -q --yes install git gitk vim vim-gui-common maven openjdk-6-jdk openjdk-7-{jdk,doc,source} visualvm firefox curl dkms
 [ -x /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run ] && sudo /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run
 
+# do an upgrade of the installation
+sudo apt-get -q --yes dist-upgrade
+
 # add user to group which is allowed to read shared folders
 id -G -n | grep vbox || sudo adduser $USER vboxsf
 
