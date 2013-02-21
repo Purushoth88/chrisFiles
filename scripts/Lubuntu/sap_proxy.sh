@@ -23,24 +23,27 @@ if [ ! -f ~/.m2/settings_sap_proxy.xml ] ;then
 	cat <<END >~/.m2/settings_sap_proxy.xml
 <settings>
   <proxies>
-   <proxy><active>true</active>
+    <proxy><active>true</active>
       <protocol>http</protocol>
       <host>proxy</host>
       <port>8080</port>
       <nonProxyHosts>nexus|*.sap.corp</nonProxyHosts>
     </proxy>
-  </proxies>
-   <proxy><active>true</active>
+    <proxy><active>true</active>
       <protocol>https</protocol>
       <host>proxy</host>
       <port>8080</port>
       <nonProxyHosts>nexus|*.sap.corp</nonProxyHosts>
     </proxy>
+  </proxies>
 </settings>
 END
 fi
 if [ ! -f ~/.m2/settings.xml ] ;then
 	cp ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml
+fi
+if [ -f ~/.m2/settings.xml ] ;then
+	sudo sed -r -i 's/<proxy><active>false</<proxy><active>true</' ~/.m2/settings.xml
 fi
 if [ ! -f /etc/apt/apt.conf.d/80proxy ] ;then
 	cat <<END >80proxy
