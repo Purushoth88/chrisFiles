@@ -12,31 +12,10 @@ installInEclipse() {
 # install eclipse indigo
 sudo apt-get -q=2 install eclipse-platform
 
-# install eclipse juno
-if [ ! -d /usr/lib/eclipse-juno ] ;then
-	tmp=$(mktemp -d)
-	wget -qO- 'http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/juno/R/eclipse-jee-juno-linux-gtk-x86_64.tar.gz&r=1' | tar -C $tmp -xz
-	sudo mv $tmp/eclipse /usr/lib/eclipse-juno
-fi
-sudo ln -s /usr/lib/eclipse-juno/eclipse /usr/bin/eclipse-juno
-if [ ! -f ~/.local/share/applications/eclipse-juno.desktop ] ;then
-	mkdir -p ~/.local/share/applications
-	cat <<EOF >~/.local/share/applications/eclipse-juno.desktop
-[Desktop Entry]
-Type=Application
-Name=Eclipse (Juno)
-Comment=Eclipse Integrated Development Environment
-Icon=eclipse
-Exec=eclipse-juno
-Terminal=false
-Categories=Development;IDE;Java;
-EOF
-fi
-
 # install eclipse kepler
 if [ ! -d /usr/lib/eclipse-kepler ] ;then
 	tmp=$(mktemp -d)
-	wget -qO- 'http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/S-4.3M5a-201302041400/eclipse-SDK-4.3M5a-linux-gtk-x86_64.tar.gz&mirror_id=17' | tar -C $tmp -xz
+	wget -qO- 'http://download.eclipse.org/technology/epp/downloads/release/kepler/M5/eclipse-jee-kepler-M5-linux-gtk-x86_64.tar.gz' | tar -C $tmp -xz
 	sudo mv $tmp/eclipse /usr/lib/eclipse-kepler
 fi
 sudo ln -s /usr/lib/eclipse-kepler/eclipse /usr/bin/eclipse-kepler
@@ -47,7 +26,7 @@ if [ ! -f ~/.local/share/applications/eclipse-kepler.desktop ] ;then
 Type=Application
 Name=Eclipse (Kepler)
 Comment=Eclipse Integrated Development Environment
-Icon=eclipse
+Icon=eclipse-kepler
 Exec=eclipse-kepler
 Terminal=false
 Categories=Development;IDE;Java;
@@ -61,12 +40,12 @@ if [ ! -d ~/egit-releases/$rel ] ;then
 	wget -q http://download.eclipse.org/egit/updates-2.0/$rel.zip && unzip $rel.zip -d ~/egit-releases/$rel && rm $rel.zip
 fi
 
-# install egit/jgit, cdt,...  in juno
-installInEclipse eclipse-juno \
-	http://download.eclipse.org/egit/updates,http://download.eclipse.org/releases/juno,http://download.eclipse.org/eclipse/updates/4.2,http://update.eclemma.org/ \
-	org.eclipse.egit.feature.group,org.eclipse.egit.import.feature.group,org.eclipse.egit.mylyn.feature.group,org.eclipse.egit.psf.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group,org.eclipse.mylyn.gerrit.feature.feature.group,org.eclipse.mylyn.git.feature.group,org.eclipse.mylyn.github.feature.feature.group,org.eclipse.cdt.autotools.feature.group,org.eclipse.cdt.feature.group,org.eclipse.m2e.feature.feature.group,org.eclipse.pde.api.tools.ee.j2se15.group,org.eclipse.pde.api.tools.ee.javase16.group,org.eclipse.pde.api.tools.ee.javase17.group,com.mountainminds.eclemma.feature.feature.group
+# install egit/jgit in kepler
+installInEclipse eclipse-kepler \
+	http://download.eclipse.org/releases/kepler,http://download.eclipse.org/eclipse/updates/4.3,http://download.eclipse.org/mylyn/releases/kepler,http://download.eclipse.org/webtools/repository/kepler,http://update.eclemma.org,http://findbugs.cs.umd.edu/eclipse \
+	org.eclipse.egit.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group,org.eclipse.cdt.feature.group,org.eclipse.pde.api.tools.ee.feature.feature.group,com.mountainminds.eclemma.feature.feature.group,edu.umd.cs.findbugs.plugin.eclipse.feature.group,org.eclipse.m2e.feature.feature.group
 
 # install egit/jgit in indigo
 installInEclipse eclipse \
 	http://download.eclipse.org/egit/updates,http://download.eclipse.org/releases/indigo \
-	org.eclipse.egit.feature.group,org.eclipse.egit.psf.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group
+	org.eclipse.egit.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group
