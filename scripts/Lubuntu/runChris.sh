@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if ping -c proxy.wdf.sap.corp ;then
+	export http_proxy=http://proxy:8080
+fi
+
 date=$(date +%Y%m%d%H%M)
 
 mkdir ~/bin
