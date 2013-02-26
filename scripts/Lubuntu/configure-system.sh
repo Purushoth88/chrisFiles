@@ -3,6 +3,13 @@
 # Configure a Lubuntu12.04 system to my needs
 #
 
+if ping -c proxy.wdf.sap.corp ;then
+	export http_proxy=http://proxy:8080
+	export https_proxy=https://proxy:8080
+	export no_proxy="wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp"
+	export APT_CONFIG="Acquire::http::proxy=http://proxy:8080/;Acquire::https::proxy=https://proxy:8080"
+fi
+
 # install java5 (can only be found on old repos)
 dpkg -s sun-java5-jdk || {
 	sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
