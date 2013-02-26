@@ -3,7 +3,7 @@
 # Configure a Lubuntu12.04 system to my needs
 #
 
-if ping -c proxy.wdf.sap.corp ;then
+if ping -c 1 proxy.wdf.sap.corp ;then
 	export http_proxy=http://proxy:8080
 	export https_proxy=https://proxy:8080
 	export no_proxy="wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp"
