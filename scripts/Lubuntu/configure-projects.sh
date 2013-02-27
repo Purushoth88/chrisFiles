@@ -26,8 +26,15 @@ cloneOrFetch() {
 	fi
 }
 
-sudo apt-get -q=2 install gdb autoconf libssl-dev 
-sudo apt-get -q=2 build-dep git
+# while in the intranet set the correct proxy
+if ping -c 1 proxy.wdf.sap.corp ;then
+	export http_proxy=http://proxy:8080 https_proxy=https://proxy:8080 no_proxy="wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp"
+else
+	unset http_proxy https_proxy no_proxy
+fi
+
+sudo -E apt-get -q=2 install gdb autoconf libssl-dev
+sudo -E apt-get -q=2 build-dep git
 
 # clone git e/jgit & gerrit
 cloneOrFetch https://github.com/git/git.git ~/git/git 
