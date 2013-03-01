@@ -9,8 +9,8 @@ fi
 
 date=$(date +%Y%m%d%H%M)
 
-mkdir ~/bin
-mkdir ~/log
+[ -d ~/bin ] || mkdir ~/bin
+[ -d ~/log ] || mkdir ~/log
 
 [ -f ~/bin/"$1" ] && mv ~/bin/"$1" ~/bin/"$1.$date.bak"
 (cd ~/bin; wget "https://raw.github.com/chalstrick/chrisFiles/master/scripts/Lubuntu/$1"; )
