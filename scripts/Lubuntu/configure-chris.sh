@@ -6,10 +6,9 @@
 # Clones a non-bare git repo or (if it already exists) fetches updates
 # usage: getOrFetch <url> <localDir> [<gerritBranchToPush>]
 cloneOrFetch() {
-	[ -d "$2" ] || mkdir -p "$2"	
-	if git rev-parse --resolve-git-dir "$2/.git" >/dev/null 2>&1 ;then
+	if [ -d "$2/.git/refs" ] ;then
 		git --git-dir "$2/.git" fetch -q --all
-		if [ `git rev-parse --git-dir "$2/.git" --symbolic-full-name --abbrev-ref HEAD` == "master" ] ;then
+		if [ `git --git-dir "$2/.git" rev-parse --symbolic-full-name --abbrev-ref HEAD` == "master" ] ;then
 			git --git-dir "$2/.git" --work-tree "$2" pull -q
 		fi
 	else
@@ -17,9 +16,7 @@ cloneOrFetch() {
 	fi
 	if [ ! -z "$3" ] ;then
 		git config -f "$2/.git/config" remote.origin.push HEAD:refs/for/$3 
-		if [ -f "$2/.git/hooks/commit-msg" ] ;then
-			echo "Won't download a commit-msg hook for repo $2 because such a hook already exists"
-		else
+		if [ ! -f "$2/.git/hooks/commit-msg" ] ;then
 			curl -o "$2/.git/hooks/commit-msg" https://git.eclipse.org/r/tools/hooks/commit-msg
 			chmod +x "$2/.git/hooks/commit-msg"
 		fi
@@ -27,11 +24,7 @@ cloneOrFetch() {
 }
 
 # while in the intranet set the correct proxy
-if ping -c 1 proxy.wdf.sap.corp ;then
-	export http_proxy=http://proxy:8080 https_proxy=https://proxy:8080 no_proxy="wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp"
-else
-	unset http_proxy https_proxy no_proxy
-fi
+[ -x ~/bin/setProxy.sh ] && . ~/bin/setProxy.sh
 
 # install my programs
 sudo -E apt-get -q=2 install terminator

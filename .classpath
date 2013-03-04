@@ -8,16 +8,12 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.ant"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.ant.test"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.console"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.generated.storage.dht.proto"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.http.server"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.http.test"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.iplog"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.junit"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.junit.http"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.pgm"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.pgm.test"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.storage.dht"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.storage.dht.test"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.test"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.ui"/>
 	<classpathentry kind="output" path="java/bin"/>

@@ -3,12 +3,8 @@
 # Configure a Lubuntu12.04 system to my needs
 #
 
-# while in the intranet set the correct proxy
-if ping -c 1 proxy.wdf.sap.corp ;then
-	export http_proxy=http://proxy:8080 https_proxy=https://proxy:8080 no_proxy="wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp"
-else
-	unset http_proxy https_proxy no_proxy
-fi
+# set proxy related stuff
+[ -x ~/bin/setProxy.sh ] && . ~/bin/setProxy.sh
 
 # install java5 (can only be found on old repos)
 dpkg -s sun-java5-jdk || {
