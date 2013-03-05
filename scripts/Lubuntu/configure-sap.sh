@@ -3,7 +3,7 @@
 # Configure a Lubuntu system to work inside the SAP intranet.
 
 # create a script which sets the proxy-related stuff
-if [ -f ~/bin/setProxy.sh ] ;then
+if [ ! -f ~/bin/setProxy.sh ] ;then
 	mkdir -p ~/bin
 	cat <<EOF >~/bin/setProxy.sh
 #!/bin/bash
