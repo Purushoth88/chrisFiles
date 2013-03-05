@@ -49,10 +49,10 @@ fi
 
 # install egit/jgit in kepler
 installInEclipse eclipse-kepler \
-	http://download.eclipse.org/releases/kepler,http://download.eclipse.org/eclipse/updates/4.3,http://download.eclipse.org/mylyn/releases/kepler,http://download.eclipse.org/webtools/repository/kepler,http://update.eclemma.org,http://findbugs.cs.umd.edu/eclipse \
-	org.eclipse.egit.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group,org.eclipse.cdt.feature.group,org.eclipse.pde.api.tools.ee.feature.feature.group,com.mountainminds.eclemma.feature.feature.group,edu.umd.cs.findbugs.plugin.eclipse.feature.group,org.eclipse.m2e.feature.feature.group
+	http://download.eclipse.org/releases/kepler,http://download.eclipse.org/egit/updates \
+	org.eclipse.egit.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group
 
 # install egit/jgit in indigo
 installInEclipse eclipse \
-	http://download.eclipse.org/egit/updates,http://download.eclipse.org/releases/indigo \
+	http://download.eclipse.org/releases/indigo,http://download.eclipse.org/egit/updates \
 	org.eclipse.egit.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group
