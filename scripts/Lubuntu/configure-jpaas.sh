@@ -38,11 +38,31 @@ else
 fi
 
 # setup a jpaas sdk
-mkdir -p ~/jpaas
-read -p "Please download and extract a juno SDK from https://tools.prod.jpaas.sapbydesign.com/index.html to ~/jpaas . Hit <Return when done"
-read -p "Please download and extract a maxdb from https://downloads.sdn.sap.com/maxdb/7_8/maxdb-all-linux-64bit-x86_64-7_8_02_28.tgz . Hit <Return when done"
-read -p "Please download and extract a RemoteJDBC driver and war from https://wiki.wdf.sap.corp/wiki/display/JavaPersistence/Remote+Access+to+Databases+in+the+NetWeaver+Cloud . Hit <Return when done"
-read -p "Please download a hana studio installer from \\\\production.wdf.sap.corp\\newdb\NewDB100\\rel . Hit <Return when done"
+find /media/sf_Shared -maxdepth 1 -type f -name 'neo-sdk*.zip' -printf '%P\n' | sed -e 's/\.zip//' | while read sdk ;do
+	if [ ! -d ~/jpaas/$sdk ] ;then
+		mkdir -p ~/jpaas/$sdk
+		(cd ~/jpaas/$sdk; unzip /media/sf_Shared/$sdk.zip)
+	fi
+done
+
+if [ ! -d /opt/sdb/MaxDB ] ;then
+	tmp=$(mktemp -d)
+	(
+		cd $tmp
+		tar -xzf /media/sf_Shared/maxdb-all-linux-64bit-x86_64-7_8_02_28.tgz
+		sudo maxdb-all-linux-64bit-x86_64-7_8_02_28/SDBINST
+		rm -fr $tmp
+	)
+fi
+
+if [ ! -d ~/jpaas/remoteAccess ] ;then
+	mkdir ~/jpaas/remoteAccess
+	cp  /media/sf_Shared/com.sap.core.jdbc.remoteaccess.* ~/jpaas/remoteAccess
+fi
+
+if [ -d /media/sf_Shared/SAP_HANA_STUDIO -a ! -d /user/sap/hdbstudio ] ;then
+        sudo /media/sf_Shared/SAP_HANA_STUDIO/hdbinst
+fi
 
 # setup mavens settings.xml
 if [ ! -f ~/.m2/settings.xml.jpaas ] ;then
