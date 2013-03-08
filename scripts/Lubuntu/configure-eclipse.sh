@@ -56,3 +56,5 @@ installInEclipse eclipse-kepler \
 installInEclipse eclipse \
 	http://download.eclipse.org/releases/indigo,http://download.eclipse.org/egit/updates \
 	org.eclipse.egit.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group
+
+read -p "If on Lubuntu: correct colors in Preferences->Customize Look and Feel->Color->Tooltip"
