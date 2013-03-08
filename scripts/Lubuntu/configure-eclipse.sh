@@ -21,14 +21,17 @@ sudo -E apt-get -q=2 install eclipse-platform
 
 # install eclipse kepler
 if [ ! -d /usr/lib/eclipse-kepler ] ;then
+	keplerUrl=http://download.eclipse.org/technology/epp/downloads/release/kepler/M5/eclipse-jee-kepler-M5-linux-gtk.tar.gz
+	if [ $(uname -m) == "x86_64" ] ;then
+		keplerUrl=http://download.eclipse.org/technology/epp/downloads/release/kepler/M5/eclipse-jee-kepler-M5-linux-gtk-x86_64.tar.gz
+	fi
 	tmp=$(mktemp -d)
-	wget -qO- 'http://download.eclipse.org/technology/epp/downloads/release/kepler/M5/eclipse-jee-kepler-M5-linux-gtk-x86_64.tar.gz' | tar -C $tmp -xz
+	wget -qO- "$keplerUrl" | tar -C $tmp -xz
 	sudo mv $tmp/eclipse /usr/lib/eclipse-kepler
-fi
-sudo ln -s /usr/lib/eclipse-kepler/eclipse /usr/bin/eclipse-kepler
-if [ ! -f ~/.local/share/applications/eclipse-kepler.desktop ] ;then
-	mkdir -p ~/.local/share/applications
-	cat <<EOF >~/.local/share/applications/eclipse-kepler.desktop
+	sudo ln -s /usr/lib/eclipse-kepler/eclipse /usr/bin/eclipse-kepler
+	if [ ! -f ~/.local/share/applications/eclipse-kepler.desktop ] ;then
+		mkdir -p ~/.local/share/applications
+		cat <<EOF >~/.local/share/applications/eclipse-kepler.desktop
 [Desktop Entry]
 Type=Application
 Name=Eclipse (Kepler)
@@ -38,6 +41,7 @@ Exec=eclipse-kepler
 Terminal=false
 Categories=Development;IDE;Java;
 EOF
+	fi
 fi
 
 # prepare API Baselines
@@ -56,5 +60,3 @@ installInEclipse eclipse-kepler \
 installInEclipse eclipse \
 	http://download.eclipse.org/releases/indigo,http://download.eclipse.org/egit/updates \
 	org.eclipse.egit.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group
-
-read -p "If on Lubuntu: correct colors in Preferences->Customize Look and Feel->Color->Tooltip"
