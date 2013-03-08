@@ -3,7 +3,7 @@
 # Configure a Eclipse(Juno,Kepler) on a Lubuntu12.04 system to my needs
 #
 
-# Install plugins to eclipse 
+# Install plugins to eclipse
 # usage: installInEclipse <eclipse> <url> <commaSeperatedFeatures>
 installInEclipse() {
 	"$1" -application org.eclipse.equinox.p2.director -r "$2" -i $3
@@ -41,7 +41,7 @@ EOF
 fi
 
 # prepare API Baselines
-mkdir -p ~/egit-releases 
+mkdir -p ~/egit-releases
 rel=org.eclipse.egit.repository-2.0.0.201206130900-r
 if [ ! -d ~/egit-releases/$rel ] ;then
 	wget -q http://download.eclipse.org/egit/updates-2.0/$rel.zip && unzip $rel.zip -d ~/egit-releases/$rel && rm $rel.zip

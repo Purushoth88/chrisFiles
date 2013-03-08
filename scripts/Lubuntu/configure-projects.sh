@@ -7,15 +7,16 @@
 # usage: getOrFetch <url> <localDir> [<gerritBranchToPush>]
 cloneOrFetch() {
 	if [ -d "$2/.git/refs" ] ;then
-		git --git-dir "$2/.git" fetch -q --all
 		if [ `git --git-dir "$2/.git" rev-parse --symbolic-full-name --abbrev-ref HEAD` == "master" ] ;then
 			git --git-dir "$2/.git" --work-tree "$2" pull -q
+		else
+			git --git-dir "$2/.git" fetch -q --all
 		fi
 	else
 		git clone -q "$1" "$2"
 	fi
 	if [ ! -z "$3" ] ;then
-		git config -f "$2/.git/config" remote.origin.push HEAD:refs/for/$3 
+		git config -f "$2/.git/config" remote.origin.push HEAD:refs/for/$3
 		if [ ! -f "$2/.git/hooks/commit-msg" ] ;then
 			curl -o "$2/.git/hooks/commit-msg" https://git.eclipse.org/r/tools/hooks/commit-msg
 			chmod +x "$2/.git/hooks/commit-msg"
@@ -31,24 +32,24 @@ sudo -E apt-get -q=2 install gdb autoconf libssl-dev
 sudo -E apt-get -q=2 build-dep git
 
 # clone git e/jgit & gerrit
-cloneOrFetch https://github.com/git/git.git ~/git/git 
-cloneOrFetch https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit master 
-cloneOrFetch https://git.eclipse.org/r/p/egit/egit ~/git/egit master 
-cloneOrFetch https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github master 
-cloneOrFetch https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde master 
-cloneOrFetch https://gerrit.googlesource.com/gerrit ~/git/gerrit master 
+cloneOrFetch https://github.com/git/git.git ~/git/git
+cloneOrFetch https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit master
+cloneOrFetch https://git.eclipse.org/r/p/egit/egit ~/git/egit master
+cloneOrFetch https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github master
+cloneOrFetch https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde master
+cloneOrFetch https://gerrit.googlesource.com/gerrit ~/git/gerrit master
 
 # clone/fetch linux
-cloneOrFetch http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux 
+cloneOrFetch http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux
 
 # build the projects
-(cd ~/git/gerrit && mvn -q package -DskipTests) 
-(cd ~/git/git && make configure && ./configure && make) 
+(cd ~/git/gerrit && mvn -q package -DskipTests)
+(cd ~/git/git && make configure && ./configure && make)
 (cd ~/git/jgit && mvn -q install -DskipTests)
 (cd ~/git/jgit/org.eclipse.jgit.packaging && mvn -q install)
 (cd ~/git/egit && mvn -q -P skip-ui-tests install -DskipTests)
-(cd ~/git/egit-github && mvn -q install -DskipTests) 
-(cd ~/git/egit-pde && mvn -q install -DskipTests) 
+(cd ~/git/egit-github && mvn -q install -DskipTests)
+(cd ~/git/egit-pde && mvn -q install -DskipTests)
 
 # Create a gerrit test site
 if [ -f ~/git/gerrit/gerrit-war/target/gerrit*.war ] ;then

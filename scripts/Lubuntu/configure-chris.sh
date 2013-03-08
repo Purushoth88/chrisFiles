@@ -15,7 +15,7 @@ cloneOrFetch() {
 		git clone -q "$1" "$2"
 	fi
 	if [ ! -z "$3" ] ;then
-		git config -f "$2/.git/config" remote.origin.push HEAD:refs/for/$3 
+		git config -f "$2/.git/config" remote.origin.push HEAD:refs/for/$3
 		if [ ! -f "$2/.git/hooks/commit-msg" ] ;then
 			curl -o "$2/.git/hooks/commit-msg" https://git.eclipse.org/r/tools/hooks/commit-msg
 			chmod +x "$2/.git/hooks/commit-msg"
@@ -58,7 +58,7 @@ else
 	cp ~/git/chrisFiles/vim/_vimrc ~/.vimrc
 fi
 
-(cd ~/git/jgit && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/jgit/jgit.git && git remote add github https://chalstrick@github.com/chalstrick/jgit.git && git fetch github) 
-(cd ~/git/egit && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit.git && git remote add github https://chalstrick@github.com/chalstrick/egit.git && git fetch github) 
+(cd ~/git/jgit && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/jgit/jgit.git && git remote add github https://chalstrick@github.com/chalstrick/jgit.git && git fetch github)
+(cd ~/git/egit && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit.git && git remote add github https://chalstrick@github.com/chalstrick/egit.git && git fetch github)
 git config -f ~/git/egit-pde/.git/config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit-pde.git
 git config -f ~/git/egit-github/.git/config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit-github.git
