@@ -37,9 +37,6 @@ else
 	unset http_proxy https_proxy no_proxy
 fi
 
-# install tomcat
-sudo -E apt-get -q=2 install tomcat7 tomcat7-admin
-
 # setup a jpaas sdk
 find /media/sf_Shared -maxdepth 1 -type f -name 'neo-sdk*.zip' -printf '%P\n' | sed -e 's/\.zip//' | while read sdk ;do
 	if [ ! -d ~/jpaas/$sdk ] ;then

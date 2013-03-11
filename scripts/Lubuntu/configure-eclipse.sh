@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Configure a Eclipse(Juno,Kepler) on a Lubuntu12.04 system to my needs
+# Configure a Eclipse(Indigo, Juno) on a Lubuntu12.04 system to my needs
 #
 
 # Install plugins to eclipse
@@ -39,36 +39,8 @@ if [ ! -x /usr/bin/eclipse-juno ] ;then
 Type=Application
 Name=Eclipse (Juno)
 Comment=Eclipse Integrated Development Environment
-Icon=/opt/eclipse-juno/icon.xpm
+Icon=eclipse-juno
 Exec=eclipse-juno
-Terminal=false
-Categories=Development;IDE;Java;
-EOF
-	fi
-fi
-
-# install eclipse kepler
-if [ ! -x /usr/bin/eclipse-kepler ] ;then
-	keplerUrl=http://download.eclipse.org/technology/epp/downloads/release/kepler/M5/eclipse-jee-kepler-M5-linux-gtk.tar.gz
-	if [ $(uname -m) == "x86_64" ] ;then
-		keplerUrl=http://download.eclipse.org/technology/epp/downloads/release/kepler/M5/eclipse-jee-kepler-M5-linux-gtk-x86_64.tar.gz
-	fi
-	tmp=$(mktemp -d)
-	wget -qO- "$keplerUrl" | tar -C $tmp -xz
-	sudo mv $tmp/eclipse /opt/eclipse-kepler
-	rm -fr $tmp
-	sudo chown -R root:root /opt/eclipse-kepler
-	sudo chmod -R +r /opt/eclipse-kepler
-	sudo ln -s /opt/eclipse-kepler/eclipse /usr/bin/eclipse-kepler
-	if [ ! -f ~/.local/share/applications/eclipse-kepler.desktop ] ;then
-		mkdir -p ~/.local/share/applications
-		cat <<EOF >~/.local/share/applications/eclipse-kepler.desktop
-[Desktop Entry]
-Type=Application
-Name=Eclipse (Kepler)
-Comment=Eclipse Integrated Development Environment
-Icon=/opt/eclipse-kepler/icon.xpm
-Exec=eclipse-kepler
 Terminal=false
 Categories=Development;IDE;Java;
 EOF
@@ -85,11 +57,6 @@ fi
 # install egit/jgit in juno
 installInEclipse eclipse-juno \
 	http://download.eclipse.org/releases/juno,http://download.eclipse.org/egit/updates \
-	org.eclipse.egit.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group
-
-# install egit/jgit in kepler
-installInEclipse eclipse-kepler \
-	http://download.eclipse.org/releases/kepler,http://download.eclipse.org/egit/updates \
 	org.eclipse.egit.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group
 
 # install egit/jgit in indigo
