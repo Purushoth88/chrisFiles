@@ -37,6 +37,9 @@ else
 	unset http_proxy https_proxy no_proxy
 fi
 
+# install tomcat
+sudo -E apt-get -q=2 install tomcat7 tomcat7-admin
+
 # setup a jpaas sdk
 find /media/sf_Shared -maxdepth 1 -type f -name 'neo-sdk*.zip' -printf '%P\n' | sed -e 's/\.zip//' | while read sdk ;do
 	if [ ! -d ~/jpaas/$sdk ] ;then
@@ -82,13 +85,23 @@ GIT_SSL_NO_VERIFY=true
 
 # clone metering
 cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/Services/metering ~/git/metering master
-(cd ~/git/metering/com.sap.core.metering.parent; mvn -q install -DskipTests)
 
 # clone orion
 cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/LeanDI/jpaas.org.eclipse.orion.server ~/git/org.eclipse.orion.server master
 cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/LeanDI/jpaas.org.eclipse.orion.client ~/git/org.eclipse.orion.client master
 cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/LeanDI/jpaas.orion ~/git/jpaas.orion master
-(cd ~/git/jpaas.orion; mvn -q install -DskipTests)
+
+# clone account page
+cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/JPaaS/com.sap.core.account.git ~/git/com.sap.core.account master
+
+# clone appdesigner
+cloneOrFetch https://git.wdf.sap.corp:8080/sapui5/sapui5.appdesigner.git ~/git/sapui5.appdesigner master
+
+# build the cloned repos
+(cd ~/git/metering/com.sap.core.metering.parent; mvn -q install -DskipTests=true)
+(cd ~/git/jpaas.orion; mvn -q install -DskipTests=true)
+(cd ~/git/com.sap.core.account; mvn -q install -DskipTests=true)
+(cd ~/git/sapui5.appdesigner; mvn -q install -DskipTests=true)
 
 if [ ! -f ~/lib/git_jpaas_bookmarks.html ] ;then
 	[ -d ~/lib ] || mkdir ~/lib
