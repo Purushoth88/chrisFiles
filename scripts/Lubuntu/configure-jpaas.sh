@@ -128,4 +128,8 @@ EOF
 fi
 read -p "Please import bookmarks from ~/lib/git_jpaas_bookmarks.html into chrome. Hit <Return when done"
 
+# install SAP Tools in juno
+installInEclipse eclipse-juno \
+	http://download.eclipse.org/releases/juno,https://tools.hana.ondemand.com/juno,http://download.eclipse.org/m2e-wtp/releases \
+	com.sap.core.tools.eclipse.help.feature.feature.group,com.sap.core.tools.eclipse.server.feature.feature.group,com.sap.jvm.profiling.feature.group,com.sap.ide.support.feature.feature.group,com.sap.ide.ui5.cloud.feature.feature.group,org.eclipse.m2e.feature.feature.group,org.eclipse.m2e.logback.feature.feature.group,org.eclipse.m2e.wtp.jaxrs.feature.feature.group,org.eclipse.m2e.wtp.jpa.feature.feature.group,org.eclipse.m2e.wtp.jsf.feature.feature.group,org.eclipse.m2e.wtp.feature.feature.group,org.eclipse.egit.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group 
 exit

@@ -27,11 +27,9 @@ if [ ! -x /usr/bin/eclipse-juno ] ;then
 	fi
 	tmp=$(mktemp -d)
 	wget -qO- "$junoUrl" | tar -C $tmp -xz
-	sudo mv $tmp/eclipse /opt/eclipse-juno
+	mv $tmp/eclipse ~/eclipse-juno
 	rm -fr $tmp
-	sudo chown -R root:root /opt/eclipse-juno
-	sudo chmod -R +r /opt/eclipse-juno
-	sudo ln -s /opt/eclipse-juno/eclipse /usr/bin/eclipse-juno
+	sudo ln -s ~/eclipse-juno/eclipse ~/bin/eclipse-juno
 	if [ ! -f ~/.local/share/applications/eclipse-juno.desktop ] ;then
 		mkdir -p ~/.local/share/applications
 		cat <<EOF >~/.local/share/applications/eclipse-juno.desktop
