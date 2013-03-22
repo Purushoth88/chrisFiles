@@ -15,8 +15,8 @@ git config --global alias.st 'status -s'
 git config --global alias.cm commit
 git config --global alias.br branch
 git config --global alias.rl 'reflog --date=local'
-git config --global alias.addchange '!bash -c '\''git config --add remote."$1".fetch refs/changes/"${2: -2}"/"$2"/*:refs/tags/"$1"/"$2"/*'\'' -'
-git config --global alias.getchange '!bash -c '\''git fetch "$1" refs/changes/"${2: -2}"/"$2"/*:refs/tags/"$1"/"$2"/*'\'' -'
+git config --global alias.addchange '!bash -c '\''git config --add remote."$1".fetch refs/changes/"${2: -2}"/"$2"/*:refs/tags/change/"$2"/*'\'' -'
+git config --global alias.getchange '!bash -c '\''git fetch "$1" refs/changes/"${2: -2}"/"$2"/*:refs/tags/change/"$2"/*'\'' -'
 git config --global http.sslverify false
 git config --global color.ui auto
 git config --global alias.snap '!bash -c '\''~/git/chrisFiles/git/scripts/snapshot.sh $*'\'' -'
