@@ -13,8 +13,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.junit"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.junit.http"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.pgm"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.pgm.test"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.test"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.ui"/>
 	<classpathentry kind="output" path="java/bin"/>
 </classpath>
