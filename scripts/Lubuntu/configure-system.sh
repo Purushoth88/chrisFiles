@@ -28,7 +28,7 @@ dpkg -s sun-java5-jdk || {
 sudo -E apt-get -q=2 update
 
 # install applications
-sudo -E apt-get -q=2 install git gitk vim vim-gui-common maven openjdk-6-{jdk,doc,source} openjdk-7-{jdk,doc,source} visualvm curl dkms
+sudo -E apt-get -q=2 install git gitk vim vim-gui-common maven openjdk-6-{jdk,doc,source} openjdk-7-{jdk,doc,source} visualvm curl dkms firefox flashplugin-installer
 
 # install guest additions (after dkms)
 [ -x /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run ] && sudo -E /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run
