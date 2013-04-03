@@ -60,4 +60,4 @@ installInEclipse eclipse-juno \
 # install egit/jgit in indigo
 installInEclipse eclipse \
 	http://download.eclipse.org/releases/indigo,http://download.eclipse.org/egit/updates \
-	org.eclipse.egit.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group
+	org.eclipse.egit.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group org.eclipse.cdt.autotools.feature.group org.eclipse.cdt.feature.group 
