@@ -18,9 +18,9 @@ fi
 
 # install eclipse juno
 if [ ! -x /usr/bin/eclipse-juno ] ;then
-	junoUrl=http://mirror.selfnet.de/eclipse/technology/epp/downloads/release/juno/SR2/eclipse-jee-juno-SR2-linux-gtk.tar.gz
+	junoUrl=http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2.2-201302041200/eclipse-SDK-4.2.2-linux-gtk.tar.gz&r=1
 	if [ $(uname -m) == "x86_64" ] ;then
-		junoUrl=http://mirror.selfnet.de/eclipse/technology/epp/downloads/release/juno/SR2/eclipse-jee-juno-SR2-linux-gtk-x86_64.tar.gz
+		junoUrl=http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2.2-201302041200/eclipse-SDK-4.2.2-linux-gtk-x86_64.tar.gz&r=1
 	fi
 	tmp=$(mktemp -d)
 	wget -qO- "$junoUrl" | tar -C $tmp -xz

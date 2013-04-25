@@ -67,6 +67,10 @@ EOF
 	chmod +x ~/bin/jgit
 fi
 
+# get the egit developer tools
+wget -q -O /tmp/egit-developer-tools.p2f http://git.eclipse.org/c/egit/egit.git/plain/tools/egit-developer-tools.p2f
+read -p "Please import /tmp/egit-developer-tools.p2f in eclipse"
+
 [ -d ~/lib ] || mkdir ~/lib
 if [ ! -f ~/lib/git_bookmarks.html ] ;then
 	cat <<EOF >~/lib/git_bookmarks.html

@@ -20,7 +20,7 @@ sudo -E apt-get -q=2 update
 sudo -E apt-get -q=2 install git gitk vim vim-gui-common maven openjdk-7-{jdk,doc,source} visualvm curl dkms firefox python-software-properties python g++ make
 
 # install nodejs and scripted
-sudo apt-get install nodejs
+sudo -E apt-get -q=2 install nodejs
 npm install -g scripted
 
 # install guest additions (after dkms)
