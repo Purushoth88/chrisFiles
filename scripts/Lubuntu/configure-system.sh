@@ -24,11 +24,18 @@ dpkg -s sun-java5-jdk || {
 	sudo -E add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates multiverse"
 }
 
-# System updates
+# add latest nodejs repo (otherwise scripted doesn't install)
+sudo add-apt-repository ppa:chris-lea/node.js
+
+# update the package index database
 sudo -E apt-get -q=2 update
 
 # install applications
-sudo -E apt-get -q=2 install git gitk vim vim-gui-common maven openjdk-6-{jdk,doc,source} openjdk-7-{jdk,doc,source} visualvm curl dkms firefox flashplugin-installer
+sudo -E apt-get -q=2 install git gitk vim vim-gui-common maven openjdk-6-{jdk,doc,source} openjdk-7-{jdk,doc,source} visualvm curl dkms firefox flashplugin-installer python-software-properties python g++ make
+
+# install nodejs and scripted
+sudo apt-get install nodejs
+npm install -g scripted
 
 # install guest additions (after dkms)
 [ -x /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run ] && sudo -E /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run
