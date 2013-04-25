@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Configure a Eclipse(Indigo, Juno) on a Lubuntu12.04 system to my needs
+# Configure a Eclipse(Juno) on a Lubuntu12.04 system to my needs
 #
 
 # Install plugins to eclipse
@@ -15,9 +15,6 @@ if ping -c 1 proxy.wdf.sap.corp >/dev/null 2>&1 ;then
 else
 	unset http_proxy https_proxy no_proxy
 fi
-
-# install eclipse indigo
-sudo -E apt-get -q=2 install eclipse-platform
 
 # install eclipse juno
 if [ ! -x /usr/bin/eclipse-juno ] ;then
@@ -52,12 +49,5 @@ if [ ! -d ~/egit-releases/$rel ] ;then
 	wget -q http://download.eclipse.org/egit/updates-2.0/$rel.zip && unzip $rel.zip -d ~/egit-releases/$rel && rm $rel.zip
 fi
 
-# install egit/jgit in juno
-installInEclipse eclipse-juno \
-	http://download.eclipse.org/releases/juno,http://download.eclipse.org/egit/updates \
-	org.eclipse.egit.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group
-
-# install egit/jgit in indigo
-installInEclipse eclipse \
-	http://download.eclipse.org/releases/indigo,http://download.eclipse.org/egit/updates \
-	org.eclipse.egit.feature.group,org.eclipse.jgit.feature.group,org.eclipse.jgit.pgm.feature.group org.eclipse.cdt.autotools.feature.group org.eclipse.cdt.feature.group 
+wget -q -O /tmp/egit-developer-tools.p2f http://git.eclipse.org/c/egit/egit.git/plain/tools/egit-developer-tools.p2f
+read -p "Please import /tmp/egit-developer-tools.p2f in eclipse"

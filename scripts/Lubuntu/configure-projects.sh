@@ -88,5 +88,5 @@ if [ ! -f ~/lib/git_bookmarks.html ] ;then
     </DL><p>
 </DL><p>
 EOF
-read -p "Please import bookmarks into your browser from ~/lib/git_bookmarks.html"
+	read -p "Please import bookmarks into your browser from ~/lib/git_bookmarks.html"
 fi
