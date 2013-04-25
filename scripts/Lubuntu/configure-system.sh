@@ -10,20 +10,6 @@ else
 	unset http_proxy https_proxy no_proxy
 fi
 
-# install java5 (can only be found on old repos)
-dpkg -s sun-java5-jdk || {
-	sudo -E add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
-	sudo -E add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates multiverse"
-	sudo -E add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
-	sudo -E add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
-	sudo -E apt-get -q=2 update
-	sudo -E apt-get -q=2 install sun-java5-jdk
-	sudo -E add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy multiverse"
-	sudo -E add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ hardy-updates multiverse"
-	sudo -E add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty multiverse"
-	sudo -E add-apt-repository -r "deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates multiverse"
-}
-
 # add latest nodejs repo (otherwise scripted doesn't install)
 sudo add-apt-repository ppa:chris-lea/node.js
 
@@ -31,7 +17,7 @@ sudo add-apt-repository ppa:chris-lea/node.js
 sudo -E apt-get -q=2 update
 
 # install applications
-sudo -E apt-get -q=2 install git gitk vim vim-gui-common maven openjdk-6-{jdk,doc,source} openjdk-7-{jdk,doc,source} visualvm curl dkms firefox flashplugin-installer python-software-properties python g++ make
+sudo -E apt-get -q=2 install git gitk vim vim-gui-common maven openjdk-7-{jdk,doc,source} visualvm curl dkms firefox python-software-properties python g++ make
 
 # install nodejs and scripted
 sudo apt-get install nodejs
@@ -69,6 +55,3 @@ fi
 
 # fix errors in jvisualvm
 sudo sed -r -i 's&/usr/share/netbeans/platform12/&/usr/share/netbeans/platform13/&' /usr/bin/jvisualvm
-
-# set the default colorscheme of vim to desert
-[ -f ~/.vimrc ] || echo "colorscheme desert" > ~/.vimrc
