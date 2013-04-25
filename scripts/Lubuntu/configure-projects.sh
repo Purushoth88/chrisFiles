@@ -33,10 +33,10 @@ sudo -E apt-get -q=2 build-dep git
 
 # clone git e/jgit & gerrit
 cloneOrFetch https://github.com/git/git.git ~/git/git
-cloneOrFetch https://git.eclipse.org/r/p/jgit/jgit ~/git/jgit master
-cloneOrFetch https://git.eclipse.org/r/p/egit/egit ~/git/egit master
-cloneOrFetch https://git.eclipse.org/r/p/egit/egit-github ~/git/egit-github master
-cloneOrFetch https://git.eclipse.org/r/p/egit/egit-pde ~/git/egit-pde master
+cloneOrFetch https://git.eclipse.org/r/jgit/jgit ~/git/jgit master
+cloneOrFetch https://git.eclipse.org/r/egit/egit ~/git/egit master
+cloneOrFetch https://git.eclipse.org/r/egit/egit-github ~/git/egit-github master
+cloneOrFetch https://git.eclipse.org/r/egit/egit-pde ~/git/egit-pde master
 cloneOrFetch https://gerrit.googlesource.com/gerrit ~/git/gerrit master
 
 # clone/fetch linux

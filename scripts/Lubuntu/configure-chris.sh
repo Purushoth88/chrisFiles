@@ -58,7 +58,7 @@ else
 	cp ~/git/chrisFiles/vim/_vimrc ~/.vimrc
 fi
 
-(cd ~/git/jgit && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/jgit/jgit.git && git remote add github https://chalstrick@github.com/chalstrick/jgit.git && git fetch github)
-(cd ~/git/egit && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit.git && git remote add github https://chalstrick@github.com/chalstrick/egit.git && git fetch github)
-git config -f ~/git/egit-pde/.git/config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit-pde.git
-git config -f ~/git/egit-github/.git/config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/p/egit/egit-github.git
+(cd ~/git/jgit && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/jgit/jgit.git && git remote add github https://chalstrick@github.com/chalstrick/jgit.git && git fetch github)
+(cd ~/git/egit && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/egit/egit.git && git remote add github https://chalstrick@github.com/chalstrick/egit.git && git fetch github)
+git config -f ~/git/egit-pde/.git/config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/egit/egit-pde.git
+git config -f ~/git/egit-github/.git/config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/egit/egit-github.git
