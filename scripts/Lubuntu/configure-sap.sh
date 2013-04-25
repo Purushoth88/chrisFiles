@@ -71,7 +71,7 @@ else
 fi
 
 # while in the intranet set the correct proxy
-if [ $proxy = "-on" ] ;then
+if [ "$proxy" = "-on" ] ;then
 	grep "^http_proxy" /etc/environment || sudo sh -c 'echo http_proxy=http://proxy:8080 >> /etc/environment'
 	grep "^https_proxy" /etc/environment || sudo sh -c 'echo https_proxy=https://proxy:8080 >> /etc/environment'
 	grep "^no_proxy" /etc/environment || sudo sh -c 'echo "no_proxy=wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp" >> /etc/environment'
