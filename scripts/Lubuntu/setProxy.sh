@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Configure a Lubuntu12.04 to use SAP proxy
+# Configure a ubuntu system to use SAP proxy
 #
 
 if [ "$1" = "-h" ] ;then
@@ -40,8 +40,9 @@ Acquire::https::proxy "https://proxy:8080/";
 END
 fi
 
-if [ ! -f ~/.chromium-browser-proxy.desktop ] ;then
-	if [ -f /usr/share/applications/chromium-browser.desktop ] ;then
+if [ -f /usr/share/applications/chromium-browser.desktop ] ;then
+	[ -d ~/.local/share/applications ] || mkdir -p ~/.local/share/applications
+	if [ ! -f ~/.chromium-browser-proxy.desktop ] ;then
 		cp /usr/share/applications/chromium-browser.desktop ~/.chromium-browser-proxy.desktop
 		cp /usr/share/applications/chromium-browser.desktop ~/.chromium-browser-noproxy.desktop
 		if ! grep -e "--proxy-" ~/.chromium-browser-proxy.desktop ;then
@@ -72,7 +73,11 @@ if [ $proxy = "-on" ] ;then
 	export no_proxy='wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp'
 	[ -f /etc/apt/apt.conf.d/80proxy ] || sudo cp ~/.80proxy /etc/apt/apt.conf.d/80proxy
 	[ -f ~/.m2/settings.xml ] || cp ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml
-	cmp -s /usr/share/applications/chromium-browser.desktop ~/.chromium-browser-noproxy.desktop && sudo cp ~/.chromium-browser-proxy.desktop /usr/share/applications/chromium-browser.desktop
+	if [ -f /usr/share/applications/chromium-browser.desktop ] ;then
+		if cmp -s ~/.local/share/applications/chromium-browser.desktop ~/.chromium-browser-noproxy.desktop || [ ! -f  ~/.local/share/applications/chromium-browser.desktop ] ;then
+			cp ~/.chromium-browser-proxy.desktop ~/.local/share/applications/chromium-browser.desktop
+		fi
+	fi
 	echo "turned proxy usage ON"
 else
 	sudo sed -i '/^http_proxy/d' /etc/environment
@@ -83,6 +88,10 @@ else
 	unset no_proxy
 	cmp -s ~/.80proxy /etc/apt/apt.conf.d/80proxy && sudo rm /etc/apt/apt.conf.d/80proxy
 	cmp -s ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml && rm ~/.m2/settings.xml
-	cmp -s /usr/share/applications/chromium-browser.desktop ~/.chromium-browser-proxy.desktop && sudo cp ~/.chromium-browser-noproxy.desktop /usr/share/applications/chromium-browser.desktop
+	if [ -f /usr/share/applications/chromium-browser.desktop ] ;then
+		if cmp -s ~/.local/share/applications/chromium-browser.desktop ~/.chromium-browser-proxy.desktop || [ ! -f  ~/.local/share/applications/chromium-browser.desktop ] ;then
+			cp ~/.chromium-browser-noproxy.desktop ~/.local/share/applications/chromium-browser.desktop
+		fi
+	fi
 	echo "turned proxy usage OFF"
 fi
