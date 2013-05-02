@@ -17,25 +17,14 @@ sudo add-apt-repository ppa:chris-lea/node.js
 sudo -E apt-get -q=2 update
 
 # install applications
-sudo -E apt-get -q=2 install git gitk vim vim-gui-common maven openjdk-7-{jdk,doc,source} visualvm curl dkms firefox python-software-properties python g++ make
+sudo -E apt-get -q=2 install git gitk vim vim-gui-common maven openjdk-7-{jdk,doc,source} visualvm curl firefox python-software-properties python g++ make
 
 # install nodejs and scripted
 sudo -E apt-get -q=2 install nodejs
 npm install -g scripted
 
-# install guest additions (after dkms)
-[ -x /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run ] && sudo -E /media/user/VBOXADDITIONS*/VBoxLinuxAdditions.run
-
 # do an upgrade of the installation
 sudo -E apt-get -q=2 dist-upgrade
-
-# add user to group which is allowed to read shared folders
-id -G -n | grep vbox || sudo adduser $USER vboxsf
-
-# mount indep data automatically
-if ! grep "LABEL=Indep" /etc/fstab ;then
-        sudo sh -c 'echo "LABEL=Indep /media/'$USER'/Indep ext4 rw,nosuid,nodev,uhelper=udisks2 0 0" >> /etc/fstab'
-fi
 
 # add ~/bin to PATH
 if [ ! -d ~/bin ] ;then
