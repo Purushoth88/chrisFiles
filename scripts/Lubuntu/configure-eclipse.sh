@@ -41,6 +41,3 @@ rel=org.eclipse.egit.repository-2.0.0.201206130900-r
 if [ ! -d ~/egit-releases/$rel ] ;then
 	wget -q http://download.eclipse.org/egit/updates-2.0/$rel.zip && unzip $rel.zip -d ~/egit-releases/$rel && rm $rel.zip
 fi
-
-wget -q -O /tmp/egit-developer-tools.p2f http://git.eclipse.org/c/egit/egit.git/plain/tools/egit-developer-tools.p2f
-read -p "Please import /tmp/egit-developer-tools.p2f in eclipse"
