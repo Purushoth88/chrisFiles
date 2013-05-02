@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Configure a Eclipse(Juno) on a Lubuntu12.04 system to my needs
+# Configure a Eclipse(Juno) on a ubuntu system to my needs
 #
 
 # Install plugins to eclipse
@@ -9,18 +9,11 @@ installInEclipse() {
 	"$1" -application org.eclipse.equinox.p2.director -r "$2" -i $3
 }
 
-# while in the intranet set the correct proxy
-if ping -c 1 proxy.wdf.sap.corp >/dev/null 2>&1 ;then
-	export http_proxy=http://proxy:8080 https_proxy=https://proxy:8080 no_proxy='wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp'
-else
-	unset http_proxy https_proxy no_proxy
-fi
-
 # install eclipse juno
 if [ ! -x /usr/bin/eclipse-juno ] ;then
-	junoUrl=http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2.2-201302041200/eclipse-SDK-4.2.2-linux-gtk.tar.gz&r=1
+	junoUrl='http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2.2-201302041200/eclipse-SDK-4.2.2-linux-gtk.tar.gz&r=1'
 	if [ $(uname -m) == "x86_64" ] ;then
-		junoUrl=http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2.2-201302041200/eclipse-SDK-4.2.2-linux-gtk-x86_64.tar.gz&r=1
+		junoUrl='http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2.2-201302041200/eclipse-SDK-4.2.2-linux-gtk-x86_64.tar.gz&r=1'
 	fi
 	tmp=$(mktemp -d)
 	wget -qO- "$junoUrl" | tar -C $tmp -xz
