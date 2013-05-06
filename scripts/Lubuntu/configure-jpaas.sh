@@ -60,7 +60,7 @@ if [ ! -d ~/jpaas/remoteAccess ] ;then
 	cp  /media/sf_Shared/com.sap.core.jdbc.remoteaccess.* ~/jpaas/remoteAccess
 fi
 
-if [ -d /media/sf_Shared/SAP_HANA_STUDIO -a ! -d /user/sap/hdbstudio ] ;then
+if [ -d /media/sf_Shared/SAP_HANA_STUDIO -a ! -d /usr/sap/hdbstudio ] ;then
         sudo /media/sf_Shared/SAP_HANA_STUDIO/hdbinst
 fi
 
@@ -78,7 +78,7 @@ cmp ~/.m2/settings.xml ~/.m2/settings.xml.jpaas && rm ~/.m2/settings.xml
 cmp ~/.m2/settings.xml ~/.m2/settings_sap_proxy.xml && rm ~/.m2/settings.xml
 [ -f ~/.m2/settings.xml ] || cp ~/.m2/settings_sap_proxy.xml.jpaas ~/.m2/settings.xml
 
-GIT_SSL_NO_VERIFY=true
+export GIT_SSL_NO_VERIFY=true
 
 # clone metering
 cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/Services/metering ~/git/metering master
