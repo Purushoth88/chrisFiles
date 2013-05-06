@@ -24,32 +24,22 @@ cloneOrFetch() {
 	fi
 }
 
-# while in the intranet set the correct proxy
-[ -f ~/bin/setProxy.sh ] && . ~/bin/setProxy.sh
-
 sudo -E apt-get -q=2 update
 sudo -E apt-get -q=2 install gdb autoconf libssl-dev
 sudo -E apt-get -q=2 build-dep git
 
-# clone git e/jgit & gerrit
-cloneOrFetch https://github.com/git/git.git ~/git/git
-cloneOrFetch https://git.eclipse.org/r/jgit/jgit ~/git/jgit master
-cloneOrFetch https://git.eclipse.org/r/egit/egit ~/git/egit master
-cloneOrFetch https://git.eclipse.org/r/egit/egit-github ~/git/egit-github master
-cloneOrFetch https://git.eclipse.org/r/egit/egit-pde ~/git/egit-pde master
-cloneOrFetch https://gerrit.googlesource.com/gerrit ~/git/gerrit master
-
 # clone/fetch linux
-cloneOrFetch http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux
+cloneOrFetch http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux &
 
-# build the projects
-(cd ~/git/gerrit && mvn -q package -DskipTests)
-(cd ~/git/git && make configure && ./configure && make)
-(cd ~/git/jgit && mvn -q install -DskipTests)
-(cd ~/git/jgit/org.eclipse.jgit.packaging && mvn -q install)
-(cd ~/git/egit && mvn -q -P skip-ui-tests install -DskipTests)
-(cd ~/git/egit-github && mvn -q install -DskipTests)
-(cd ~/git/egit-pde && mvn -q install -DskipTests)
+# clone & build git e/jgit & gerrit
+(cloneOrFetch https://gerrit.googlesource.com/gerrit ~/git/gerrit master && cd ~/git/gerrit && mvn -q package -DskipTests) &
+(cloneOrFetch https://github.com/git/git.git ~/git/git && cd ~/git/git && make configure && ./configure && make)
+(cloneOrFetch https://git.eclipse.org/r/jgit/jgit ~/git/jgit master && cd ~/git/jgit && mvn -q install && cd ~/git/jgit/org.eclipse.jgit.packaging && mvn -q install) 
+(cloneOrFetch https://git.eclipse.org/r/egit/egit ~/git/egit master && cd ~/git/egit && mvn -q -P skip-ui-tests install -DskipTests) 
+(cloneOrFetch https://git.eclipse.org/r/egit/egit-github ~/git/egit-github master && cd ~/git/egit-github && mvn -q install -DskipTests) 
+(cloneOrFetch https://git.eclipse.org/r/egit/egit-pde ~/git/egit-pde master && cd ~/git/egit-pde && mvn -q install -DskipTests) 
+
+wait
 
 # Create a gerrit test site
 if [ -f ~/git/gerrit/gerrit-war/target/gerrit*.war ] ;then
