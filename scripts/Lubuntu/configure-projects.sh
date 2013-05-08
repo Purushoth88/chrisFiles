@@ -43,10 +43,11 @@ wait
 
 # Create a gerrit test site
 if [ -f ~/git/gerrit/gerrit-war/target/gerrit*.war ] ;then
-	[ -d ~/gerrit ] || mkdir ~/gerrit
-	java -jar ~/git/gerrit/gerrit-war/target/gerrit*.war init --batch -d ~/gerrit/gerrit-testsite
-	~/gerrit/gerrit-testsite/bin/gerrit.sh stop
-	sed -r -i 's/type.*=.*OPENID/type = DEVELOPMENT_BECOME_ANY_ACCOUNT/' ~/gerrit/gerrit-testsite/etc/gerrit.config
+	site=~/git/gerrit/test-site/bin
+	[ -d $site ] || mkdir $site
+	java -jar ~/git/gerrit/gerrit-war/target/gerrit*.war init --batch -d $site
+	$site/bin/gerrit.sh stop
+	sed -r -i 's/type.*=.*OPENID/type = DEVELOPMENT_BECOME_ANY_ACCOUNT/' $site/etc/gerrit.config
 fi
 
 if [ -d ~/bin -a ! -f ~/bin/jgit ] ;then
