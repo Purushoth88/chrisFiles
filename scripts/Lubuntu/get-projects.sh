@@ -25,7 +25,7 @@ cloneOrFetch() {
 }
 
 # clone/fetch linux
-cloneOrFetch http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/git/linux 
+cloneOrFetch https://github.com/torvalds/linux.git ~/git/linux
 
 # clone & build git e/jgit & gerrit
 cloneOrFetch https://gerrit.googlesource.com/gerrit ~/git/gerrit master
