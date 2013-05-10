@@ -9,7 +9,7 @@ sudo -E apt-get -q=2 update
 sudo -E apt-get -q=2 dist-upgrade
 
 # install applications
-sudo -E apt-get -q=2 install git gitk vim vim-gui-common maven openjdk-7-{jdk,doc,source} visualvm curl
+sudo -E apt-get -q=2 install git gitk vim vim-gui-common openjdk-7-{jdk,doc,source} maven2 visualvm curl
 
 # fix errors in jvisualvm
 [ -f /usr/bin/jvisualvm ] && sudo sed -r -i 's&/usr/share/netbeans/platform12/&/usr/share/netbeans/platform13/&' /usr/bin/jvisualvm
