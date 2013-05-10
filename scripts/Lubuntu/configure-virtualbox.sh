@@ -13,8 +13,3 @@ sudo -E apt-get -q=2 install dkms
 
 # add user to group which is allowed to read shared folders
 id -G -n | grep vbox || sudo adduser $USER vboxsf
-
-# mount indep data automatically
-if ! grep "LABEL=Indep" /etc/fstab ;then
-        sudo sh -c 'echo "LABEL=Indep /media/'$USER'/Indep ext4 rw,nosuid,nodev,uhelper=udisks2 0 0" >> /etc/fstab'
-fi
