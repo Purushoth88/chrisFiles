@@ -6,6 +6,10 @@
 # Clones a non-bare git repo or (if it already exists) fetches updates
 # usage: getOrFetch <url> <localDir> [<gerritBranchToPush>]
 cloneOrFetch() {
+	if [ -f /media/sf_shared/$(basename "$2").zip && ! -d "$2" ] ;then
+		mkdir "$2"
+		unzip /media/sf_shared/$(basename "$2").zip -d "$2"
+	fi
 	if [ -d "$2/.git/refs" ] ;then
 		if [ `git --git-dir "$2/.git" rev-parse --symbolic-full-name --abbrev-ref HEAD` == "master" ] ;then
 			git --git-dir "$2/.git" --work-tree "$2" pull
@@ -24,6 +28,9 @@ cloneOrFetch() {
 	fi
 }
 
+# get git
+sudo -E apt-get -q=2 install git gitk 
+
 # clone/fetch linux
 cloneOrFetch https://github.com/torvalds/linux.git ~/git/linux
 
@@ -35,13 +42,10 @@ cloneOrFetch https://git.eclipse.org/r/egit/egit ~/git/egit master
 cloneOrFetch https://git.eclipse.org/r/egit/egit-github ~/git/egit-github master
 cloneOrFetch https://git.eclipse.org/r/egit/egit-pde ~/git/egit-pde master
 
-# get the egit developer tools
-wget -q -O /tmp/egit-developer-tools.p2f http://git.eclipse.org/c/egit/egit.git/plain/tools/egit-developer-tools.p2f
-read -p "Please import /tmp/egit-developer-tools.p2f in eclipse"
-
+# write bookmarks file
 [ -d ~/lib ] || mkdir ~/lib
 if [ ! -f ~/lib/git_bookmarks.html ] ;then
-	cat <<EOF >~/lib/git_bookmarks.html
+	cat <<'EOF' >~/lib/git_bookmarks.html
 <!DOCTYPE NETSCAPE-Bookmark-file-1>
 <!-- This is an automatically generated file.
      It will be read and overwritten.

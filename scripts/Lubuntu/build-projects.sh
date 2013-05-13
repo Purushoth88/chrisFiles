@@ -6,6 +6,10 @@
 # Clones a non-bare git repo or (if it already exists) fetches updates
 # usage: getOrFetch <url> <localDir> [<gerritBranchToPush>]
 cloneOrFetch() {
+	if [ -f /media/sf_shared/$(basename "$2").zip && ! -d "$2" ] ;then
+		mkdir "$2"
+		unzip /media/sf_shared/$(basename "$2").zip -d "$2"
+	fi
 	if [ -d "$2/.git/refs" ] ;then
 		if [ `git --git-dir "$2/.git" rev-parse --symbolic-full-name --abbrev-ref HEAD` == "master" ] ;then
 			git --git-dir "$2/.git" --work-tree "$2" pull
@@ -24,8 +28,8 @@ cloneOrFetch() {
 	fi
 }
 
-sudo -E apt-get -q=2 update
-sudo -E apt-get -q=2 install gdb autoconf libssl-dev
+# install software to build: java, g++
+sudo -E apt-get -q=2 install gdb autoconf libssl-dev maven openjdk-7-{jdk,doc,source}
 sudo -E apt-get -q=2 build-dep git
 
 # clone & build git e/jgit & gerrit
@@ -46,7 +50,7 @@ if [ -f ~/git/gerrit/gerrit-war/target/gerrit*.war ] ;then
 fi
 
 if [ -d ~/bin -a ! -f ~/bin/jgit ] ;then
-	cat <<EOF >~/bin/jgit
+	cat <<'EOF' >~/bin/jgit
 #!/bin/sh
 java -jar ~/git/jgit/org.eclipse.jgit.pgm/target/jgit-cli.jar $*
 EOF

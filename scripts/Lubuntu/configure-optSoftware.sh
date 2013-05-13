@@ -10,7 +10,10 @@ sudo add-apt-repository ppa:chris-lea/node.js
 sudo -E apt-get -q=2 update
 
 # install applications
-sudo -E apt-get -q=2 install python-software-properties python g++ make
+sudo -E apt-get -q=2 install python-software-properties python g++ make vim vim-gui-common visualvm curl terminator
+
+# fix errors in jvisualvm
+[ -f /usr/bin/jvisualvm ] && sudo sed -r -i 's&/usr/share/netbeans/platform12/&/usr/share/netbeans/platform13/&' /usr/bin/jvisualvm
 
 # install nodejs and scripted
 sudo -E apt-get -q=2 install nodejs

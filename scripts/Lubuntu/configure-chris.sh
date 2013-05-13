@@ -6,13 +6,18 @@
 # Clones a non-bare git repo or (if it already exists) fetches updates
 # usage: getOrFetch <url> <localDir> [<gerritBranchToPush>]
 cloneOrFetch() {
+	if [ -f /media/sf_shared/$(basename "$2").zip && ! -d "$2" ] ;then
+		mkdir "$2"
+		unzip /media/sf_shared/$(basename "$2").zip -d "$2"
+	fi
 	if [ -d "$2/.git/refs" ] ;then
-		git --git-dir "$2/.git" fetch -q --all
 		if [ `git --git-dir "$2/.git" rev-parse --symbolic-full-name --abbrev-ref HEAD` == "master" ] ;then
-			git --git-dir "$2/.git" --work-tree "$2" pull -q
+			git --git-dir "$2/.git" --work-tree "$2" pull
+		else
+			git --git-dir "$2/.git" fetch --all
 		fi
 	else
-		git clone -q "$1" "$2"
+		git clone "$1" "$2"
 	fi
 	if [ ! -z "$3" ] ;then
 		git config -f "$2/.git/config" remote.origin.push HEAD:refs/for/$3
@@ -29,9 +34,6 @@ if ping -c 1 proxy.wdf.sap.corp >/dev/null 2>&1 ;then
 else
 	unset http_proxy https_proxy no_proxy
 fi
-
-# install my programs
-sudo -E apt-get -q=2 install terminator
 
 if [ -f ~/.netrc ] ;then
 	echo "Don't write ~/.netrc because it already exists"

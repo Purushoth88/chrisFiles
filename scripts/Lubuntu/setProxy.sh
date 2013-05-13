@@ -13,7 +13,7 @@ fi
 
 if [ ! -f ~/.m2/settings_sap_proxy.xml ] ;then
 	mkdir -p ~/.m2
-	cat <<END >~/.m2/settings_sap_proxy.xml
+	cat <<'EOF' >~/.m2/settings_sap_proxy.xml
 <settings>
   <proxies>
     <proxy><active>true</active>
@@ -30,14 +30,14 @@ if [ ! -f ~/.m2/settings_sap_proxy.xml ] ;then
     </proxy>
   </proxies>
 </settings>
-END
+EOF
 fi
 
 if [ ! -f ~/.80proxy ] ;then
-	cat <<END >~/.80proxy
+	cat <<'EOF' >~/.80proxy
 Acquire::http::proxy "http://proxy:8080/";
 Acquire::https::proxy "https://proxy:8080/";
-END
+EOF
 fi
 
 if [ -f /usr/share/applications/chromium-browser.desktop ] ;then

@@ -6,14 +6,18 @@
 # Clones a non-bare git repo or (if it already exists) fetches updates
 # usage: getOrFetch <url> <localDir> [<gerritBranchToPush>]
 cloneOrFetch() {
+	if [ -f /media/sf_shared/$(basename "$2").zip && ! -d "$2" ] ;then
+		mkdir "$2"
+		unzip /media/sf_shared/$(basename "$2").zip -d "$2"
+	fi
 	if [ -d "$2/.git/refs" ] ;then
 		if [ `git --git-dir "$2/.git" rev-parse --symbolic-full-name --abbrev-ref HEAD` == "master" ] ;then
-			git --git-dir "$2/.git" --work-tree "$2" pull -q
+			git --git-dir "$2/.git" --work-tree "$2" pull
 		else
-			git --git-dir "$2/.git" fetch -q --all
+			git --git-dir "$2/.git" fetch --all
 		fi
 	else
-		git clone -q "$1" "$2"
+		git clone "$1" "$2"
 	fi
 	if [ ! -z "$3" ] ;then
 		git config -f "$2/.git/config" remote.origin.push HEAD:refs/for/$3
@@ -102,7 +106,7 @@ cloneOrFetch https://git.wdf.sap.corp:8080/sapui5/sapui5.appdesigner.git ~/git/s
 
 if [ ! -f ~/lib/git_jpaas_bookmarks.html ] ;then
 	[ -d ~/lib ] || mkdir ~/lib
-	cat <<EOF >~/lib/git_jpaas_bookmarks.html
+	cat <<'EOF' >~/lib/git_jpaas_bookmarks.html
 <!DOCTYPE NETSCAPE-Bookmark-file-1>
 <!-- This is an automatically generated file.
      It will be read and overwritten.

@@ -2,9 +2,6 @@
 #
 # Configure a Ubuntu based Linux to work properly as a VirtualBox guest
 
-# update the package index database
-sudo -E apt-get -q=2 update
-
 # install applications
 sudo -E apt-get -q=2 install dkms
 
