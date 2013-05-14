@@ -6,9 +6,9 @@
 # Clones a non-bare git repo or (if it already exists) fetches updates
 # usage: getOrFetch <url> <localDir> [<gerritBranchToPush>]
 cloneOrFetch() {
-	if [ -f /media/sf_shared/$(basename "$2").zip && ! -d "$2" ] ;then
+	if [ -f /media/sf_shared/$(basename "$2").zip ] && [ ! -d "$2" ] ;then
 		mkdir "$2"
-		unzip /media/sf_shared/$(basename "$2").zip -d "$2"
+		unzip /media/sf_shared/$(basename "$2").zip -d "$(dirname "$2")"
 	fi
 	if [ -d "$2/.git/refs" ] ;then
 		if [ `git --git-dir "$2/.git" rev-parse --symbolic-full-name --abbrev-ref HEAD` == "master" ] ;then
