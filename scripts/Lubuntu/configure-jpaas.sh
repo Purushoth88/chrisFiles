@@ -6,24 +6,32 @@
 # Clones a non-bare git repo or (if it already exists) fetches updates
 # usage: getOrFetch <url> <localDir> [<gerritBranchToPush>]
 cloneOrFetch() {
-	if [ -f /media/sf_shared/$(basename "$2").zip ] && [ ! -d "$2" ] ;then
-		mkdir "$2"
-		unzip /media/sf_shared/$(basename "$2").zip -d "$(dirname "$2")"
-	fi
-	if [ -d "$2/.git/refs" ] ;then
-		if [ `git --git-dir "$2/.git" rev-parse --symbolic-full-name --abbrev-ref HEAD` == "master" ] ;then
-			git --git-dir "$2/.git" --work-tree "$2" pull
+	if [ -d "$2" ] ;then
+		gitDir="$2/.git"
+		workTree="$2"
+		[ ! -d "$2/.git" ] && gitDir="$2" && workTree=""
+		if [ ! -z "$workTree" ] && [ $(git --git-dir "$gitDir" rev-parse --symbolic-full-name --abbrev-ref HEAD) == "master" ] ;then
+			git --git-dir "$gitDir" --work-tree "$2" pull
 		else
-			git --git-dir "$2/.git" fetch --all
+			git --git-dir "$gitDir" fetch --all
 		fi
+		[ -z "$workTree" ] || ( cd "$workTree" ; git submodule update --init --recursive )
 	else
-		git clone "$1" "$2"
+		if [ -f /media/sf_Shared/$(basename "$2").zip ] ;then
+			unzip -q /media/sf_Shared/$(basename "$2").zip -d "$(dirname "$2")"
+			cloneOrFetch "$1" "$2" "$3"
+			return
+		else
+			git clone --recursive $1 "$2"
+			gitDir="$2/.git"
+			[ ! -d "$2/.git" ] && gitDir="$2"
+		fi
 	fi
 	if [ ! -z "$3" ] ;then
-		git config -f "$2/.git/config" remote.origin.push HEAD:refs/for/$3
-		if [ ! -f "$2/.git/hooks/commit-msg" ] ;then
-			curl -o "$2/.git/hooks/commit-msg" https://git.eclipse.org/r/tools/hooks/commit-msg
-			chmod +x "$2/.git/hooks/commit-msg"
+		git config -f "$gitDir/config" remote.origin.push HEAD:refs/for/$3
+		if [ ! -f "$gitDir/hooks/commit-msg" ] ;then
+			curl -o "$gitDir/hooks/commit-msg" https://git.eclipse.org/r/tools/hooks/commit-msg
+			chmod +x "$gitDir/hooks/commit-msg"
 		fi
 	fi
 }
@@ -45,7 +53,7 @@ fi
 find /media/sf_Shared -maxdepth 1 -type f -name 'neo-sdk*.zip' -printf '%P\n' | sed -e 's/\.zip//' | while read sdk ;do
 	if [ ! -d ~/jpaas/$sdk ] ;then
 		mkdir -p ~/jpaas/$sdk
-		(cd ~/jpaas/$sdk; unzip /media/sf_Shared/$sdk.zip)
+		(cd ~/jpaas/$sdk; unzip -q /media/sf_Shared/$sdk.zip)
 	fi
 done
 
