@@ -30,13 +30,18 @@ if [ ! -x /usr/bin/eclipse-juno ] ;then
 Type=Application
 Name=Eclipse (Juno)
 Comment=Eclipse Integrated Development Environment
-Icon=~/eclipse-juno/eclipse
-Exec=~/bin/eclipse-juno
+Icon=eclipse-juno
+Exec=eclipse-juno
 Terminal=false
 Categories=Development;IDE;Java;
 EOF
 	fi
 fi
+
+# install CDT
+installInEclipse eclipse-juno 
+	http://download.eclipse.org/releases/juno
+	org.eclipse.cdt.autotools.feature.group,org.eclipse.cdt.feature.group,org.eclipse.m2e.feature.feature.group
 
 # prepare API Baselines
 mkdir -p ~/egit-releases
@@ -44,3 +49,5 @@ rel=org.eclipse.egit.repository-2.0.0.201206130900-r
 if [ ! -d ~/egit-releases/$rel ] ;then
 	wget -q http://download.eclipse.org/egit/updates-2.0/$rel.zip && unzip -q $rel.zip -d ~/egit-releases/$rel && rm $rel.zip
 fi
+
+read -p "Please start eclipse and "Install software items from file" using ~/git/egit/tools/egit-developer-tools.p2f"

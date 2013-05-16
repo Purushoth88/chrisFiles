@@ -30,7 +30,7 @@ cloneOrFetch() {
 	if [ ! -z "$3" ] ;then
 		git config -f "$gitDir/config" remote.origin.push HEAD:refs/for/$3
 		if [ ! -f "$gitDir/hooks/commit-msg" ] ;then
-			curl -o "$gitDir/hooks/commit-msg" https://git.eclipse.org/r/tools/hooks/commit-msg
+			wget -O "$gitDir/hooks/commit-msg" https://git.eclipse.org/r/tools/hooks/commit-msg
 			chmod +x "$gitDir/hooks/commit-msg"
 		fi
 	fi
@@ -50,7 +50,7 @@ sudo -E apt-get -q=2 build-dep git
 
 # Create a gerrit test site
 if [ -f ~/git/gerrit/gerrit-war/target/gerrit*.war ] ;then
-	site=~/git/gerrit/test-site/bin
+	site=~/git/test-site
 	[ -d $site ] || mkdir $site
 	java -jar ~/git/gerrit/gerrit-war/target/gerrit*.war init --batch -d $site
 	$site/bin/gerrit.sh stop
