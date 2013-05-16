@@ -110,7 +110,7 @@ cloneOrFetch https://git.wdf.sap.corp:8080/sapui5/sapui5.appdesigner.git ~/git/s
 (cd ~/git/metering/com.sap.core.metering.parent; mvn -q install -DskipTests=true)
 (cd ~/git/jpaas.orion; mvn -q install -DskipTests=true)
 (cd ~/git/com.sap.core.account; mvn -q install -DskipTests=true)
-(cd ~/git/sapui5.appdesigner; mvn -q install -DskipTests=true)
+(cd ~/git/sapui5.appdesigner; mvn -q install -f reactor/pom.xml -DskipTests=true)
 
 if [ ! -f ~/lib/git_jpaas_bookmarks.html ] ;then
 	[ -d ~/lib ] || mkdir ~/lib
