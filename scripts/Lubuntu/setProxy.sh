@@ -4,14 +4,19 @@
 #
 
 if [ "$1" = "-h" ] ;then
-	echo "usage: setProxy [-on] [-off]"
+	echo "usage: setProxy [-on] [-off] [-update]"
 	echo "       -on:  turn on proxy usage"
 	echo "       -off: turn off proxy usage"
+	echo "       -update: force rewriting of the config files"
 	echo "       by default it is determined automatically whether a proxy is needed or not"
 	exit 0
 fi
 
 host=$(hostname)
+if [ "$1" = "-update" ] || [ "$2" = "-update" ] ;then
+	rm ~/.m2/settings_sap_proxy.xml ~/.chromium-browser-proxy.desktop ~/.chromium-browser-noproxy.desktop
+	shift 2
+fi
 
 if [ ! -f ~/.m2/settings_sap_proxy.xml ] ;then
 	mkdir -p ~/.m2
