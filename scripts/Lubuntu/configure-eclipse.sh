@@ -41,7 +41,7 @@ fi
 # install CDT
 installInEclipse eclipse-juno 
 	http://download.eclipse.org/releases/juno
-	org.eclipse.cdt.autotools.feature.group,org.eclipse.cdt.feature.group,org.eclipse.m2e.feature.feature.group
+	org.eclipse.cdt.autotools.feature.group,org.eclipse.cdt.feature.group,org.eclipse.m2e.feature.feature.group,org.eclipse.m2e.wtp.feature.feature.group
 
 # prepare API Baselines
 mkdir -p ~/egit-releases
