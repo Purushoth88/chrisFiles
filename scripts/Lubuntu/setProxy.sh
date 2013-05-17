@@ -11,22 +11,24 @@ if [ "$1" = "-h" ] ;then
 	exit 0
 fi
 
+host=$(hostname)
+
 if [ ! -f ~/.m2/settings_sap_proxy.xml ] ;then
 	mkdir -p ~/.m2
-	cat <<'EOF' >~/.m2/settings_sap_proxy.xml
+	cat <<EOF >~/.m2/settings_sap_proxy.xml
 <settings>
   <proxies>
     <proxy><active>true</active>
       <protocol>http</protocol>
       <host>proxy</host>
       <port>8080</port>
-      <nonProxyHosts>nexus|*.sap.corp</nonProxyHosts>
+      <nonProxyHosts>nexus|*.sap.corp|localhost|$host</nonProxyHosts>
     </proxy>
     <proxy><active>true</active>
       <protocol>https</protocol>
       <host>proxy</host>
       <port>8080</port>
-      <nonProxyHosts>nexus|*.sap.corp</nonProxyHosts>
+      <nonProxyHosts>nexus|*.sap.corp|localhost|$host</nonProxyHosts>
     </proxy>
   </proxies>
 </settings>
@@ -46,7 +48,7 @@ if [ -f /usr/share/applications/chromium-browser.desktop ] ;then
 		cp /usr/share/applications/chromium-browser.desktop ~/.chromium-browser-proxy.desktop
 		cp /usr/share/applications/chromium-browser.desktop ~/.chromium-browser-noproxy.desktop
 		if ! grep -e "--proxy-" ~/.chromium-browser-proxy.desktop ;then
-			sed -r -i '/^Exec=/s/\/usr\/bin\/chromium-browser/\/usr\/bin\/chromium-browser --proxy-server=proxy.wdf.sap.corp:8080 --proxy-bypass-list="*.wdf.sap.corp;nexus;jtrack;localhost;127.0.0.1"/' ~/.chromium-browser-proxy.desktop
+			sed -r -i '/^Exec=/s/\/usr\/bin\/chromium-browser/\/usr\/bin\/chromium-browser --proxy-server=proxy.wdf.sap.corp:8080 --proxy-bypass-list="*.wdf.sap.corp;nexus;jtrack;localhost;127.0.0.1;'$host'"/' ~/.chromium-browser-proxy.desktop
 		else
 			sed -r -i '/^Exec=/s/--proxy[^ \t]+[ \t]*//' ~/.chromium-browser-noproxy.desktop
 		fi
@@ -67,10 +69,10 @@ fi
 if [ $proxy = "-on" ] ;then
 	grep "^http_proxy" /etc/environment || sudo sh -c 'echo http_proxy=http://proxy:8080 >> /etc/environment'
 	grep "^https_proxy" /etc/environment || sudo sh -c 'echo https_proxy=https://proxy:8080 >> /etc/environment'
-	grep "^no_proxy" /etc/environment || sudo sh -c 'echo "no_proxy=wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp" >> /etc/environment'
+	grep "^no_proxy" /etc/environment || sudo sh -c 'echo "no_proxy=wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp,'$host'" >> /etc/environment'
 	export http_proxy=http://proxy:8080
 	export https_proxy=https://proxy:8080
-	export no_proxy='wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp'
+	export no_proxy='wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp,'$host
 	[ -f /etc/apt/apt.conf.d/80proxy ] || sudo cp ~/.80proxy /etc/apt/apt.conf.d/80proxy
 	[ -f ~/.m2/settings.xml ] || cp ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml
 	if [ -f /usr/share/applications/chromium-browser.desktop ] ;then

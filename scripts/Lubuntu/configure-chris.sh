@@ -36,13 +36,6 @@ cloneOrFetch() {
 	fi
 }
 
-# while in the intranet set the correct proxy
-if ping -c 1 proxy.wdf.sap.corp >/dev/null 2>&1 ;then
-	export http_proxy=http://proxy:8080 https_proxy=https://proxy:8080 no_proxy='wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp'
-else
-	unset http_proxy https_proxy no_proxy
-fi
-
 if [ -f ~/.netrc ] ;then
 	echo "Don't write ~/.netrc because it already exists"
 else
