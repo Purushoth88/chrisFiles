@@ -1,0 +1,88 @@
+user@lubuntu-vbox:~/git/tmp$ git config -l | grep -i ssl
+http.sslverify=false
+user@lubuntu-vbox:~/git/tmp$ GIT_CURL_VERBOSE=1 git clone https://git.eclipse.org/r/jgit/jgit.git
+Cloning into 'jgit'...
+* Couldn't find host git.eclipse.org in the .netrc file; using defaults
+* About to connect() to proxy proxy port 8080 (#0)
+*   Trying 147.204.6.19...
+* Connected to proxy (147.204.6.19) port 8080 (#0)
+* Establish HTTP proxy tunnel to git.eclipse.org:443
+> CONNECT git.eclipse.org:443 HTTP/1.1
+Host: git.eclipse.org:443
+User-Agent: git/1.8.1.2
+Proxy-Connection: Keep-Alive
+Pragma: no-cache
+
+< HTTP/1.1 200 Connection established
+< 
+* Proxy replied OK to CONNECT request
+* found 160 certificates in /etc/ssl/certs/ca-certificates.crt
+* 	 server certificate verification SKIPPED
+* 	 compression: NULL
+* 	 cipher: AES-128-CBC
+* 	 MAC: SHA1
+> GET /r/jgit/jgit.git/info/refs?service=git-upload-pack HTTP/1.1
+User-Agent: git/1.8.1.2
+Host: git.eclipse.org
+Accept: */*
+Accept-Encoding: gzip
+Pragma: no-cache
+
+< HTTP/1.1 200 OK
+< Date: Wed, 26 Jun 2013 11:09:59 GMT
+< Expires: Tue, 01 Jan 1980 00:00:00 GMT
+< Pragma: no-cache
+< Cache-Control: no-cache, max-age=0, must-revalidate
+< Content-Type: application/x-git-upload-pack-advertisement
+< Content-Encoding: gzip
+< X-NodeID: (null)
+< Transfer-Encoding: chunked
+< 
+* Connection #0 to host proxy left intact
+* Couldn't find host git.eclipse.org in the .netrc file; using defaults
+* About to connect() to proxy proxy port 8080 (#1)
+*   Trying 147.204.6.23...
+* Connected to proxy (147.204.6.23) port 8080 (#1)
+* Establish HTTP proxy tunnel to git.eclipse.org:443
+> CONNECT git.eclipse.org:443 HTTP/1.1
+Host: git.eclipse.org:443
+User-Agent: git/1.8.1.2
+Proxy-Connection: Keep-Alive
+Content-Type: application/x-git-upload-pack-request
+Accept: application/x-git-upload-pack-result
+Content-Encoding: gzip
+
+< HTTP/1.1 200 Connection established
+< 
+* Proxy replied OK to CONNECT request
+* found 160 certificates in /etc/ssl/certs/ca-certificates.crt
+* SSL re-using session ID
+* 	 server certificate verification SKIPPED
+* 	 compression: NULL
+* 	 cipher: AES-128-CBC
+* 	 MAC: SHA1
+> POST /r/jgit/jgit.git/git-upload-pack HTTP/1.1
+User-Agent: git/1.8.1.2
+Host: git.eclipse.org
+Accept-Encoding: gzip
+Content-Type: application/x-git-upload-pack-request
+Accept: application/x-git-upload-pack-result
+Content-Encoding: gzip
+Content-Length: 1253
+
+* upload completely sent off: 1253 out of 1253 bytes
+< HTTP/1.1 200 OK
+< Date: Wed, 26 Jun 2013 11:10:07 GMT
+< Expires: Tue, 01 Jan 1980 00:00:00 GMT
+< Pragma: no-cache
+< Cache-Control: no-cache, max-age=0, must-revalidate
+< Content-Type: application/x-git-upload-pack-result
+< X-NodeID: dev1
+< Transfer-Encoding: chunked
+< 
+remote: Counting objects: 40564, done
+remote: Finding sources: 100% (40564/40564)
+* Connection #1 to host proxy left intact.06 MiB | 556 KiB/s   
+remote: Total 40564 (delta 18938), reused 36231 (delta 18938)
+Receiving objects: 100% (40564/40564), 13.51 MiB | 562 KiB/s, done.
+Resolving deltas: 100% (18938/18938), done.

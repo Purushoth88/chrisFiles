@@ -20,6 +20,7 @@ rm demoCA/index.txt
 touch demoCA/index.txt
 echo '00' > demoCA/serial
 openssl ca -batch -cert badbad_certificate_selfSigned.pem -keyfile badbad_privateKey_rsa_nopwd_traditional.pem -days 730 -in client_certificateRequest.pem -out client_certificate_signedByBadbad.pem
+openssl ca -batch -cert badbad_certificate_selfSigned.pem -keyfile badbad_privateKey_rsa_nopwd_traditional.pem -days 730 -in server_certificateRequest.pem -out server_certificate_signedByBadbad.pem
 
 # create different representations of the clients private key
 openssl rsa -inform PEM -outform PEM -in client_privateKey_rsa_nopwd_traditional.pem -out client_privateKey_rsa_pwdclient_traditional.pem -passout pass:client -des3 

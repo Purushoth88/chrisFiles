@@ -1,0 +1,149 @@
+> git config -l | grep -i ssl
+http.sslverify=true
+> GIT_CURL_VERBOSE=1 git clone https://git.wdf.sap.corp:8080/sandbox/training/egit-training
+Cloning into 'egit-training'...
+* About to connect() to git.wdf.sap.corp port 8080 (#0)
+*   Trying 10.66.148.128...
+* Connected to git.wdf.sap.corp (10.66.148.128) port 8080 (#0)
+* found 160 certificates in /etc/ssl/certs/ca-certificates.crt
+* 	 server certificate verification OK
+* 	 common name: git.wdf.sap.corp (matched)
+* 	 server certificate expiration date OK
+* 	 server certificate activation date OK
+* 	 certificate public key: RSA
+* 	 certificate version: #3
+* 	 subject: C=DE,O=SAP-AG,OU=Java Infrastructure,CN=git.wdf.sap.corp
+* 	 start date: Mon, 09 Jul 2012 14:50:55 GMT
+
+* 	 expire date: Wed, 09 Jul 2014 14:50:55 GMT
+
+* 	 issuer: C=DE,O=SAP-AG,OU=SAPNet,CN=SAPNetCA,EMAIL=maik.mueller@sap-ag.de
+* 	 compression: NULL
+* 	 cipher: AES-128-CBC
+* 	 MAC: SHA1
+> GET /sandbox/training/egit-training/info/refs?service=git-upload-pack HTTP/1.1
+User-Agent: git/1.8.1.2
+Host: git.wdf.sap.corp:8080
+Accept: */*
+Accept-Encoding: gzip
+Pragma: no-cache
+
+< HTTP/1.1 401 Unauthorized
+< Date: Wed, 26 Jun 2013 09:22:31 GMT
+< Pragma: no-cache
+< WWW-Authenticate: Basic realm="Gerrit Code Review"
+< Cache-Control: must-revalidate,no-cache,no-store
+< Content-Type: text/html;charset=ISO-8859-1
+< Content-Length: 1313
+< 
+* Ignoring the response-body
+* Connection #0 to host git.wdf.sap.corp left intact
+* Issue another request to this URL: 'https://git.wdf.sap.corp:8080/sandbox/training/egit-training/info/refs?service=git-upload-pack'
+* Found bundle for host git.wdf.sap.corp: 0x2646200
+* Re-using existing connection! (#0) with host git.wdf.sap.corp
+* Connected to git.wdf.sap.corp (10.66.148.128) port 8080 (#0)
+* Server auth using Basic with user 'd032780'
+> GET /sandbox/training/egit-training/info/refs?service=git-upload-pack HTTP/1.1
+Authorization: Basic ZDAzMjc4MDpJZmduSEsxMg==
+User-Agent: git/1.8.1.2
+Host: git.wdf.sap.corp:8080
+Accept: */*
+Accept-Encoding: gzip
+Pragma: no-cache
+
+< HTTP/1.1 401 Unauthorized
+< Date: Wed, 26 Jun 2013 09:22:31 GMT
+* Authentication problem. Ignoring this.
+< WWW-Authenticate: Basic realm="Gerrit Code Review"
+< Cache-Control: must-revalidate,no-cache,no-store
+< Content-Type: text/html;charset=ISO-8859-1
+< Content-Length: 1313
+* The requested URL returned error: 401
+* Closing connection 0
+Username for 'https://git.wdf.sap.corp:8080': d032780
+Password for 'https://d032780@git.wdf.sap.corp:8080': 
+* Couldn't find host git.wdf.sap.corp in the .netrc file; using defaults
+* About to connect() to git.wdf.sap.corp port 8080 (#1)
+*   Trying 10.66.148.128...
+* Connected to git.wdf.sap.corp (10.66.148.128) port 8080 (#1)
+* found 160 certificates in /etc/ssl/certs/ca-certificates.crt
+* SSL re-using session ID
+* 	 server certificate verification OK
+* 	 common name: git.wdf.sap.corp (matched)
+* 	 server certificate expiration date OK
+* 	 server certificate activation date OK
+* 	 certificate public key: RSA
+* 	 certificate version: #3
+* 	 subject: C=DE,O=SAP-AG,OU=Java Infrastructure,CN=git.wdf.sap.corp
+* 	 start date: Mon, 09 Jul 2012 14:50:55 GMT
+
+* 	 expire date: Wed, 09 Jul 2014 14:50:55 GMT
+
+* 	 issuer: C=DE,O=SAP-AG,OU=SAPNet,CN=SAPNetCA,EMAIL=maik.mueller@sap-ag.de
+* 	 compression: NULL
+* 	 cipher: AES-128-CBC
+* 	 MAC: SHA1
+* Server auth using Basic with user 'd032780'
+> GET /sandbox/training/egit-training/info/refs?service=git-upload-pack HTTP/1.1
+Authorization: Basic ZDAzMjc4MDpJZmduSEsxMQ==
+User-Agent: git/1.8.1.2
+Host: git.wdf.sap.corp:8080
+Accept: */*
+Accept-Encoding: gzip
+Pragma: no-cache
+
+< HTTP/1.1 200 OK
+< Date: Wed, 26 Jun 2013 09:22:59 GMT
+< Expires: Fri, 01 Jan 1980 00:00:00 GMT
+< Pragma: no-cache
+< Cache-Control: no-cache, max-age=0, must-revalidate
+< Content-Type: application/x-git-upload-pack-advertisement
+< Transfer-Encoding: chunked
+< 
+* Connection #1 to host git.wdf.sap.corp left intact
+* Couldn't find host git.wdf.sap.corp in the .netrc file; using defaults
+* About to connect() to git.wdf.sap.corp port 8080 (#2)
+*   Trying 10.66.148.128...
+* Connected to git.wdf.sap.corp (10.66.148.128) port 8080 (#2)
+* found 160 certificates in /etc/ssl/certs/ca-certificates.crt
+* SSL re-using session ID
+* 	 server certificate verification OK
+* 	 common name: git.wdf.sap.corp (matched)
+* 	 server certificate expiration date OK
+* 	 server certificate activation date OK
+* 	 certificate public key: RSA
+* 	 certificate version: #3
+* 	 subject: C=DE,O=SAP-AG,OU=Java Infrastructure,CN=git.wdf.sap.corp
+* 	 start date: Mon, 09 Jul 2012 14:50:55 GMT
+
+* 	 expire date: Wed, 09 Jul 2014 14:50:55 GMT
+
+* 	 issuer: C=DE,O=SAP-AG,OU=SAPNet,CN=SAPNetCA,EMAIL=maik.mueller@sap-ag.de
+* 	 compression: NULL
+* 	 cipher: AES-128-CBC
+* 	 MAC: SHA1
+* Server auth using Basic with user 'd032780'
+> POST /sandbox/training/egit-training/git-upload-pack HTTP/1.1
+Authorization: Basic ZDAzMjc4MDpJZmduSEsxMQ==
+User-Agent: git/1.8.1.2
+Host: git.wdf.sap.corp:8080
+Accept-Encoding: gzip
+Content-Type: application/x-git-upload-pack-request
+Accept: application/x-git-upload-pack-result
+Content-Length: 224
+
+* upload completely sent off: 224 out of 224 bytes
+< HTTP/1.1 200 OK
+< Date: Wed, 26 Jun 2013 09:22:59 GMT
+< Expires: Fri, 01 Jan 1980 00:00:00 GMT
+< Pragma: no-cache
+< Cache-Control: no-cache, max-age=0, must-revalidate
+< Content-Type: application/x-git-upload-pack-result
+< Transfer-Encoding: chunked
+< 
+remote: Counting objects: 193, done
+remote: Finding sources: 100% (193/193)
+* Connection #2 to host git.wdf.sap.corp left intact
+remote: Total 193 (delta 28), reused 137 (delta 28)
+Receiving objects: 100% (193/193), 39.75 KiB, done.
+Resolving deltas: 100% (28/28), done.

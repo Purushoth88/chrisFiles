@@ -1,0 +1,108 @@
+> git config -l | grep -i ssl
+http.sslverify=true
+> GIT_CURL_VERBOSE=1 git clone https://git.eclipse.org/r/jgit/jgit.git
+Cloning into 'jgit'...
+* About to connect() to proxy proxy port 8080 (#0)
+*   Trying 147.204.6.18...
+* Connected to proxy (147.204.6.18) port 8080 (#0)
+* Establish HTTP proxy tunnel to git.eclipse.org:443
+> CONNECT git.eclipse.org:443 HTTP/1.1
+Host: git.eclipse.org:443
+User-Agent: git/1.8.1.2
+Proxy-Connection: Keep-Alive
+Pragma: no-cache
+
+< HTTP/1.1 200 Connection established
+< 
+* Proxy replied OK to CONNECT request
+* found 160 certificates in /etc/ssl/certs/ca-certificates.crt
+* 	 server certificate verification OK
+* 	 common name: *.eclipse.org (matched)
+* 	 server certificate expiration date OK
+* 	 server certificate activation date OK
+* 	 certificate public key: RSA
+* 	 certificate version: #3
+* 	 subject: C=CA,ST=Ontario,L=Nepean,O=Eclipse.org Foundation\, Inc.,OU=Eclipse Foundation,CN=*.eclipse.org
+* 	 start date: Thu, 11 Nov 2010 00:00:00 GMT
+
+* 	 expire date: Sun, 02 Feb 2014 23:59:59 GMT
+
+* 	 issuer: C=US,O=DigiCert Inc,OU=www.digicert.com,CN=DigiCert High Assurance CA-3
+* 	 compression: NULL
+* 	 cipher: AES-128-CBC
+* 	 MAC: SHA1
+> GET /r/jgit/jgit.git/info/refs?service=git-upload-pack HTTP/1.1
+User-Agent: git/1.8.1.2
+Host: git.eclipse.org
+Accept: */*
+Accept-Encoding: gzip
+Pragma: no-cache
+
+< HTTP/1.1 200 OK
+< Date: Wed, 26 Jun 2013 09:20:18 GMT
+< Expires: Tue, 01 Jan 1980 00:00:00 GMT
+< Pragma: no-cache
+< Cache-Control: no-cache, max-age=0, must-revalidate
+< Content-Type: application/x-git-upload-pack-advertisement
+< Content-Encoding: gzip
+< X-NodeID: (null)
+< Transfer-Encoding: chunked
+< 
+* Connection #0 to host proxy left intact
+* About to connect() to proxy proxy port 8080 (#1)
+*   Trying 147.204.6.18...
+* Connected to proxy (147.204.6.18) port 8080 (#1)
+* Establish HTTP proxy tunnel to git.eclipse.org:443
+> CONNECT git.eclipse.org:443 HTTP/1.1
+Host: git.eclipse.org:443
+User-Agent: git/1.8.1.2
+Proxy-Connection: Keep-Alive
+Content-Type: application/x-git-upload-pack-request
+Accept: application/x-git-upload-pack-result
+Content-Encoding: gzip
+
+< HTTP/1.1 200 Connection established
+< 
+* Proxy replied OK to CONNECT request
+* found 160 certificates in /etc/ssl/certs/ca-certificates.crt
+* SSL re-using session ID
+* 	 server certificate verification OK
+* 	 common name: *.eclipse.org (matched)
+* 	 server certificate expiration date OK
+* 	 server certificate activation date OK
+* 	 certificate public key: RSA
+* 	 certificate version: #3
+* 	 subject: C=CA,ST=Ontario,L=Nepean,O=Eclipse.org Foundation\, Inc.,OU=Eclipse Foundation,CN=*.eclipse.org
+* 	 start date: Thu, 11 Nov 2010 00:00:00 GMT
+
+* 	 expire date: Sun, 02 Feb 2014 23:59:59 GMT
+
+* 	 issuer: C=US,O=DigiCert Inc,OU=www.digicert.com,CN=DigiCert High Assurance CA-3
+* 	 compression: NULL
+* 	 cipher: AES-128-CBC
+* 	 MAC: SHA1
+> POST /r/jgit/jgit.git/git-upload-pack HTTP/1.1
+User-Agent: git/1.8.1.2
+Host: git.eclipse.org
+Accept-Encoding: gzip
+Content-Type: application/x-git-upload-pack-request
+Accept: application/x-git-upload-pack-result
+Content-Encoding: gzip
+Content-Length: 1253
+
+* upload completely sent off: 1253 out of 1253 bytes
+< HTTP/1.1 200 OK
+< Date: Wed, 26 Jun 2013 09:20:25 GMT
+< Expires: Tue, 01 Jan 1980 00:00:00 GMT
+< Pragma: no-cache
+< Cache-Control: no-cache, max-age=0, must-revalidate
+< Content-Type: application/x-git-upload-pack-result
+< X-NodeID: dev1
+< Transfer-Encoding: chunked
+< 
+remote: Counting objects: 40564, done
+remote: Finding sources: 100% (40564/40564)
+* Connection #1 to host proxy left intact.06 MiB | 564 KiB/s   
+remote: Total 40564 (delta 18938), reused 36231 (delta 18938)
+Receiving objects: 100% (40564/40564), 13.51 MiB | 562 KiB/s, done.
+Resolving deltas: 100% (18938/18938), done.
