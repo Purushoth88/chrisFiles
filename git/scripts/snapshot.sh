@@ -2,7 +2,7 @@
 srcRepo="$(git rev-parse --show-toplevel)"
 [ -d "$srcRepo" ] || { echo "not in a non-bare git repo"; exit -1; }
 tgtRepo="$srcRepo/.git/snapshot"
-[ -d "$tgtRepo" ] || { git init -q "$tgtRepo"; touch -d "1974-01-01 00:00:00" "$tgtRepo/.git/ts"; }
+[ -d "$tgtRepo" ] || { git init -q "$tgtRepo"; git --git-dir="$tgtRepo/.git" config core.autocrlf false; touch -d "1974-01-01 00:00:00" "$tgtRepo/.git/ts"; }
 
 # remove obsolete files/folders
 find "$tgtRepo" -depth ! -path "$tgtRepo/.git/*" | while read tgt; do
@@ -31,8 +31,18 @@ find "$srcRepo" -newer "$tgtRepo/.git/ts" -a ! -path "$tgtRepo/*" | while read s
 		[ -d "$tgt" ] || mkdir -p "$tgt"
 		continue
 	fi
-	[[ "$tgtPath" =~ _git/(modules/[^/]+/)?index ]] && { git --git-dir="$(dirname $src)" ls-files --cached -s > "$tgt"; continue; }
-	[[ "$tgtPath" =~ _git/(modules/[^/]+/)?objects/[0-9a-f]{2}/[0-9a-f]{38}$ ]] && { git --git-dir="$(dirname $src)/../.." cat-file -p ${tgtPath: -41:2}${tgtPath: -38:38} > "$tgt"; continue; }
+	if echo $tgtPath | grep -E '_git/(modules/[^/]+/)?index' > /dev/null
+	then
+		echo "found a index file"
+		git --git-dir="$(dirname $src)" ls-files --cached -s > "$tgt"
+		continue
+	fi
+	if echo $tgtPath | grep -E '_git/(modules/[^/]+/)?objects/[0-9a-f]{2}/[0-9a-f]{38}$' > /dev/null
+	then
+		echo "found a object file"
+		git --git-dir="$(dirname $src)/../.." cat-file -p ${tgtPath: -41:2}${tgtPath: -38:38} > "$tgt"
+		continue
+	fi
 	cp "$src" "$tgt"
 done
 
