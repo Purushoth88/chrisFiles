@@ -9,10 +9,15 @@ import java.io.RandomAccessFile;
 import java.lang.management.ManagementFactory;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-public class LockFile {
+public class FileOp {
 	public enum OPS {
-		WRITE, CAT, CREATE, UNLOCKX, UNLOCK, LOCKX, LOCK, DELETE, CLOSEOUTPUTSTREAM, COS, CLOSEINPUTSTREAM, CIS, OPENINPUTSTREAM, OIS, OPENOUTPUTSTREAM, OOS, QUIT
+		write, cat, create, unlockx, unlock, lockx, lock, delete, closeOutputStream, closeInputStream, openInputStream, openOutputStream, quit
 	};
 
 	public static void main(String args[]) throws IOException {
@@ -22,8 +27,28 @@ public class LockFile {
 		FileLock lock = null;
 		FileLock lockx = null;
 		StringBuilder commands = new StringBuilder();
-		for (OPS o : OPS.values())
-			commands.append(o.toString().toLowerCase() + " ");
+		Map<String, OPS> variant2command=new HashMap<>();
+		for (OPS o : OPS.values()) {
+			Iterator<String> variants = abbrevCamelCase(o.name()).iterator();
+			String variant = variants.next();
+			commands.append(variant);
+			variant2command.put(variant,  o);
+			if (variants.hasNext()) {
+				commands.append("(");
+				StringBuilder sb = new StringBuilder();
+				sb.append(var.next());
+					while (strings.hasNext()) {
+						sb.append(delimiter);
+						sb.append(strings.next());
+					}
+					return sb.toString();
+				} else
+					return "";
+
+				commands.append(join(",", variants));
+				commands.append(")");
+			}
+		}
 		StringBuilder usage = new StringBuilder("usage: LockFile <FileName>");
 		String lastLine;
 		BufferedReader sysInReader = new BufferedReader(new InputStreamReader(
@@ -45,7 +70,7 @@ public class LockFile {
 					continue;
 				}
 				switch (op) {
-				case CAT:
+				case cat:
 					System.out.println("Content of file " + f.getPath() + ":");
 					BufferedReader br = new BufferedReader(
 							new InputStreamReader(new FileInputStream(f)));
@@ -57,8 +82,7 @@ public class LockFile {
 					System.out.println("EOF");
 					br.close();
 					break;
-				case CIS:
-				case CLOSEINPUTSTREAM:
+				case closeInputStream:
 					if (fis == null) {
 						System.out.println("fatal: no inputstream created");
 						break;
@@ -67,8 +91,7 @@ public class LockFile {
 					fis = null;
 					System.out.println("closed FileInputStream");
 					break;
-				case COS:
-				case CLOSEOUTPUTSTREAM:
+				case closeOutputStream:
 					if (fos == null) {
 						System.out.println("fatal: no outputstream created");
 						break;
@@ -78,13 +101,12 @@ public class LockFile {
 					fos = null;
 					System.out.println("closed FileOutputStream");
 					break;
-				case CREATE:
+				case create:
 					boolean createRc = f.createNewFile();
 					System.out.println("Creating new file " + f.getPath()
 							+ " lead to rc:" + createRc);
 					break;
-				case OIS:
-				case OPENINPUTSTREAM:
+				case openInputStream:
 					if (fis != null) {
 						System.out.println("fatal: inputstream already created");
 						break;
@@ -92,8 +114,7 @@ public class LockFile {
 					fis = new FileInputStream(f);
 					System.out.println("created FileInputStream");
 					break;
-				case OOS:
-				case OPENOUTPUTSTREAM:
+				case openOutputStream:
 					if (fos != null) {
 						System.out.println("fatal: outputstream already created");
 						break;
@@ -101,12 +122,12 @@ public class LockFile {
 					fos = new FileOutputStream(f);
 					System.out.println("created FileOutputStream");
 					break;
-				case DELETE:
+				case delete:
 					boolean deleteRc = f.delete();
 					System.out.println("Deleting file " + f.getPath()
 							+ " lead to rc:" + deleteRc);
 					break;
-				case LOCK:
+				case lock:
 					System.out
 							.println("About to lock a file through new RandomAccessFile(f, \"r\").getChannel().lock(0, 1, true)");
 					channel = new RandomAccessFile(f, "r").getChannel();
@@ -114,7 +135,7 @@ public class LockFile {
 					System.out
 							.println("Locked file through new RandomAccessFile(f, \"r\").getChannel().lock(0, 1, true)");
 					break;
-				case LOCKX:
+				case lockx:
 					System.out
 							.println("About to lock a file through new RandomAccessFile(f, \"rw\").getChannel().lock()");
 					channel = new RandomAccessFile(f, "rw").getChannel();
@@ -122,7 +143,7 @@ public class LockFile {
 					System.out
 							.println("Locked file through new RandomAccessFile(f, \"rw\").getChannel().lock()");
 					break;
-				case UNLOCK:
+				case unlock:
 					if (lock == null) {
 						System.out.println("fatal: file not locked");
 						break;
@@ -131,7 +152,7 @@ public class LockFile {
 					lock = null;
 					System.out.println("unlocked file which was shared locked");
 					break;
-				case UNLOCKX:
+				case unlockx:
 					if (lockx == null) {
 						System.out.println("fatal: file not locked");
 						break;
@@ -140,7 +161,7 @@ public class LockFile {
 					lockx = null;
 					System.out.println("unlocked file which was shared locked");
 					break;
-				case WRITE:
+				case write:
 					if (fos == null) {
 						System.out
 								.println("fatal: not fileoutputstream has been created");
@@ -150,13 +171,13 @@ public class LockFile {
 					pw.println("Writing content to stream from process "
 							+ ManagementFactory.getRuntimeMXBean().getName());
 					break;
-				case QUIT:
+				case quit:
 					break;
 				default:
 
 					break;
 				}
-			} while (op != OPS.QUIT);
+			} while (op != OPS.quit);
 		} finally {
 			if (lock != null) {
 				lock.release();
@@ -177,14 +198,30 @@ public class LockFile {
 		}
 	}
 
-	public static <T extends Enum<T>> T getEnumFromString(Class<T> c,
-			String string) {
-		if (c != null && string != null) {
-			try {
-				return Enum.valueOf(c, string.trim().toUpperCase());
-			} catch (IllegalArgumentException ex) {
-			}
+	public static List<String> abbrevCamelCase(String orig) {
+		LinkedList<String> ret = new LinkedList<>();
+		ret.add(orig);
+		String[] split = orig.split("(?<=[a-z])(?=[A-Z])");
+		if (split.length > 1) {
+			ret.add(orig.toLowerCase());
+			StringBuffer sb = new StringBuffer();
+			for (String part : split)
+				sb.append(part.substring(1, 1).toLowerCase());
+			ret.add(sb.toString());
 		}
-		return null;
+		return ret;
+	}
+
+	public static String join(String delimiter, Iterator<String> strings) {
+		if (strings.hasNext()) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(strings.next());
+			while (strings.hasNext()) {
+				sb.append(delimiter);
+				sb.append(strings.next());
+			}
+			return sb.toString();
+		} else
+			return "";
 	}
 }
