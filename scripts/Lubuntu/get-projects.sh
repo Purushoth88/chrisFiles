@@ -30,14 +30,14 @@ cloneOrFetch() {
 	if [ ! -z "$3" ] ;then
 		git config -f "$gitDir/config" remote.origin.push HEAD:refs/for/$3
 		if [ ! -f "$gitDir/hooks/commit-msg" ] ;then
-			wget -O "$gitDir/hooks/commit-msg" https://git.eclipse.org/r/tools/hooks/commit-msg
+			curl -o "$gitDir/hooks/commit-msg" https://git.eclipse.org/r/tools/hooks/commit-msg
 			chmod +x "$gitDir/hooks/commit-msg"
 		fi
 	fi
 }
 
 # get git
-sudo -E apt-get -q=2 install git gitk
+sudo -E apt-get -q=2 install git gitk 
 
 # clone/fetch linux
 cloneOrFetch https://github.com/torvalds/linux.git ~/git/linux
