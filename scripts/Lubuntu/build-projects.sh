@@ -54,7 +54,7 @@ sudo -E apt-get -q=2 build-dep git
 # Create a gerrit test site
 if [ -f ~/git/gerrit/buck-out/gen/release.war ] ;then
 	site=~/git/gerrit/test-site/bin
-	[ -d $site ] || mkdir $site
+	[ -d $site ] || mkdir -p $site
 	java -jar ~/git/gerrit/buck-out/gen/release.war init --batch -d $site
 	$site/bin/gerrit.sh stop
 	sed -r -i 's/type.*=.*OPENID/type = DEVELOPMENT_BECOME_ANY_ACCOUNT/' $site/etc/gerrit.config
