@@ -30,7 +30,7 @@ cloneOrFetch() {
 	if [ ! -z "$3" ] ;then
 		git config -f "$gitDir/config" remote.origin.push HEAD:refs/for/$3
 		if [ ! -f "$gitDir/hooks/commit-msg" ] ;then
-			curl -o "$gitDir/hooks/commit-msg" https://git.eclipse.org/r/tools/hooks/commit-msg
+			wget -O "$gitDir/hooks/commit-msg" https://git.eclipse.org/r/tools/hooks/commit-msg
 			chmod +x "$gitDir/hooks/commit-msg"
 		fi
 	fi
