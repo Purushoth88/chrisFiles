@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Configure a Eclipse(Kepler) on a ubuntu system to my needs
+# Configure a Eclipse on a ubuntu system to my needs
 #
 
 # Install plugins to eclipse
@@ -12,26 +12,27 @@ installInEclipse() {
 # install java
 sudo -E apt-get -q=2 install openjdk-7-{jdk,doc,source} 
 
-# install eclipse kepler
-if [ ! -x /usr/bin/eclipse-kepler ] ;then
-	keplerUrl='http://mirror.netcologne.de/eclipse//technology/epp/downloads/release/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk.tar.gz'
+# install eclipse
+if [ ! -x /usr/bin/eclipse ] ;then
+	eclipseUrl='http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/luna/M2/eclipse-jee-luna-M2-linux-gtk.tar.gz'
 	if [ $(uname -m) == "x86_64" ] ;then
-		keplerUrl='http://mirror.netcologne.de/eclipse//technology/epp/downloads/release/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz'
+		eclipseUrl='http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/luna/M2/eclipse-jee-luna-M2-linux-gtk-x86_64.tar.gz'
 	fi
 	tmp=$(mktemp -d)
-	wget -qO- "$keplerUrl" | tar -C $tmp -xz
-	mv $tmp/eclipse ~/eclipse-kepler
+	wget -qO- "$eclipseUrl" | tar -C $tmp -xz
+	sudo mv $tmp/eclipse /opt/eclipse
 	rm -fr $tmp
-	sudo ln -s ~/eclipse-kepler/eclipse ~/bin/eclipse-kepler
-	if [ ! -f ~/.local/share/applications/eclipse-kepler.desktop ] ;then
+	sudo chown -R $USER:$USER /opt/eclipse
+	sudo ln -s /opt/eclipse/eclipse ~/bin/
+	if [ ! -f ~/.local/share/applications/eclipse.desktop ] ;then
 		mkdir -p ~/.local/share/applications
-		cat <<'EOF' >~/.local/share/applications/eclipse-kepler.desktop
+		cat <<'EOF' >~/.local/share/applications/eclipse.desktop
 [Desktop Entry]
 Type=Application
-Name=Eclipse (Kepler)
+Name=Eclipse
 Comment=Eclipse Integrated Development Environment
-Icon=~/eclipse-kepler/eclipse
-Exec=~/bin/eclipse-kepler
+Icon=/opt/eclipse/eclipse
+Exec=/opt/eclipse/eclipse
 Terminal=false
 Categories=Development;IDE;Java;
 EOF
@@ -40,7 +41,7 @@ fi
 
 # prepare API Baselines
 mkdir -p ~/egit-releases
-rel=org.eclipse.egit.repository-2.0.0.201206130900-r
+rel=org.eclipse.egit.repository-3.1.0.201310021548-r
 if [ ! -d ~/egit-releases/$rel ] ;then
-	wget -q http://download.eclipse.org/egit/updates-2.0/$rel.zip && unzip -q $rel.zip -d ~/egit-releases/$rel && rm $rel.zip
+	wget -q http://download.eclipse.org/egit/updates-3.1/$rel.zip && unzip -q $rel.zip -d ~/egit-releases/$rel && rm $rel.zip
 fi
