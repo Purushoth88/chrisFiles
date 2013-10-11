@@ -12,7 +12,7 @@ installInEclipse() {
 # install java
 sudo -E apt-get -q=2 install openjdk-7-{jdk,doc,source} 
 
-# install eclipse keploer
+# install eclipse kepler
 if [ ! -x /usr/bin/eclipse-kepler ] ;then
 	keplerUrl='http://mirror.netcologne.de/eclipse//technology/epp/downloads/release/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk.tar.gz'
 	if [ $(uname -m) == "x86_64" ] ;then
