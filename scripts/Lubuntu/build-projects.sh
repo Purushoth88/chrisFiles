@@ -37,7 +37,7 @@ cloneOrFetch() {
 }
 
 # install software to build: java, g++
-sudo -E apt-get -q=2 install gdb autoconf libssl-dev maven openjdk-7-{jdk,doc,source} ant
+sudo -E apt-get -q=2 install gdb autoconf libssl-dev maven openjdk-7-{jdk,doc,source} ant curl
 sudo -E apt-get -q=2 build-dep git
 
 # clone & build git e/jgit & gerrit
