@@ -37,7 +37,9 @@ cloneOrFetch() {
 }
 
 # install software to build: java, g++
-sudo -E apt-get -q=2 install gdb autoconf libssl-dev maven openjdk-7-{jdk,doc,source} ant curl
+sudo -E apt-get -q=2 install openjdk-7-jdk
+sudo update-alternatives --set java /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java
+sudo -E apt-get -q=2 install gdb autoconf libssl-dev maven openjdk-7-{doc,source} ant curl
 sudo -E apt-get -q=2 build-dep git
 
 # clone & build git e/jgit & gerrit
@@ -50,10 +52,10 @@ sudo -E apt-get -q=2 build-dep git
 (cloneOrFetch https://gerrit.googlesource.com/gerrit ~/git/gerrit master && cd ~/git/gerrit && buck build release && tools/eclipse/project.py --src)
 
 # Create a gerrit test site
-if [ -f ~/git/gerrit/gerrit-war/target/gerrit*.war ] ;then
+if [ -f ~/git/gerrit/buck-out/gen/release.war ] ;then
 	site=~/git/gerrit/test-site/bin
 	[ -d $site ] || mkdir $site
-	java -jar ~/git/gerrit/gerrit-war/target/gerrit*.war init --batch -d $site
+	java -jar ~/git/gerrit/buck-out/gen/release.war init --batch -d $site
 	$site/bin/gerrit.sh stop
 	sed -r -i 's/type.*=.*OPENID/type = DEVELOPMENT_BECOME_ANY_ACCOUNT/' $site/etc/gerrit.config
 fi
