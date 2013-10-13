@@ -96,9 +96,10 @@ export GIT_SSL_NO_VERIFY=true
 cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/Services/metering ~/git/metering master
 
 # clone orion
-cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/LeanDI/jpaas.org.eclipse.orion.server ~/git/org.eclipse.orion.server master
-cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/LeanDI/jpaas.org.eclipse.orion.client ~/git/org.eclipse.orion.client master
-cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/LeanDI/jpaas.orion ~/git/jpaas.orion master
+[ -d ~/git/orion ] || mkdir -p ~/git/orion
+cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/LeanDI/jpaas.orion.git ~/git/org.eclipse.orion.server master
+cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/LeanDI/org.eclipse.orion.client.git ~/git/orion/org.eclipse.orion.client master
+cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/LeanDI/org.eclipse.orion.server.git ~/git/orion/org.eclipse.orion.server master
 
 # clone account page
 cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/JPaaS/com.sap.core.account.git ~/git/com.sap.core.account master

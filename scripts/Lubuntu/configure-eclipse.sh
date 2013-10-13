@@ -14,9 +14,9 @@ sudo -E apt-get -q=2 install openjdk-7-{jdk,doc,source}
 
 # install eclipse
 if [ ! -x /usr/bin/eclipse ] ;then
-	eclipseUrl='http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/luna/M2/eclipse-jee-luna-M2-linux-gtk.tar.gz'
+	eclipseUrl='http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk.tar.gz&r=1'
 	if [ $(uname -m) == "x86_64" ] ;then
-		eclipseUrl='http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/luna/M2/eclipse-jee-luna-M2-linux-gtk-x86_64.tar.gz'
+		eclipseUrl='http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz&r=1'
 	fi
 	tmp=$(mktemp -d)
 	wget -qO- "$eclipseUrl" | tar -C $tmp -xz
@@ -24,18 +24,8 @@ if [ ! -x /usr/bin/eclipse ] ;then
 	rm -fr $tmp
 	sudo chown -R $USER:$USER /opt/eclipse
 	sudo ln -s /opt/eclipse/eclipse ~/bin/
-	if [ ! -f ~/.local/share/applications/eclipse.desktop ] ;then
-		mkdir -p ~/.local/share/applications
-		cat <<'EOF' >~/.local/share/applications/eclipse.desktop
-[Desktop Entry]
-Type=Application
-Name=Eclipse
-Comment=Eclipse Integrated Development Environment
-Icon=/opt/eclipse/eclipse
-Exec=/opt/eclipse/eclipse
-Terminal=false
-Categories=Development;IDE;Java;
-EOF
+	if [ ! -L ~/Desktop/eclipse ] ;then
+		ln -s /opt/eclipse/eclipse ~/Desktop/ 
 	fi
 fi
 
