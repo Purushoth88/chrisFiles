@@ -97,7 +97,7 @@ cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/Services/metering ~/git/metering
 
 # clone orion
 [ -d ~/git/orion ] || mkdir -p ~/git/orion
-cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/LeanDI/jpaas.orion.git ~/git/org.eclipse.orion.server master
+cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/LeanDI/jpaas.orion.git ~/git/orion/jpaas.orion master
 cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/LeanDI/org.eclipse.orion.client.git ~/git/orion/org.eclipse.orion.client master
 cloneOrFetch https://git.wdf.sap.corp:8080/NGJP/LeanDI/org.eclipse.orion.server.git ~/git/orion/org.eclipse.orion.server master
 
@@ -109,7 +109,9 @@ cloneOrFetch https://git.wdf.sap.corp:8080/sapui5/sapui5.appdesigner.git ~/git/s
 
 # build the cloned repos
 (cd ~/git/metering/com.sap.core.metering.parent; mvn -s ~/.m2/settings.xml.jpaas -q install -DskipTests=true)
-(cd ~/git/jpaas.orion; mvn -s ~/.m2/settings.xml.jpaas -q install -DskipTests=true)
+(cd ~/git/orion; mvn -s ~/.m2/settings.xml.jpaas -f org.eclipse.orion.client/pom.xml clean install)
+(cd ~/git/orion; mvn -s ~/.m2/settings.xml.jpaas -f org.eclipse.orion.server/pom.xml clean install)
+(cd ~/git/orion; mvn -s ~/.m2/settings.xml.jpaas -f jpaas.orion/pom.xml clean install)
 (cd ~/git/com.sap.core.account; mvn -s ~/.m2/settings.xml.jpaas -q install -DskipTests=true)
 (cd ~/git/sapui5.appdesigner; mvn -s ~/.m2/settings.xml.jpaas -q install -DskipTests=true)
 
@@ -142,7 +144,7 @@ fi
 read -p "Please import bookmarks from ~/lib/git_jpaas_bookmarks.html into chrome. Hit <Return when done"
 
 # install SAP Tools in kepler
-installInEclipse eclipse-kepler \
-	http://download.eclipse.org/releases/kepler,https://tools.hana.ondemand.com/kepler,http://download.eclipse.org/m2e-wtp/releases \
+installInEclipse eclipse \
+	http://download.eclipse.org/releases/kepler,https://tools.neo.ondemand.com/kepler,http://download.eclipse.org/m2e-wtp/releases \
 	com.sap.core.tools.eclipse.help.feature.feature.group,com.sap.core.tools.eclipse.server.feature.feature.group,com.sap.jvm.profiling.feature.group,com.sap.ide.support.feature.feature.group,com.sap.ide.ui5.cloud.feature.feature.group 
 exit
