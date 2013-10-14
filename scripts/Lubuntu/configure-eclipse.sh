@@ -3,12 +3,6 @@
 # Configure a Eclipse on a ubuntu system to my needs
 #
 
-# Install plugins to eclipse
-# usage: installInEclipse <eclipse> <url> <commaSeperatedFeatures>
-installInEclipse() {
-	"$1" -application org.eclipse.equinox.p2.director -r "$2" -i $3
-}
-
 # install java
 sudo -E apt-get -q=2 install openjdk-7-{jdk,doc,source} 
 
