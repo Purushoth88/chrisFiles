@@ -145,6 +145,6 @@ read -p "Please import bookmarks from ~/lib/git_jpaas_bookmarks.html into chrome
 
 # install SAP Tools in kepler
 installInEclipse eclipse \
-	http://download.eclipse.org/releases/kepler,https://tools.neo.ondemand.com/kepler,http://download.eclipse.org/m2e-wtp/releases \
+	http://download.eclipse.org/releases/kepler,https://tools.hana.ondemand.com/kepler,http://download.eclipse.org/m2e-wtp/releases \
 	com.sap.core.tools.eclipse.help.feature.feature.group,com.sap.core.tools.eclipse.server.feature.feature.group,com.sap.jvm.profiling.feature.group,com.sap.ide.support.feature.feature.group,com.sap.ide.ui5.cloud.feature.feature.group 
 exit
