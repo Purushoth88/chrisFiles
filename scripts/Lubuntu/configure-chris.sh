@@ -17,8 +17,9 @@ cloneOrFetch() {
 		fi
 		[ -z "$workTree" ] || ( cd "$workTree" ; git submodule update --init --recursive )
 	else
-		if [ -f /media/sf_Shared/$(basename "$2").zip ] ;then
-			unzip -q /media/sf_Shared/$(basename "$2").zip -d "$(dirname "$2")"
+		if [ -f /media/sf_Shared/$(basename "$2").bundle ] ;then
+			git clone /media/sf_Shared/$(basename "$2").bundle "$2"
+			git --git-dir "$2/.git" config remote.origin.url $1
 			cloneOrFetch "$1" "$2" "$3"
 			return
 		else
