@@ -1,9 +1,8 @@
 #!/bin/bash
 #
-# Configure a Ubuntu based Linux to work properly as a VirtualBox guest
+# Configure a Debian based Linux to work properly as a VirtualBox guest
 
 # install applications
-sudo -E apt-get -q=2 update
 sudo -E apt-get -q=2 install dkms
 
 # install guest additions (after dkms)
