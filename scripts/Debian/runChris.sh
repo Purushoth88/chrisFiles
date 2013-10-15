@@ -20,7 +20,7 @@ date=$(date +%Y%m%d%H%M)
 
 if  $update ;then
 	[ -f ~/bin/"$1" ] && mv ~/bin/"$1" ~/bin/"$1.$date.bak"
-	(cd ~/bin; wget "https://raw.github.com/chalstrick/chrisFiles/master/scripts/Lubuntu/$1"; )
+	(cd ~/bin; wget "https://raw.github.com/chalstrick/chrisFiles/master/scripts/Debian/$1"; )
 	cmp -s ~/bin/"$1" ~/bin/"$1.$date.bak" && rm ~/bin/"$1.$date.bak"
 	chmod +x ~/bin/"$1"
 fi
