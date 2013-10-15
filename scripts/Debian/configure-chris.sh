@@ -67,3 +67,7 @@ fi
 (cd ~/git/gerrit && git remote add sap https://d032780@git.wdf.sap.corp:8080/NGP/LDI/gerrit-internal && git fetch sap && git config remote.sap.push HEAD:refs/for/master)
 git config -f ~/git/egit-pde/.git/config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/egit/egit-pde.git
 git config -f ~/git/egit-github/.git/config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/egit/egit-github.git
+
+read -p "rearrange icons in starter"
+read -p "import certificates (your and sap) into firefox and chrome"
+read -p "add xmark sync extensions to chrome and firefox"
