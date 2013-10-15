@@ -49,6 +49,9 @@ else
 	unset http_proxy https_proxy no_proxy
 fi
 
+# install chrome for appdesigner
+sudo -E apt-get -q=2 install chromium-browser
+
 # setup a jpaas sdk
 find /media/sf_Shared -maxdepth 1 -type f -name 'neo-sdk*.zip' -printf '%P\n' | sed -e 's/\.zip//' | while read sdk ;do
 	if [ ! -d ~/jpaas/$sdk ] ;then
@@ -113,7 +116,7 @@ cloneOrFetch https://git.wdf.sap.corp:8080/sapui5/sapui5.appdesigner.git ~/git/s
 (cd ~/git/orion; mvn -s ~/.m2/settings.xml.jpaas -f org.eclipse.orion.server/pom.xml clean install)
 (cd ~/git/orion; mvn -s ~/.m2/settings.xml.jpaas -f jpaas.orion/pom.xml clean install)
 (cd ~/git/com.sap.core.account; mvn -s ~/.m2/settings.xml.jpaas -q install -DskipTests=true)
-(cd ~/git/sapui5.appdesigner; mvn -s ~/.m2/settings.xml.jpaas -q install -DskipTests=true)
+(cd ~/git/sapui5.appdesigner; mvn -f reactor/pom.xml -Poptimized.build clean install -DskipTests=true)
 
 if [ ! -f ~/lib/git_jpaas_bookmarks.html ] ;then
 	[ -d ~/lib ] || mkdir ~/lib
