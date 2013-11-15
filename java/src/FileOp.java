@@ -9,219 +9,181 @@ import java.io.RandomAccessFile;
 import java.lang.management.ManagementFactory;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 public class FileOp {
-	public enum OPS {
-		write, cat, create, unlockx, unlock, lockx, lock, delete, closeOutputStream, closeInputStream, openInputStream, openOutputStream, quit
-	};
-
-	public static void main(String args[]) throws IOException {
+	public static void main(String args[]) {
 		FileInputStream fis = null;
 		FileOutputStream fos = null;
 		FileChannel channel;
 		FileLock lock = null;
 		FileLock lockx = null;
-		StringBuilder commands = new StringBuilder();
-		Map<String, OPS> variant2command=new HashMap<>();
-		for (OPS o : OPS.values()) {
-			Iterator<String> variants = abbrevCamelCase(o.name()).iterator();
-			String variant = variants.next();
-			commands.append(variant);
-			variant2command.put(variant,  o);
-			if (variants.hasNext()) {
-				commands.append("(");
-				StringBuilder sb = new StringBuilder();
-				sb.append(var.next());
-					while (strings.hasNext()) {
-						sb.append(delimiter);
-						sb.append(strings.next());
-					}
-					return sb.toString();
-				} else
-					return "";
-
-				commands.append(join(",", variants));
-				commands.append(")");
-			}
-		}
-		StringBuilder usage = new StringBuilder("usage: LockFile <FileName>");
-		String lastLine;
+		String line;
 		BufferedReader sysInReader = new BufferedReader(new InputStreamReader(
 				System.in));
-		File f = (args.length == 1) ? new File(args[0]) : null;
-		if (f == null || !f.exists()) {
+
+		StringBuilder usage = new StringBuilder("usage: LockFile <FileName>");
+		if (args.length == 0 || args.length > 1
+				|| "-h".equalsIgnoreCase(args[0])) {
 			System.err.println(usage);
 			System.exit(-1);
 		}
+		File f = new File(args[0]);
+		if (!f.exists()) {
+			System.err.println("Couldn't find file: " + args[0]);
+			System.exit(-2);
+		}
+
 		try {
-			OPS op = null;
+			String cmd = null;
 			do {
-				System.out.println("Possible commands: " + commands);
+				System.out
+						.println("Possible commands: cat, closeInputStream|cis, closeOutputStream|cos, create, openInputStream|ois, openOutputStream|oos, delete|del, lock, lockx, unlock, unlockx, write, rename <newFile>, quit");
 				System.out.print("Enter command:");
-				lastLine = sysInReader.readLine();
-				op = getEnumFromString(OPS.class, lastLine);
-				if (op == null) {
-					System.out.println("Unknown command: <" + lastLine + ">");
-					continue;
-				}
-				switch (op) {
-				case cat:
-					System.out.println("Content of file " + f.getPath() + ":");
-					BufferedReader br = new BufferedReader(
-							new InputStreamReader(new FileInputStream(f)));
-					lastLine = br.readLine();
-					while (lastLine != null) {
-						System.out.println(lastLine);
-						lastLine = br.readLine();
-					}
-					System.out.println("EOF");
-					br.close();
-					break;
-				case closeInputStream:
-					if (fis == null) {
-						System.out.println("fatal: no inputstream created");
-						break;
-					}
-					fis.close();
-					fis = null;
-					System.out.println("closed FileInputStream");
-					break;
-				case closeOutputStream:
-					if (fos == null) {
-						System.out.println("fatal: no outputstream created");
-						break;
-					}
-
-					fos.close();
-					fos = null;
-					System.out.println("closed FileOutputStream");
-					break;
-				case create:
-					boolean createRc = f.createNewFile();
-					System.out.println("Creating new file " + f.getPath()
-							+ " lead to rc:" + createRc);
-					break;
-				case openInputStream:
-					if (fis != null) {
-						System.out.println("fatal: inputstream already created");
-						break;
-					}
-					fis = new FileInputStream(f);
-					System.out.println("created FileInputStream");
-					break;
-				case openOutputStream:
-					if (fos != null) {
-						System.out.println("fatal: outputstream already created");
-						break;
-					}
-					fos = new FileOutputStream(f);
-					System.out.println("created FileOutputStream");
-					break;
-				case delete:
-					boolean deleteRc = f.delete();
-					System.out.println("Deleting file " + f.getPath()
-							+ " lead to rc:" + deleteRc);
-					break;
-				case lock:
-					System.out
-							.println("About to lock a file through new RandomAccessFile(f, \"r\").getChannel().lock(0, 1, true)");
-					channel = new RandomAccessFile(f, "r").getChannel();
-					lock = channel.lock(0, 1, true);
-					System.out
-							.println("Locked file through new RandomAccessFile(f, \"r\").getChannel().lock(0, 1, true)");
-					break;
-				case lockx:
-					System.out
-							.println("About to lock a file through new RandomAccessFile(f, \"rw\").getChannel().lock()");
-					channel = new RandomAccessFile(f, "rw").getChannel();
-					lockx = channel.lock();
-					System.out
-							.println("Locked file through new RandomAccessFile(f, \"rw\").getChannel().lock()");
-					break;
-				case unlock:
-					if (lock == null) {
-						System.out.println("fatal: file not locked");
-						break;
-					}
-					lock.release();
-					lock = null;
-					System.out.println("unlocked file which was shared locked");
-					break;
-				case unlockx:
-					if (lockx == null) {
-						System.out.println("fatal: file not locked");
-						break;
-					}
-					lockx.release();
-					lockx = null;
-					System.out.println("unlocked file which was shared locked");
-					break;
-				case write:
-					if (fos == null) {
+				try {
+					line = sysInReader.readLine();
+					String[] tokens = line.split(" ");
+					cmd = tokens[0];
+					if (cmd.equalsIgnoreCase("cat")) {
+						System.out.println("Content of file " + f.getPath()
+								+ ":");
+						BufferedReader br = new BufferedReader(
+								new InputStreamReader(new FileInputStream(f)));
+						line = br.readLine();
+						while (line != null) {
+							System.out.println(line);
+							line = br.readLine();
+						}
+						System.out.println("EOF");
+						br.close();
+					} else if (cmd.equalsIgnoreCase("closeInputStream")
+							|| cmd.equalsIgnoreCase("cis")) {
+						if (fis == null)
+							System.out.println("fatal: no inputstream created");
+						else {
+							fis.close();
+							fis = null;
+							System.out.println("closed FileInputStream");
+						}
+					} else if (cmd.equalsIgnoreCase("closeOutputStream")
+							|| cmd.equalsIgnoreCase("cos")) {
+						if (fos == null)
+							System.out
+									.println("fatal: no outputstream created");
+						else {
+							fos.close();
+							fos = null;
+							System.out.println("closed FileOutputStream");
+						}
+					} else if (cmd.equalsIgnoreCase("create")) {
+						boolean createRc = f.createNewFile();
+						System.out.println("Creating new file " + f.getPath()
+								+ " lead to rc:" + createRc);
+					} else if (cmd.equalsIgnoreCase("openInputStream")
+							|| cmd.equalsIgnoreCase("ois")) {
+						if (fis != null)
+							System.out
+									.println("fatal: inputstream already created");
+						else {
+							fis = new FileInputStream(f);
+							System.out.println("created FileInputStream");
+						}
+					} else if (cmd.equalsIgnoreCase("openOutputStream")
+							|| cmd.equalsIgnoreCase("oos")) {
+						if (fos != null)
+							System.out
+									.println("fatal: outputstream already created");
+						else {
+							fos = new FileOutputStream(f);
+							System.out.println("created FileOutputStream");
+						}
+					} else if (cmd.equalsIgnoreCase("delete")
+							|| cmd.equalsIgnoreCase("del")) {
+						boolean deleteRc = f.delete();
+						System.out.println("Deleting file " + f.getPath()
+								+ " lead to rc:" + deleteRc);
+					} else if (cmd.equalsIgnoreCase("lock")) {
 						System.out
-								.println("fatal: not fileoutputstream has been created");
-						break;
-					}
-					PrintWriter pw = new PrintWriter(fos, true);
-					pw.println("Writing content to stream from process "
-							+ ManagementFactory.getRuntimeMXBean().getName());
-					break;
-				case quit:
-					break;
-				default:
-
-					break;
+								.println("About to lock a file through new RandomAccessFile(f, \"r\").getChannel().lock(0, 1, true)");
+						channel = new RandomAccessFile(f, "r").getChannel();
+						lock = channel.lock(0, 1, true);
+						System.out
+								.println("Locked file through new RandomAccessFile(f, \"r\").getChannel().lock(0, 1, true)");
+					} else if (cmd.equalsIgnoreCase("lockx")) {
+						System.out
+								.println("About to lock a file through new RandomAccessFile(f, \"rw\").getChannel().lock()");
+						channel = new RandomAccessFile(f, "rw").getChannel();
+						lockx = channel.lock();
+						System.out
+								.println("Locked file through new RandomAccessFile(f, \"rw\").getChannel().lock()");
+					} else if (cmd.equalsIgnoreCase("unlock")) {
+						if (lock == null)
+							System.out.println("fatal: file not locked");
+						else {
+							lock.release();
+							lock = null;
+							System.out
+									.println("unlocked a file which was previously locked with a shared lock");
+						}
+					} else if (cmd.equalsIgnoreCase("unlockx")) {
+						if (lockx == null)
+							System.out.println("fatal: file not locked");
+						else {
+							lockx.release();
+							lockx = null;
+							System.out
+									.println("unlocked a file which was previously locked exclusively");
+						}
+					} else if (cmd.equalsIgnoreCase("write")) {
+						if (fos == null)
+							System.out
+									.println("fatal: not fileoutputstream has been created");
+						else {
+							PrintWriter pw = new PrintWriter(fos, true);
+							pw.println("Writing content to stream from process "
+									+ ManagementFactory.getRuntimeMXBean()
+											.getName());
+						}
+					} else if (cmd.equalsIgnoreCase("rename")) {
+						if (tokens.length < 2)
+							System.err.println("No target filename specified.");
+						else {
+							boolean ret = f.renameTo(new File(tokens[1]));
+							System.out.println("renaming file to path <"
+									+ tokens[1] + "> lead to rc=" + ret);
+							System.out
+									.println("Further commands will continue to work on the old File object with path: "
+											+ f.getPath());
+						}
+					} else if (!cmd.equalsIgnoreCase("quit"))
+						System.out.println("Unknown command: <" + line + ">");
+				} catch (IOException e) {
+					System.err.println("catched and IOException: "
+							+ e.toString());
 				}
-			} while (op != OPS.quit);
+				System.out.println();
+			} while (!cmd.equalsIgnoreCase("quit"));
 		} finally {
-			if (lock != null) {
-				lock.release();
-				System.out.println("Implicitly released shared lock");
-			}
-			if (lockx != null) {
-				lockx.release();
-				System.out.println("Implicitly released exclusive lock");
-			}
-			if (fis != null) {
-				fis.close();
-				System.out.println("Implicitly closed inputstream");
-			}
-			if (fos != null) {
-				fos.close();
-				System.out.println("Implicitly closed outputstream");
+			System.out.println("Leaving");
+			try {
+				if (lock != null) {
+					lock.release();
+					System.out.println("Implicitly released shared lock");
+				}
+				if (lockx != null) {
+					lockx.release();
+					System.out.println("Implicitly released exclusive lock");
+				}
+				if (fis != null) {
+					fis.close();
+					System.out.println("Implicitly closed inputstream");
+				}
+				if (fos != null) {
+					fos.close();
+					System.out.println("Implicitly closed outputstream");
+				}
+			} catch (IOException e) {
+				System.err.println("catched and IOException: " + e.toString());
 			}
 		}
-	}
-
-	public static List<String> abbrevCamelCase(String orig) {
-		LinkedList<String> ret = new LinkedList<>();
-		ret.add(orig);
-		String[] split = orig.split("(?<=[a-z])(?=[A-Z])");
-		if (split.length > 1) {
-			ret.add(orig.toLowerCase());
-			StringBuffer sb = new StringBuffer();
-			for (String part : split)
-				sb.append(part.substring(1, 1).toLowerCase());
-			ret.add(sb.toString());
-		}
-		return ret;
-	}
-
-	public static String join(String delimiter, Iterator<String> strings) {
-		if (strings.hasNext()) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(strings.next());
-			while (strings.hasNext()) {
-				sb.append(delimiter);
-				sb.append(strings.next());
-			}
-			return sb.toString();
-		} else
-			return "";
 	}
 }
