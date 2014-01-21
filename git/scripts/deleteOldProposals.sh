@@ -4,7 +4,7 @@
 
 oldChangeNr="0"
 oldPatchSet="0"
-git show-ref | cut  -d ' ' -f 2 | grep '^refs/[^/]\+/change/[0-9]\+/[0-9]\+$' | sort -n -t/ -k4,5 -r | while read ref ;do
+git show-ref | cut  -d ' ' -f 2 | grep '^refs/[^/]\+/change/[0-9]\+/[0-9]\+$' | sort -n -t/ -k4 -k5 -r | while read ref ;do
 	change=${ref##refs/*/change/}
  	changeNr=${change%%/*}
 	patchSet=${change##*/}
