@@ -6,6 +6,7 @@
 # Clones a non-bare git repo or (if it already exists) fetches updates
 # usage: getOrFetch <url> <localDir> [<gerritBranchToPush>]
 cloneOrFetch() {
+	bundleDir=/mnt/perm/git/bundles
 	if [ -d "$2" ] ;then
 		gitDir="$2/.git"
 		workTree="$2"
@@ -17,8 +18,8 @@ cloneOrFetch() {
 		fi
 		[ -z "$workTree" ] || ( cd "$workTree" ; git submodule update --init --recursive )
 	else
-		if [ -f /media/sf_Shared/$(basename "$2").bundle ] ;then
-			git clone /media/sf_Shared/$(basename "$2").bundle "$2"
+		if [ -f $bundleDir/$(basename "$2").bundle ] ;then
+			git clone $bundleDir/$(basename "$2").bundle "$2"
 			git --git-dir "$2/.git" config remote.origin.url $1
 			cloneOrFetch "$1" "$2" "$3"
 			return
