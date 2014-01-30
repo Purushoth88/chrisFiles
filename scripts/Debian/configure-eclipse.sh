@@ -18,14 +18,24 @@ if [ ! -x /usr/bin/eclipse ] ;then
 	rm -fr $tmp
 	sudo chown -R $USER:$USER /opt/eclipse
 	sudo ln -s /opt/eclipse/eclipse ~/bin/
-	if [ ! -L ~/Desktop/eclipse ] ;then
-		ln -s /opt/eclipse/eclipse ~/Desktop/ 
+	if [ ! -f ~/.local/share/applications/eclipse.desktop ] ;then
+		cat <<EOF >~/.local/share/applications/eclipse.desktop
+[Desktop Entry]
+Version=4.3.0
+Name=Eclipse
+Comment=Eclipse EE 4.3.1 (Kepler)
+Exec=env UBUNTU_MENUPROXY=0 /opt/eclipse/eclipse
+Icon=/opt/eclipse/icon.xpm
+Terminal=false
+Type=Application
+Categories=Utility;Development;Application
+EOF
 	fi
 fi
 
 # prepare API Baselines
 mkdir -p ~/egit-releases
-rel=org.eclipse.egit.repository-3.1.0.201310021548-r
+rel=org.eclipse.egit.repository-3.2.0.201312181205-r
 if [ ! -d ~/egit-releases/$rel ] ;then
-	wget -q http://download.eclipse.org/egit/updates-3.1/$rel.zip && unzip -q $rel.zip -d ~/egit-releases/$rel && rm $rel.zip
+	wget -q http://download.eclipse.org/egit/updates-3.2/$rel.zip && unzip -q $rel.zip -d ~/egit-releases/$rel && rm $rel.zip
 fi
