@@ -6,7 +6,7 @@ sudo -E apt-get -q=2 install libnss3-tools
 read -p "Folder containing SAPNetCA.crt: " crtFolder
 
 [ -f $crtFolder/SAPNetCA.crt ] && sudo cp $crtFolder/SAPNetCA.crt /usr/local/share/ca-certificates
-if [ -r /usr/local/share/ca-certificates/SAPNetCA.crt ] ;then
+if [ -f /usr/local/share/ca-certificates/SAPNetCA.crt ] ;then
 	sudo chmod 444 /usr/local/share/ca-certificates/SAPNetCA.crt
 	sudo dpkg-reconfigure ca-certificates
 	sudo update-ca-certificates
