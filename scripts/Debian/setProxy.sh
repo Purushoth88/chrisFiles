@@ -25,13 +25,13 @@ if [ ! -f ~/.m2/settings_sap_proxy.xml ] ;then
   <proxies>
     <proxy><active>true</active>
       <protocol>http</protocol>
-      <host>proxy</host>
+      <host>proxy.wdf.sap.corp</host>
       <port>8080</port>
       <nonProxyHosts>nexus|*.sap.corp|localhost|$host</nonProxyHosts>
     </proxy>
     <proxy><active>true</active>
       <protocol>https</protocol>
-      <host>proxy</host>
+      <host>proxy.wdf.sap.corp</host>
       <port>8080</port>
       <nonProxyHosts>nexus|*.sap.corp|localhost|$host</nonProxyHosts>
     </proxy>
@@ -42,8 +42,8 @@ fi
 
 if [ ! -f ~/.80proxy ] ;then
 	cat <<'EOF' >~/.80proxy
-Acquire::http::proxy "http://proxy:8080/";
-Acquire::https::proxy "https://proxy:8080/";
+Acquire::http::proxy "http://proxy.wdf.sap.corp:8080/";
+Acquire::https::proxy "https://proxy.wdf.sap.corp:8080/";
 EOF
 fi
 
@@ -72,11 +72,11 @@ fi
 
 # while in the intranet set the correct proxy
 if [ $proxy = "-on" ] ;then
-	grep "^http_proxy" /etc/environment || sudo sh -c 'echo http_proxy=http://proxy:8080 >> /etc/environment'
-	grep "^https_proxy" /etc/environment || sudo sh -c 'echo https_proxy=https://proxy:8080 >> /etc/environment'
+	grep "^http_proxy" /etc/environment || sudo sh -c 'echo http_proxy=http://proxy.wdf.sap.corp:8080 >> /etc/environment'
+	grep "^https_proxy" /etc/environment || sudo sh -c 'echo https_proxy=https://proxy.wdf.sap.corp:8080 >> /etc/environment'
 	grep "^no_proxy" /etc/environment || sudo sh -c 'echo "no_proxy=wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp,'$host'" >> /etc/environment'
-	export http_proxy=http://proxy:8080
-	export https_proxy=https://proxy:8080
+	export http_proxy=http://proxy.wdf.sap.corp:8080
+	export https_proxy=https://proxy.wdf.sap.corp:8080
 	export no_proxy='wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp,'$host
 	[ -f /etc/apt/apt.conf.d/80proxy ] || sudo cp ~/.80proxy /etc/apt/apt.conf.d/80proxy
 	[ -f ~/.m2/settings.xml ] || cp ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml
