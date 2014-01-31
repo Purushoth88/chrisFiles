@@ -3,10 +3,11 @@
 # Clone and build projects
 #
 
+read -p "Enter path where to find bundles: " -e -i "/mnt/perm/git/bundles" bundle_dir
+
 # Clones a non-bare git repo or (if it already exists) fetches updates
 # usage: getOrFetch <url> <localDir> [<gerritBranchToPush>]
 cloneOrFetch() {
-	bundleDir=/mnt/perm/git/bundles
 	if [ -d "$2" ] ;then
 		gitDir="$2/.git"
 		workTree="$2"
