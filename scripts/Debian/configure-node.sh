@@ -1,7 +1,6 @@
 #!/bin/bash
 #
-# Configure a ubuntu system to contain optional software packages (e.g. scripted,...)
-#
+# Install in a ubuntu based system node, scripted
 
 # add latest nodejs repo (otherwise scripted doesn't install)
 sudo add-apt-repository ppa:chris-lea/node.js
