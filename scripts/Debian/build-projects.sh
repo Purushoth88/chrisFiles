@@ -9,8 +9,10 @@ sudo -E apt-get -q=2 install sudo -E apt-get -q=2 build-dep git
 
 # clone & build git e/jgit & gerrit
 (cd ~/git/git && make configure && ./configure && make -s) &
-(cd ~/git/jgit && mvn -q install -DskipTests && cd ~/git/jgit/org.eclipse.jgit.packaging && mvn install -DskipTests) && (cd ~/git/egit && mvn -q -P skip-ui-tests install -DskipTests) &
-(cd ~/git/buck && ant -S && ln -s $(pwd)/bin/buck ~/bin/ ) && (cd ~/git/gerrit && buck build release && tools/eclipse/project.py --src) &
+GIT_RELEASE=v3.2.0.201312181205-r
+(cd ~/git/jgit && git checkout $GIT_RELEASE && mvn -q install -DskipTests && cd ~/git/jgit/org.eclipse.jgit.packaging && mvn install -DskipTests) && (cd ~/git/egit && git checkout $GIT_RELEASE && mvn -q -P skip-ui-tests install -DskipTests) &
+GERRIT_RELEASE=v2.8.1
+(cd ~/git/buck && ant -S && ln -s $(pwd)/bin/buck ~/bin/ ) && (cd ~/git/gerrit && git checkout $GERRIT_RELEASE && buck build release && tools/eclipse/project.py --src) &
 wait
 
 # Create a gerrit test site
