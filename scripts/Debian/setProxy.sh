@@ -1,7 +1,6 @@
 #!/bin/bash
 #
-# Configure a ubuntu system to use SAP proxy
-#
+# Configure a ubuntu based system to use SAP proxy if needed
 
 if [ "$1" = "-h" ] ;then
 	echo "usage: setProxy [-on] [-off] [-update]"
