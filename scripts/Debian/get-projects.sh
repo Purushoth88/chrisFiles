@@ -6,12 +6,12 @@
 sudo -E apt-get -q=2 install git gitk 
 
 # clone/fetch linux, git, e/jgit, gerrit, buck
-git clone --recursive https://github.com/torvalds/linux.git &
-git clone --recursive https://gerrit.googlesource.com/gerrit &
-git clone --recursive https://github.com/git/git.git &
-git clone --recursive https://git.eclipse.org/r/jgit/jgit &
-git clone --recursive https://git.eclipse.org/r/egit/egit &
-git clone --recursive https://gerrit.googlesource.com/buck &
+( cd ~/git && git clone --recursive https://github.com/torvalds/linux.git ) &
+( cd ~/git && git clone --recursive https://gerrit.googlesource.com/gerrit ) &
+( cd ~/git && git clone --recursive https://github.com/git/git.git ) &
+( cd ~/git && git clone --recursive https://git.eclipse.org/r/jgit/jgit ) &
+( cd ~/git && git clone --recursive https://git.eclipse.org/r/egit/egit ) &
+( cd ~/git && git clone --recursive https://gerrit.googlesource.com/buck ) &
 
 wait
 
