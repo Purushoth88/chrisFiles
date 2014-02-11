@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Configure a Debian based Linux to work properly as a VirtualBox guest
+# Configure a ubuntu based Linux to work properly as a VirtualBox guest
 
 # install applications
 sudo -E apt-get -q=2 update
