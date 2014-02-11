@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# Run a script stored at https://raw.github.com/chalstrick/chrisFiles/master/scripts/Debian and write a log during execution
 
 update=false
 if [ "$1" == "-u" ] ;then
