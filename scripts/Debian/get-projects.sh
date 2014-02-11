@@ -3,7 +3,7 @@
 # Clone and build projects
 #
 
-read -p "Enter path where to find bundles: " -e -i "/mnt/perm/git/bundles" bundle_dir
+read -p "Enter path where to find bundles: " -e -i "/mnt/perm/git/bundles" bundleDir
 
 # Clones a non-bare git repo or (if it already exists) fetches updates
 # usage: getOrFetch <url> <localDir> [<gerritBranchToPush>]
@@ -52,6 +52,7 @@ cloneOrFetch https://git.eclipse.org/r/jgit/jgit ~/git/jgit master
 cloneOrFetch https://git.eclipse.org/r/egit/egit ~/git/egit master
 cloneOrFetch https://git.eclipse.org/r/egit/egit-github ~/git/egit-github master
 cloneOrFetch https://git.eclipse.org/r/egit/egit-pde ~/git/egit-pde master
+cloneOrFetch https://gerrit.googlesource.com/buck ~/git/buck
 
 # write bookmarks file
 [ -d ~/lib ] || mkdir ~/lib
