@@ -9,4 +9,4 @@ if [ -f /etc/xdg/autostart/gnome-keyring-pkcs11.desktop ] ;then
 	fi
 fi
 
-
+read -p "Start Preferences/Customize Look and Feel/Color and switch \"Tooltip\" to yellow foreground/black background"
