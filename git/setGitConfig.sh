@@ -21,3 +21,5 @@ git config --global http.sslverify false
 git config --global color.ui auto
 git config --global alias.snap '!bash -c '\''~/git/chrisFiles/git/scripts/snapshot.sh $*'\'' -'
 git config --global alias.lssnap '!bash -c '\''~/git/chrisFiles/git/scripts/lssnap.sh $*'\'' -'
+git config --global alias.show-local 'log --all --not --remotes --decorate --oneline'
+git config --global alias.show-local-refs 'log --all --not --remotes --simplify-by-decoration --decorate --oneline'

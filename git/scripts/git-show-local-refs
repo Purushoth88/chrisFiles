@@ -1,0 +1,10 @@
+#!/bin/sh
+for d in $(find . -name '.git' -type d) ;do
+  echo "inspecting $d"
+  git --git-dir $d fetch -q --all --prune --recurse-submodules=yes
+  [ -x ~/bin/deleteOldProposals.sh ] && (cd $d; ~/bin/deleteOldProposals.sh >/dev/null)
+  for r in $(git --git-dir $d remote) ;do git --git-dir $d fetch -q $r "refs/tags/*:refs/remotes/$r/tags/*" ;done
+  git --git-dir $d --work-tree $d/.. st
+  git --no-pager --git-dir $d log --all --not --remotes --decorate --simplify-by-decoration --oneline
+  for r in $(git --git-dir $d remote) ;do rm -fr $d/refs/remotes/$r/tags ;done
+done
