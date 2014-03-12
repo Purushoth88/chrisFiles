@@ -17,10 +17,12 @@ echo -e '#!/bin/bash \n echo -e "post-receive:\nrefs:\n$(git show-ref)\nInput:" 
 chmod +x central.git/hooks/*-receive
 
 # start a daeomon
-git daemon --verbose --export-all --enable=receive-pack --base-path=. &
+port=$((( RANDOM % 1000 ) + 25000 ))
+git daemon --port=$port --verbose --export-all --enable=receive-pack --base-path=. &
+sleep 3
 
 # create developers repo, modify and push
-git clone git://localhost/central.git developer
+git clone git://localhost:$port/central.git developer
 cd developer
 git commit --allow-empty -m modifiedByDev
 git checkout -b side origin/side 
