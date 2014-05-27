@@ -18,6 +18,7 @@ public class CheckForCleanState_FindCommitForPath {
 				RepositoryCache.FileKey key;
 		key = RepositoryCache.FileKey.lenient(new File(args[0]), fs);
 		Repository repo = new RepositoryBuilder().setFS(fs).setGitDir(key.getFile()).setMustExist(true).build();
+		Git git=new Git(repo);
 		if (!git.status().call().isClean())
 			throw new IllegalStateException("Repo state is not clean.");
 		// find last commit

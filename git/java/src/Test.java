@@ -194,9 +194,9 @@ public class Test {
 				.call();
 
 		for (int i = 0; i < 5; ++i) {
-			RevTag tag = local.tag().setMessage("m").setName("t1")
+			Ref tag = local.tag().setMessage("m").setName("t1")
 					.setObjectId(commit).setForceUpdate(true).call();
-			System.out.println("tag on local with id: " + tag.getId());
+			System.out.println("tag on local with id: " + tag.getObjectId());
 			System.out.println("Attempt #" + i + " to push on local");
 			Iterable<PushResult> pushResults = local.push().setRemote("origin")
 					.setRefSpecs(new RefSpec("refs/tags/t1:refs/tags/t1"))
@@ -208,9 +208,9 @@ public class Test {
 			Thread.sleep(1000);
 		}
 
-		RevTag tag2 = local2.tag().setMessage("m").setName("t1")
+		Ref tag2 = local2.tag().setMessage("m").setName("t1")
 				.setObjectId(commit).call();
-		System.out.println("tag2 on local2 with id: " + tag2.getId());
+		System.out.println("tag2 on local2 with id: " + tag2.getObjectId());
 		for (int i = 0; i < 5; ++i) {
 			System.out.println("Attempt #" + i + " to push on local2");
 			Iterable<PushResult> pushResults = local2.push()

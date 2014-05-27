@@ -1,20 +1,20 @@
 	import java.io.File;
-	import java.io.IOException;
-	
-	import org.eclipse.jgit.api.Git;
-	import org.eclipse.jgit.api.errors.GitAPIException;
-	import org.eclipse.jgit.api.errors.JGitInternalException;
-	import org.eclipse.jgit.dircache.DirCache;
-	import org.eclipse.jgit.errors.CorruptObjectException;
-	import org.eclipse.jgit.errors.NoWorkTreeException;
-	import org.eclipse.jgit.lib.CommitBuilder;
-	import org.eclipse.jgit.lib.ObjectId;
-	import org.eclipse.jgit.lib.ObjectInserter;
-	import org.eclipse.jgit.lib.PersonIdent;
-	import org.eclipse.jgit.lib.RefUpdate;
-	import org.eclipse.jgit.lib.Repository;
-	import org.eclipse.jgit.revwalk.RevCommit;
-	import org.eclipse.jgit.storage.file.FileRepository;
+import java.io.IOException;
+
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.dircache.DirCache;
+import org.eclipse.jgit.errors.CorruptObjectException;
+import org.eclipse.jgit.errors.NoWorkTreeException;
+import org.eclipse.jgit.lib.CommitBuilder;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectInserter;
+import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.lib.RefUpdate;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 	
 	public class TestLocalRepo {
 		private static String defaultRepo = "C:/git/chris";
@@ -40,7 +40,7 @@
 		public void testBug(File gitDir) throws GitAPIException,
 				JGitInternalException, NoWorkTreeException, CorruptObjectException,
 				IOException, InterruptedException {
-			final Repository initialRepository = new FileRepository(gitDir);
+			final Repository initialRepository = FileRepositoryBuilder.create(gitDir);
 			initialRepository.create(false);
 	
 			final DirCache dirCache = DirCache.newInCore();
@@ -77,13 +77,13 @@
 			refUpdate = initialRepository.updateRef("HEAD");
 			refUpdate.link("refs/heads/master");
 	
-			Repository repository1 = new FileRepository(gitDir);
+			Repository repository1 = FileRepositoryBuilder.create(gitDir);
 			final ObjectId headId1 = repository1.resolve("HEAD"); // without this
 																	// "resolve" the
 																	// test is
 																	// passed
 	
-			Repository repository2 = new FileRepository(gitDir);
+			Repository repository2 = FileRepositoryBuilder.create(gitDir);
 			final ObjectId headId2 = repository2.resolve("HEAD"); // without
 																	// this"resolve"
 																	// the test is
