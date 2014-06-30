@@ -1,0 +1,3 @@
+#!/bin/sh
+# filter replacing words by strings of from "$<n>" (e.g. $1, $2, $3...). The same word will allways be replaced by the same number.
+awk '{for(i=NF;i>0;i--) {if ($i in t) $i=t[$i]; else { t[$i]=n++; $i=t[$i]}} print}' $*
