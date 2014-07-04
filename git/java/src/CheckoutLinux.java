@@ -11,15 +11,21 @@ public class CheckoutLinux {
 			JGitInternalException {
 		Git r = Git.open(new File("/home/user/git/linux"));
 		StopWatch sw = StopWatch.createAndStart();
-		System.out.println("Current commit on HEAD: "+ r.log().call().iterator().next().getShortMessage());
-		sw.stop("printed latest log message");
-		
-		FileOutputStream fos = new FileOutputStream(new File(r.getRepository().getWorkTree(), "a"));
+		System.out.println("Current commit on HEAD: "
+				+ r.log().call().iterator().next().getShortMessage());
+		System.out
+				.println("printed latest log message in " + sw.stop() + "ms.");
+
+		FileOutputStream fos = new FileOutputStream(new File(r.getRepository()
+				.getWorkTree(), "a"));
 		fos.write(65);
 		fos.close();
-		
+
 		sw = StopWatch.createAndStart();
-		r.add().addFilepattern("a").call();
-		sw.stop("added file a");
+		r.add().addFilepattern("a1").call();
+		System.out.println("Added a new file a in "+sw.stop()+"ms.");
+		sw = StopWatch.createAndStart();
+		r.add().addFilepattern("a2").call();
+		System.out.println("Added another new file a in "+sw.stop()+"ms.");
 	}
 }

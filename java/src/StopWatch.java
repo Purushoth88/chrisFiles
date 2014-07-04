@@ -1,9 +1,9 @@
 /**
- *
+ * A minimal stopwatch
  */
 public class StopWatch {
 	private long start = -1;
-	private long readOut = 0;
+	private long readOut = -1;
 
 	public static StopWatch createAndStart() {
 		StopWatch sw = new StopWatch();
@@ -11,35 +11,22 @@ public class StopWatch {
 		return sw;
 	}
 
-	/**
-	 */
-	public StopWatch start() {
+	public long start() {
+		start = System.currentTimeMillis();
+		return start;
+	}
+
+	public long stop() {
 		if (start == -1)
-			start = System.currentTimeMillis();
-		return this;
+			return -1;
+		long lastMeasurement = System.currentTimeMillis() - start;
+		readOut += lastMeasurement;
+		start = -1;
+		return lastMeasurement;
 	}
 
-	/**
-	 * @return readout
-	 */
-	public StopWatch stop(String message) {
-		if (start != -1) {
-			readOut += System.currentTimeMillis() - start;
-			start = -1;
-		}
-		if (message != null)
-			System.out.println("Stop of " + message + ". readOut:" + readOut);
-		return this;
-	}
-
-	/**
-	 * @return readout
-	 */
-	public long readout(String message) {
-		long ret = (start != -1) ? readOut + System.currentTimeMillis() - start
+	public long readout() {
+		return (start != -1) ? readOut + System.currentTimeMillis() - start
 				: readOut;
-		if (message != null)
-			System.out.println("readOut(" + message + "):" + ret);
-		return ret;
 	}
 }
