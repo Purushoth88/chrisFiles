@@ -7,9 +7,9 @@ sudo -E apt-get -q=2 install openjdk-7-{jdk,doc,source}
 
 # install eclipse
 if [ ! -x /usr/bin/eclipse ] ;then
-	eclipseUrl='http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk.tar.gz&r=1'
+	eclipseUrl='http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/kepler/SR2/eclipse-jee-kepler-SR2-linux-gtk.tar.gz&r=1'
 	if [ $(uname -m) == "x86_64" ] ;then
-		eclipseUrl='http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/kepler/SR1/eclipse-jee-kepler-SR1-linux-gtk-x86_64.tar.gz&r=1'
+		eclipseUrl='http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/kepler/SR2/eclipse-jee-kepler-SR2-linux-gtk-x86_64.tar.gz&r=1'
 	fi
 	tmp=$(mktemp -d)
 	wget -qO- "$eclipseUrl" | tar -C $tmp -xz
@@ -21,9 +21,9 @@ if [ ! -x /usr/bin/eclipse ] ;then
 		mkdir -p ~/.local/share/applications
 		cat <<EOF >~/.local/share/applications/eclipse.desktop
 [Desktop Entry]
-Version=4.3.0
+Version=4.3.2
 Name=Eclipse
-Comment=Eclipse EE 4.3.1 (Kepler)
+Comment=Eclipse EE 4.3.2 (Kepler)
 Exec=env UBUNTU_MENUPROXY=0 /opt/eclipse/eclipse
 Icon=/opt/eclipse/icon.xpm
 Terminal=false
