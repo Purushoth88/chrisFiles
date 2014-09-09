@@ -2,26 +2,32 @@
 #
 # Clone my favourite git repos
 
+tarDir=/media/sf_Shared/git/backups
+
 # get git
 sudo -E apt-get -q=2 install git gitk 
 
+# get a commit-msg hook
+[ -f ~/lib/commit-msg ] || { wget -O ~/lib/commit-msg https://git.eclipse.org/r/tools/hooks/commit-msg ; chmod +x ~/lib/commit-msg }
+
 # clone/fetch linux, git, e/jgit, gerrit, buck
-[ -d ~/git ] || mkdir -p ~/git
-( cd ~/git && git clone -q --recursive https://github.com/torvalds/linux.git ) &
-( cd ~/git && git clone -q --recursive https://gerrit.googlesource.com/gerrit ) &
-( cd ~/git && git clone -q --recursive https://github.com/git/git.git ) &
-( cd ~/git && git clone -q --recursive https://git.eclipse.org/r/jgit/jgit ) &
-( cd ~/git && git clone -q --recursive https://git.eclipse.org/r/egit/egit ) &
-( cd ~/git && git clone -q --recursive https://gerrit.googlesource.com/buck ) &
-
-wait
-
-# configure gerrit repos: get commit-msg hook, configure push 
-for i in { gerrit jgit egit } ;do 
-  (
-    cd $i && \
-    git config remote.origin.push HEAD:refs/for/master && \
-    wget -O ".git/hooks/commit-msg" https://git.eclipse.org/r/tools/hooks/commit-msg && \
-    chmod +x ".git/hooks/commit-msg" && 
-  )
+mkdir -p ~/git
+for url in https://github.com/torvalds/linux.git https://gerrit.googlesource.com/gerrit https://github.com/git/git.git https://git.eclipse.org/r/jgit/jgit https://git.eclipse.org/r/egit/egit https://gerrit.googlesource.com/buck
+do
+  repo = ${url##*/}
+  dir = ${repol%.git}
+  if [ ! -d ~/git/$dir ] ;then
+    if [ -f $tarDir/$dir.tar ] ;then
+      tar -C ~/git -xf $tarDir/$dir.tar
+      git -C ~/git/$dir fetch --all --recurse-submodules
+      git -C ~/git/$dir pull
+    else
+      git clone -q --recursive $url $dir 
+    fi
+    # config jgit,egit,gerrit to work with gerrit
+    if [ $dir = jgit -o $dir = egit -o $dir = gerrit ] ;then
+      git -C ~/git/$dir config remote.origin.push HEAD:refs/for/master
+      cp ~/lib/commit-msg ~/git/$dir/.git/hooks
+    fi
+  fi
 done

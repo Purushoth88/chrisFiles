@@ -49,4 +49,6 @@ read -p "Please add source and javadoc attachments to the installed JRE's in ecl
 read -p "Import tools from ~/git/egit/tools/*"
 read -p "Deactivate Error on Missing Baseline"
 read -p "Import JGit/EGit into eclipse"
+read -p "Import Gerrit into eclipse"
+read -p "Resolve the target platforms 4.3,4.4 in Egit platforms folder"
 read -p "Add Baseline for ~/egit-releases/*"

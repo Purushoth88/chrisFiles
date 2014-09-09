@@ -13,7 +13,7 @@ sudo apt-get -q=2 build-dep git
 (cd ~/git/jgit && mvn -q install -DskipTests && cd org.eclipse.jgit.packaging && mvn install -DskipTests)
 (cd ~/git/egit && mvn -q -P skip-ui-tests install -DskipTests)
 (cd ~/git/buck && ant -S && ln -s $(pwd)/bin/buck ~/bin/ )
-(cd ~/git/gerrit && buck build gerrit && buck build release && tools/eclipse/project.py)
+(cd ~/git/gerrit && buck build gerrit && buck build release && tools/eclipse/project.py --src)
 
 # Create a gerrit test site
 if [ -f ~/git/gerrit/buck-out/gen/release.war ] ;then
