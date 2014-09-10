@@ -2,24 +2,41 @@
 #
 # Configure a ubuntu based system to use SAP proxy if needed
 
-if [ "$1" = "-h" ] ;then
-	echo "usage: setProxy [-on] [-off] [-update]"
-	echo "       -on:  turn on proxy usage"
-	echo "       -off: turn off proxy usage"
-	echo "       -update: force rewriting of the config files"
-	echo "       by default it is determined automatically whether a proxy is needed or not"
-	exit 0
-fi
+mode=auto
+while [[ $# > 0 ]] ;do
+  case $1 in
+  -h|--help:
+    echo "usage: setProxy [-o|--on] [-f|--off] [-u|--update] [-b|--boot] [-h|--help]"
+    echo "       -o|--on:  turn on proxy usage"
+    echo "       -f|--off: turn off proxy usage"
+    echo "       -u|--update: force rewriting of the config files"
+    echo "       -b|--boot: reboot"
+    echo "       by default it is determined automatically whether a proxy is needed or not"
+    exit 0
+    ;;
+  -o|--on:
+    mode=on
+    ;;
+  -f|--off:
+    mode=off
+    ;;
+  -u|--update:
+    update=true
+    ;;
+  -b|--boot:
+    boot=true
+    ;;
+  esac
+  shift
+done
 
 host=$(hostname)
-if [ "$1" = "-update" ] || [ "$2" = "-update" ] ;then
-	rm ~/.m2/settings_sap_proxy.xml ~/.chromium-browser-proxy.desktop ~/.chromium-browser-noproxy.desktop
-	shift 2
-fi
+
+[ "$update" ] && rm ~/.m2/settings_sap_proxy.xml ~/.chromium-browser-proxy.desktop ~/.chromium-browser-noproxy.desktop
 
 if [ ! -f ~/.m2/settings_sap_proxy.xml ] ;then
-	mkdir -p ~/.m2
-	cat <<EOF >~/.m2/settings_sap_proxy.xml
+  mkdir -p ~/.m2
+  cat <<EOF >~/.m2/settings_sap_proxy.xml
 <settings>
   <proxies>
     <proxy><active>true</active>
@@ -40,64 +57,65 @@ EOF
 fi
 
 if [ ! -f ~/.80proxy ] ;then
-	cat <<'EOF' >~/.80proxy
+  cat <<'EOF' >~/.80proxy
 Acquire::http::proxy "http://proxy.wdf.sap.corp:8080/";
 Acquire::https::proxy "https://proxy.wdf.sap.corp:8080/";
 EOF
 fi
 
 if [ -f /usr/share/applications/chromium-browser.desktop ] ;then
-	[ -d ~/.local/share/applications ] || mkdir -p ~/.local/share/applications
-	if [ ! -f ~/.chromium-browser-proxy.desktop ] ;then
-		cp /usr/share/applications/chromium-browser.desktop ~/.chromium-browser-proxy.desktop
-		cp /usr/share/applications/chromium-browser.desktop ~/.chromium-browser-noproxy.desktop
-		if ! grep -e "--proxy-" ~/.chromium-browser-proxy.desktop ;then
-			sed -r -i '/^Exec=/s/\/usr\/bin\/chromium-browser/\/usr\/bin\/chromium-browser --proxy-server=proxy.wdf.sap.corp:8080 --proxy-bypass-list="*.wdf.sap.corp;nexus;jtrack;localhost;127.0.0.1;'$host'"/' ~/.chromium-browser-proxy.desktop
-		else
-			sed -r -i '/^Exec=/s/--proxy[^ \t]+[ \t]*//' ~/.chromium-browser-noproxy.desktop
-		fi
-	fi
+  [ -d ~/.local/share/applications ] || mkdir -p ~/.local/share/applications
+  if [ ! -f ~/.chromium-browser-proxy.desktop ] ;then
+    cp /usr/share/applications/chromium-browser.desktop ~/.chromium-browser-proxy.desktop
+    cp /usr/share/applications/chromium-browser.desktop ~/.chromium-browser-noproxy.desktop
+    if ! grep -e "--proxy-" ~/.chromium-browser-proxy.desktop ;then
+      sed -r -i '/^Exec=/s/\/usr\/bin\/chromium-browser/\/usr\/bin\/chromium-browser --proxy-server=proxy.wdf.sap.corp:8080 --proxy-bypass-list="*.wdf.sap.corp;nexus;jtrack;localhost;127.0.0.1;'$host'"/' ~/.chromium-browser-proxy.desktop
+    else
+      sed -r -i '/^Exec=/s/--proxy[^ \t]+[ \t]*//' ~/.chromium-browser-noproxy.desktop
+    fi
+  fi
 fi
 
-if [ "$1" == "" ] ;then
-	if ping -c 1 proxy.wdf.sap.corp >/dev/null 2>&1 ;then
-		proxy="-on"	
-	else
-		proxy="-off"
-	fi
-else
-	proxy=$1
+if [ "$mode" == auto ] ;then
+  if ping -c 1 proxy.wdf.sap.corp >/dev/null 2>&1 ;then
+    mode=on
+  else
+    mode=off
+  fi
 fi
 
 # while in the intranet set the correct proxy
-if [ $proxy = "-on" ] ;then
-	grep "^http_proxy" /etc/environment || sudo sh -c 'echo http_proxy=http://proxy.wdf.sap.corp:8080 >> /etc/environment'
-	grep "^https_proxy" /etc/environment || sudo sh -c 'echo https_proxy=https://proxy.wdf.sap.corp:8080 >> /etc/environment'
-	grep "^no_proxy" /etc/environment || sudo sh -c 'echo "no_proxy=wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp,'$host'" >> /etc/environment'
-	export http_proxy=http://proxy.wdf.sap.corp:8080
-	export https_proxy=https://proxy.wdf.sap.corp:8080
-	export no_proxy='wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp,'$host
-	[ -f /etc/apt/apt.conf.d/80proxy ] || sudo cp ~/.80proxy /etc/apt/apt.conf.d/80proxy
-	[ -f ~/.m2/settings.xml ] || cp ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml
-	if [ -f /usr/share/applications/chromium-browser.desktop ] ;then
-		if cmp -s ~/.local/share/applications/chromium-browser.desktop ~/.chromium-browser-noproxy.desktop || [ ! -f  ~/.local/share/applications/chromium-browser.desktop ] ;then
-			cp ~/.chromium-browser-proxy.desktop ~/.local/share/applications/chromium-browser.desktop
-		fi
-	fi
-	echo "turned proxy usage ON"
+if [ "$mode" = on ] ;then
+  grep "^http_proxy" /etc/environment || sudo sh -c 'echo http_proxy=http://proxy.wdf.sap.corp:8080 >> /etc/environment'
+  grep "^https_proxy" /etc/environment || sudo sh -c 'echo https_proxy=https://proxy.wdf.sap.corp:8080 >> /etc/environment'
+  grep "^no_proxy" /etc/environment || sudo sh -c 'echo "no_proxy=wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp,'$host'" >> /etc/environment'
+  export http_proxy=http://proxy.wdf.sap.corp:8080
+  export https_proxy=https://proxy.wdf.sap.corp:8080
+  export no_proxy='wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp,'$host
+  [ -f /etc/apt/apt.conf.d/80proxy ] || sudo cp ~/.80proxy /etc/apt/apt.conf.d/80proxy
+  [ -f ~/.m2/settings.xml ] || cp ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml
+  if [ -f /usr/share/applications/chromium-browser.desktop ] ;then
+    if cmp -s ~/.local/share/applications/chromium-browser.desktop ~/.chromium-browser-noproxy.desktop || [ ! -f  ~/.local/share/applications/chromium-browser.desktop ] ;then
+      cp ~/.chromium-browser-proxy.desktop ~/.local/share/applications/chromium-browser.desktop
+    fi
+  fi
+  echo "turned proxy usage ON"
 else
-	sudo sed -i '/^http_proxy/d' /etc/environment
-	sudo sed -i '/^https_proxy/d' /etc/environment
-	sudo sed -i '/^no_proxy/d' /etc/environment
-	unset http_proxy
-	unset https_proxy
-	unset no_proxy
-	cmp -s ~/.80proxy /etc/apt/apt.conf.d/80proxy && sudo rm /etc/apt/apt.conf.d/80proxy
-	cmp -s ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml && rm ~/.m2/settings.xml
-	if [ -f /usr/share/applications/chromium-browser.desktop ] ;then
-		if cmp -s ~/.local/share/applications/chromium-browser.desktop ~/.chromium-browser-proxy.desktop || [ ! -f  ~/.local/share/applications/chromium-browser.desktop ] ;then
-			cp ~/.chromium-browser-noproxy.desktop ~/.local/share/applications/chromium-browser.desktop
-		fi
-	fi
-	echo "turned proxy usage OFF"
+  sudo sed -i '/^http_proxy/d' /etc/environment
+  sudo sed -i '/^https_proxy/d' /etc/environment
+  sudo sed -i '/^no_proxy/d' /etc/environment
+  unset http_proxy
+  unset https_proxy
+  unset no_proxy
+  cmp -s ~/.80proxy /etc/apt/apt.conf.d/80proxy && sudo rm /etc/apt/apt.conf.d/80proxy
+  cmp -s ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml && rm ~/.m2/settings.xml
+  if [ -f /usr/share/applications/chromium-browser.desktop ] ;then
+    if cmp -s ~/.local/share/applications/chromium-browser.desktop ~/.chromium-browser-proxy.desktop || [ ! -f  ~/.local/share/applications/chromium-browser.desktop ] ;then
+      cp ~/.chromium-browser-noproxy.desktop ~/.local/share/applications/chromium-browser.desktop
+    fi
+  fi
+  echo "turned proxy usage OFF"
 fi
+
+[ "$boot" ] && sudo shutdown -r now
+
