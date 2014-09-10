@@ -33,7 +33,7 @@ clone https://git.eclipse.org/r/egit/egit
 clone https://gerrit.googlesource.com/buck
 
 # configure jgit,egit,gerrit to work with gerrit
-[ -f ~/lib/commit-msg ] || { mkdir -p ~/lib; wget -O ~/lib/commit-msg https://git.eclipse.org/r/tools/hooks/commit-msg; chmod +x ~/lib/commit-msg; }
+[ -f ~/lib/commit-msg ] || { mkdir -p ~/lib; wget -P ~/lib https://git.eclipse.org/r/tools/hooks/commit-msg; chmod +x ~/lib/commit-msg; }
 [ -f ~/git/jgit/.git/hooks/commit-msg ] || { git -C ~/git/jgit config remote.origin.push HEAD:refs/for/master; cp ~/lib/commit-msg ~/git/jgit/.git/hooks; }
 [ -f ~/git/egit/.git/hooks/commit-msg ] || { git -C ~/git/egit config remote.origin.push HEAD:refs/for/master; cp ~/lib/commit-msg ~/git/egit/.git/hooks; }
 [ -f ~/git/gerrit/.git/hooks/commit-msg ] || { git -C ~/git/gerrit config remote.origin.push HEAD:refs/for/master; cp ~/lib/commit-msg ~/git/gerrit/.git/hooks; }
