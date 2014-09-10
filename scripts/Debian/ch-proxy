@@ -64,7 +64,7 @@ EOF
 fi
 
 if [ -f /usr/share/applications/chromium-browser.desktop ] ;then
-  [ -d ~/.local/share/applications ] || mkdir -p ~/.local/share/applications
+  mkdir -p ~/.local/share/applications
   if [ ! -f ~/.chromium-browser-proxy.desktop ] ;then
     cp /usr/share/applications/chromium-browser.desktop ~/.chromium-browser-proxy.desktop
     cp /usr/share/applications/chromium-browser.desktop ~/.chromium-browser-noproxy.desktop

@@ -17,8 +17,8 @@ fi
 
 date=$(date +%Y%m%d%H%M)
 
-[ -d ~/bin ] || mkdir ~/bin
-[ -d ~/log ] || mkdir ~/log
+mkdir -p ~/bin
+mkdir -p ~/log
 
 if  $update ;then
 	[ -f ~/bin/"$1" ] && mv ~/bin/"$1" ~/bin/"$1.$date.bak"

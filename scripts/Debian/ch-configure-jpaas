@@ -15,7 +15,7 @@ done
 
 # setup mavens settings.xml
 if [ ! -f ~/.m2/settings.xml.jpaas ] ;then
-	[ -d ~/.m2 ] || mkdir ~/.m2
+	mkdir -p ~/.m2
 	wget -O ~/.m2/settings.xml.jpaas http://nexus.wdf.sap.corp:8081/nexus/service/local/templates/settings/LeanDI/content
 	sed -r -i 's/\r//' ~/.m2/settings.xml.jpaas
 fi
@@ -29,7 +29,7 @@ cmp ~/.m2/settings.xml ~/.m2/settings_sap_proxy.xml && rm ~/.m2/settings.xml
 
 export GIT_SSL_NO_VERIFY=true
 
-[ -d ~/git/orion ] || mkdir -p ~/git/orion
+mkdir -p ~/git/orion
 
 # clone metering, orion, accountPage, appdesigner, hcproxy, cloudrepo
 (cd ~/git && git clone -o sap https://git.wdf.sap.corp:8080/NGJP/Services/metering ) &
