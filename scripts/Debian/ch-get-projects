@@ -2,6 +2,7 @@
 #
 # Clone my favourite git repos
 
+# usage: clone url [ parent-dir-of-repo [ folder-containing-zips ] ]
 clone() {
   url=$1
   repoDir=${2-~/git}
@@ -18,7 +19,9 @@ clone() {
     else
       git clone -q --recursive "$url" "$repoDir/$dir"
     fi
- fi
+  else
+    git -C "$repoDir/$dir" fetch --all --recurse-submodules
+  fi
 }
  
 # get git

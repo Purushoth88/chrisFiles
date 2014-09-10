@@ -2,6 +2,28 @@
 #
 # Configure a ubuntu based system for jpaas development
 
+# usage: clone url [ parent-dir-of-repo [ folder-containing-zips ] ]
+clone() {
+  url=$1
+  repoDir=${2-~/git}
+  tarDir=${3-/media/sf_Shared/git/backups}
+  repo=${url##*/}
+  dir=${repo%.git}
+
+  mkdir -p "$repoDir"
+  if [ ! -d "$repoDir/$dir" ] ;then
+    if [ -f "$tarDir/$dir.tar" ] ;then
+      tar -C "$repoDir" -xf "$tarDir/$dir.tar"
+      git -C "$repoDir/$dir" fetch --all --recurse-submodules
+      git -C "$repoDir/$dir" pull --recurse-submodules
+    else
+      git clone -q --recursive "$url" "$repoDir/$dir"
+    fi
+  else
+    git -C "$repoDir/$dir" fetch --all --recurse-submodules
+  fi
+}
+
 read -p "Enter directory where to find sap installations: " -e -i "/mnt/perm/sap/install" install_src
 
 # setup a jpaas sdk
@@ -32,36 +54,33 @@ export GIT_SSL_NO_VERIFY=true
 mkdir -p ~/git/orion
 
 # clone metering, orion, accountPage, appdesigner, hcproxy, cloudrepo
-(cd ~/git && git clone -o sap https://git.wdf.sap.corp:8080/NGJP/Services/metering ) &
-(cd ~/git/orion && git clone -o sap https://git.wdf.sap.corp:8080/NGJP/LeanDI/jpaas.orion.git ) &
-(cd ~/git/orion && git clone -o sap https://git.wdf.sap.corp:8080/NGJP/LeanDI/org.eclipse.orion.client.git ) &
-(cd ~/git/orion && git clone -o sap https://git.wdf.sap.corp:8080/NGJP/LeanDI/org.eclipse.orion.server.git ) &
-(cd ~/git && git clone -o sap https://git.wdf.sap.corp:8080/NGJP/JPaaS/com.sap.core.account.git ) &
-(cd ~/git && git clone -o sap https://git.wdf.sap.corp:8080/sapui5/sapui5.appdesigner.git ) &
-(cd ~/git && git clone -o sap https://git.wdf.sap.corp:8080/com.sap.core.hcproxy.git ) &
-(cd ~/git && git clone -o sap https://git.wdf.sap.corp:8080/NGJP/LeanDI/Git/com.sap.core.cloudrepo.git ) &
-(cd ~/git/gerrit && git remote add sap https://git.wdf.sap.corp:8080/NGP/LDI/gerrit-internal && git fetch sap) &
-(cd ~/git/jgit && git remote add sap https://git.wdf.sap.corp:8080/NGP/LDI/jgit && git fetch sap) &
-wait
+clone https://git.wdf.sap.corp:8080/NGJP/Services/metering
+clone https://git.wdf.sap.corp:8080/NGJP/LeanDI/jpaas.orion.git ~/git/orion
+clone https://git.wdf.sap.corp:8080/NGJP/LeanDI/org.eclipse.orion.client.git ~/git/orion
+clone https://git.wdf.sap.corp:8080/NGJP/LeanDI/org.eclipse.orion.server.git ~/git/orion
+clone https://git.wdf.sap.corp:8080/NGJP/JPaaS/com.sap.core.account.git
+clone https://git.wdf.sap.corp:8080/com.sap.core.hcproxy.git
+clone https://git.wdf.sap.corp:8080/NGJP/LeanDI/Git/com.sap.core.cloudrepo.git
+git -C ~/git/gerrit remote add sap https://git.wdf.sap.corp:8080/NGP/LDI/gerrit-internal && git -C ~/git/gerrit fetch --all --recurse-submodules
+git -C ~/git/jgit remote add sap https://git.wdf.sap.corp:8080/NGP/LDI/jgit && git -C ~/git/jgit fetch --all --recurse-submodules
 
-# configure gerrit repos: get commit-msg hook, configure push 
-for i in { metering orion/jpaas.orion.git orion/org.eclipse.orion.client.git orion/org.eclipse.orion.server.git com.sap.core.account.git sapui5.appdesigner.git com.sap.core.hcproxy.git com.sap.core.cloudrepo.git } ;do 
-  (
-    cd ~/git/$i && \
-    git config remote.sap.push HEAD:refs/for/master && \
-    wget -P .git/hooks https://git.eclipse.org/r/tools/hooks/commit-msg && \
-    chmod +x ".git/hooks/commit-msg" && 
-  )
-done
+[ -f ~/lib/commit-msg ] || { mkdir -p ~/lib; wget -P ~/lib https://git.eclipse.org/r/tools/hooks/commit-msg; chmod +x ~/lib/commit-msg; }
+[ -f ~/git/metering/.git/hooks/commit-msg ] || { git -C ~/git/metering config remote.origin.push HEAD:refs/for/master; cp ~/lib/commit-msg ~/git/metering/.git/hooks; }
+[ -f ~/git/orion/jpaas.orion/.git/hooks/commit-msg ] || { git -C ~/git/orion/jpaas.orion config remote.origin.push HEAD:refs/for/master; cp ~/lib/commit-msg ~/git/orion/jpaas.orion/.git/hooks; }
+[ -f ~/git/orion/org.eclipse.orion.client/.git/hooks/commit-msg ] || { git -C ~/git/orion/org.eclipse.orion.client config remote.origin.push HEAD:refs/for/master; cp ~/lib/commit-msg ~/git/orion/org.eclipse.orion.client/.git/hooks; }
+[ -f ~/git/orion/org.eclipse.orion.server/.git/hooks/commit-msg ] || { git -C ~/git/orion/org.eclipse.orion.server config remote.origin.push HEAD:refs/for/master; cp ~/lib/commit-msg ~/git/orion/org.eclipse.orion.server/.git/hooks; }
+[ -f ~/git/com.sap.core.account/.git/hooks/commit-msg ] || { git -C ~/git/com.sap.core.account config remote.origin.push HEAD:refs/for/master; cp ~/lib/commit-msg ~/git/com.sap.core.account/.git/hooks; }
+[ -f ~/git/com.sap.core.hcproxy/.git/hooks/commit-msg ] || { git -C ~/git/com.sap.core.hcproxy config remote.origin.push HEAD:refs/for/master; cp ~/lib/commit-msg ~/git/com.sap.core.hcproxy/.git/hooks; }
+[ -f ~/git/com.sap.core.cloudrepo/.git/hooks/commit-msg ] || { git -C ~/git/com.sap.core.cloudrepo config remote.origin.push HEAD:refs/for/master; cp ~/lib/commit-msg ~/git/com.sap.core.cloudrepo/.git/hooks; }
 
 # build the cloned repos
-(cd ~/git/metering/com.sap.core.metering.parent; mvn -s ~/.m2/settings.xml.jpaas -q install -DskipTests=true) &
-(cd ~/git/orion; mvn -s ~/.m2/settings.xml.jpaas -f org.eclipse.orion.client/pom.xml clean install) && (cd ~/git/orion; mvn -s ~/.m2/settings.xml.jpaas -f org.eclipse.orion.server/pom.xml clean install) && (cd ~/git/orion; mvn -s ~/.m2/settings.xml.jpaas -f jpaas.orion/pom.xml clean install) &
-(cd ~/git/com.sap.core.account; mvn -s ~/.m2/settings.xml.jpaas -q install -DskipTests=true) &
-(cd ~/git/sapui5.appdesigner; mvn -s -f reactor/pom.xml -Poptimized.build clean install -DskipTests=true) &
-(cd ~/git/com.sap.core.hcproxy; mvn -s ~/.m2/settings.xml.jpaas -q install -DskipTests=true) &
-(cd ~/git/com.sap.core.cloudrepo/com.sap.jgit.extensions; mvn -s ~/.m2/settings.xml.jpaas -q install -DskipTests=true) &
-wait
+mvn -s ~/.m2/settings.xml.jpaas -f ~/git/metering/com.sap.core.metering.parent/pom.xml -q install -DskipTests=true
+mvn -s ~/.m2/settings.xml.jpaas -f ~/git/orion/org.eclipse.orion.client/pom.xml -q clean install -DskipTests=true
+mvn -s ~/.m2/settings.xml.jpaas -f ~/git/orion/org.eclipse.orion.server/pom.xml -q clean install -DskipTests=true
+mvn -s ~/.m2/settings.xml.jpaas -f ~/git/orion/jpaas.orion/pom.xml -q clean install -DskipTests=true
+mvn -s ~/.m2/settings.xml.jpaas -f ~/git/com.sap.core.account/pom.xml -q install -DskipTests=true
+mvn -s ~/.m2/settings.xml.jpaas -f ~/git/com.sap.core.hcproxy/pom.xml -q install -DskipTests=true
+mvn -s ~/.m2/settings.xml.jpaas -f ~/git/com.sap.core.cloudrepo/com.sap.jgit.extensions/pom.xml -q install -DskipTests=true
 
 # install SAP Tools in kepler
 eclipse -application org.eclipse.equinox.p2.director \
