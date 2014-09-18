@@ -82,8 +82,8 @@ mvn -s ~/.m2/settings.xml.jpaas -f ~/git/com.sap.core.account/pom.xml -q install
 mvn -s ~/.m2/settings.xml.jpaas -f ~/git/com.sap.core.hcproxy/pom.xml -q install -DskipTests=true
 mvn -s ~/.m2/settings.xml.jpaas -f ~/git/com.sap.core.cloudrepo/com.sap.jgit.extensions/pom.xml -q install -DskipTests=true
 
-# install SAP Tools in kepler
+# install SAP Tools in luna
 eclipse -application org.eclipse.equinox.p2.director \
-  -r "http://download.eclipse.org/releases/kepler,https://tools.neo.ondemand.com/kepler,http://download.eclipse.org/m2e-wtp/releases" \
+  -r "http://download.eclipse.org/releases/luna,https://tools.neo.ondemand.com/luna,http://download.eclipse.org/m2e-wtp/releases" \
   -i com.sap.core.tools.eclipse.help.feature.feature.group,com.sap.core.tools.eclipse.server.feature.feature.group,com.sap.jvm.profiling.feature.group,com.sap.ide.support.feature.feature.group,com.sap.ide.ui5.cloud.feature.feature.group 
 exit
