@@ -7,9 +7,9 @@ sudo -E apt-get -q=2 install openjdk-7-{jdk,doc,source}
 
 # install eclipse
 if [ ! -x /usr/bin/eclipse ] ;then
-	eclipseUrl='http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/kepler/SR2/eclipse-jee-kepler-SR2-linux-gtk.tar.gz&r=1'
+	eclipseUrl='http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/luna/R/eclipse-standard-luna-R-linux-gtk.tar.gz&r=1'
 	if [ $(uname -m) == "x86_64" ] ;then
-		eclipseUrl='http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/kepler/SR2/eclipse-jee-kepler-SR2-linux-gtk-x86_64.tar.gz&r=1'
+		eclipseUrl='http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/luna/R/eclipse-standard-luna-R-linux-gtk-x86_64.tar.gz&r=1'
 	fi
 	tmp=$(mktemp -d)
 	wget -qO- "$eclipseUrl" | tar -C $tmp -xz
@@ -21,9 +21,9 @@ if [ ! -x /usr/bin/eclipse ] ;then
 		mkdir -p ~/.local/share/applications
 		cat <<EOF >~/.local/share/applications/eclipse.desktop
 [Desktop Entry]
-Version=4.3.2
+Version=4.4
 Name=Eclipse
-Comment=Eclipse EE 4.3.2 (Kepler)
+Comment=Eclipse EE 4.4 (Luna)
 Exec=env UBUNTU_MENUPROXY=0 /opt/eclipse/eclipse
 Icon=/opt/eclipse/icon.xpm
 Terminal=false
@@ -48,3 +48,4 @@ read -p "Import JGit/EGit into eclipse"
 read -p "Import Gerrit into eclipse"
 read -p "Resolve the target platforms 4.3,4.4 in Egit platforms folder"
 read -p "Add Baseline for ~/egit-releases/*"
+read -p "Make workspace.git the default one"
