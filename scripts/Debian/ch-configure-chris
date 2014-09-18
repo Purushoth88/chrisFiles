@@ -33,6 +33,9 @@ else
 	read -s -p "Enter password for d032780 at git.wdf.sap.corp: " epass
 	echo -e "machine git.wdf.sap.corp\nlogin d032780\npassword $epass" >> ~/.netrc
 	echo
+	read -s -p "Enter password for d032780 at git.neo.ondemand.com: " epass
+	echo -e "machine git.neo.ondemand.com\nlogin d032780\npassword $epass" >> ~/.netrc
+	echo
 	read -s -p "Enter password for chalstrick at git.eclipse.org: " epass
 	echo -e "machine git.eclipse.org\nlogin chalstrick\npassword $epass" >> ~/.netrc
 	echo
@@ -50,6 +53,10 @@ clone http://github.com/chalstrick/chrisFiles && ~/git/chrisFiles/git/setGitConf
 git config -f ~/git/egit-pde/.git/config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/egit/egit-pde.git
 git config -f ~/git/egit-github/.git/config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/egit/egit-github.git
 
-read -p "rearrange icons in starter"
 read -p "import certificates (your and sap) into firefox and chrome"
-read -p "add xmark sync extensions to chrome and firefox"
+read -p "import ssh keys to ~/.ssh"
+read -p "import bookmarks into firefox and chrome"
+read -p "login once in firefox and chrome to google, eclipse, github, sap-gerrit, sap-intranet"
+read -p "import chrisFiles into eclipse"
+
+ssh gerrit@git.wdf.sap.corp
