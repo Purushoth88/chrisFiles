@@ -10,7 +10,7 @@ sudo -E apt-get -q=2 install python-software-properties python g++ make vim vim-
 
 # install cdt in eclipse
 eclipse -application org.eclipse.equinox.p2.director \
-  -r "http://download.eclipse.org/releases/kepler" \
+  -r "http://download.eclipse.org/releases/luna" \
   -i org.eclipse.cdt.autotools.feature.group,org.eclipse.cdt.feature.group
 
 read -p "Open new Eclipse workspace workspace.native and import C project ~/git/git"
