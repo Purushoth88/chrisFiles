@@ -17,11 +17,11 @@ sudo apt-get -q=2 build-dep git
 
 # Create a gerrit test site
 if [ -f ~/git/gerrit/buck-out/gen/release.war ] ;then
-	site=~/gerrit/test-site/bin
+	site=~/git/gerrit_testsite
 	mkdir -p $site
 	java -jar ~/git/gerrit/buck-out/gen/release.war init --batch -d $site
 	$site/bin/gerrit.sh stop
-	sed -r -i 's/type.*=.*OPENID/type = DEVELOPMENT_BECOME_ANY_ACCOUNT/' $site/etc/gerrit.config
+	git config -f $site/etc/gerrit.config auth.type DEVELOPMENT_BECOME_ANY_ACCOUNT
 fi
 
 if [ ! -f ~/bin/jgit ] ;then
