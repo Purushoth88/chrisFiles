@@ -85,5 +85,5 @@ mvn -s ~/.m2/settings.xml.jpaas -f ~/git/com.sap.core.cloudrepo/com.sap.jgit.ext
 # install SAP Tools in luna
 eclipse -application org.eclipse.equinox.p2.director \
   -r "http://download.eclipse.org/releases/luna,https://tools.neo.ondemand.com/luna,http://download.eclipse.org/m2e-wtp/releases" \
-  -i com.sap.core.tools.eclipse.help.feature.feature.group,com.sap.core.tools.eclipse.server.feature.feature.group,com.sap.jvm.profiling.feature.group,com.sap.ide.support.feature.feature.group,com.sap.ide.ui5.cloud.feature.feature.group 
+  -i com.sap.core.tools.eclipse.help.feature.feature.group,com.sap.core.tools.eclipse.server.feature.feature.group,com.sap.jvm.profiling.feature.group,com.sap.ide.support.feature.feature.group,com.sap.ide.ui5.cloud.feature.feature.group,org.eclipse.m2e.feature.feature.group
 exit
