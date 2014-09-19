@@ -5,7 +5,7 @@
 mode=auto
 while [[ $# > 0 ]] ;do
   case $1 in
-  -h|--help:
+  -h|--help)
     echo "usage: setProxy [-o|--on] [-f|--off] [-u|--update] [-b|--boot] [-h|--help]"
     echo "       -o|--on:  turn on proxy usage"
     echo "       -f|--off: turn off proxy usage"
@@ -14,16 +14,16 @@ while [[ $# > 0 ]] ;do
     echo "       by default it is determined automatically whether a proxy is needed or not"
     exit 0
     ;;
-  -o|--on:
+  -o|--on)
     mode=on
     ;;
-  -f|--off:
+  -f|--off)
     mode=off
     ;;
-  -u|--update:
+  -u|--update)
     update=true
     ;;
-  -b|--boot:
+  -b|--boot)
     boot=true
     ;;
   esac
