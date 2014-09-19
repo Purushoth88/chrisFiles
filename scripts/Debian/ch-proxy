@@ -4,7 +4,7 @@
 
 mode=auto
 ind=1
-while [ $# >= $ind ] ;do
+while [ $# -gt $ind ]; do
   case ${!ind} in
   -h|--help)
     echo "usage: setProxy [-o|--on] [-f|--off] [-u|--update] [-b|--boot] [-h|--help]"
