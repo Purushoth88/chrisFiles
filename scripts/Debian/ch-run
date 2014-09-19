@@ -26,10 +26,10 @@ mkdir -p ~/bin
 mkdir -p ~/log
 
 if [ "$update" ] ;then
-  [ -f "~/bin/$1" ] && mv "~/bin/$1" "~/bin/$1.$date.bak"
-  wget -P ~/bin "https://raw.github.com/chalstrick/chrisFiles/master/scripts/Debian/$1"
-  cmp -s "~/bin/$1" "~/bin/$1.$date.bak" && rm "~/bin/$1.$date.bak"
-  chmod +x "~/bin/$1"
+  [ -f ~/bin/$1 ] && mv ~/bin/$1 ~/bin/$1.$date.bak
+  wget -P ~/bin https://raw.github.com/chalstrick/chrisFiles/master/scripts/Debian/$1
+  cmp -s ~/bin/$1 ~/bin/$1.$date.bak && rm ~/bin/$1.$date.bak
+  chmod +x ~/bin/$1
 fi
 
-bash -x "~/bin/$1" 2>&1 | tee "~/log/$1.$date.log"
+bash -x ~/bin/$1 2>&1 | tee ~/log/$1.$date.log
