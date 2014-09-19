@@ -2,13 +2,14 @@
 #
 # Run a script stored at https://raw.github.com/chalstrick/chrisFiles/master/scripts/Debian and write a log during execution
 
-while [[ $# > 0 ]] ;do
-  case $1 in
+ind=1
+while [[ $# >= $ind ]] ;do
+  case ${!ind} in
   -u|--update)
     update=true
+    shift
     ;;
   esac
-  shift
 done
 
 [ ! -f ~/bin/$1 ] && update=true

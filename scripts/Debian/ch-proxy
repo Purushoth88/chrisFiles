@@ -3,8 +3,9 @@
 # Configure a ubuntu based system to use SAP proxy if needed
 
 mode=auto
-while [[ $# > 0 ]] ;do
-  case $1 in
+ind=1
+while [[ $# >= $ind ]] ;do
+  case ${!ind} in
   -h|--help)
     echo "usage: setProxy [-o|--on] [-f|--off] [-u|--update] [-b|--boot] [-h|--help]"
     echo "       -o|--on:  turn on proxy usage"
@@ -16,18 +17,21 @@ while [[ $# > 0 ]] ;do
     ;;
   -o|--on)
     mode=on
+    shift
     ;;
   -f|--off)
     mode=off
+    shift
     ;;
   -u|--update)
     update=true
+    shift
     ;;
   -b|--boot)
     boot=true
+    shift
     ;;
   esac
-  shift
 done
 
 host=$(hostname)
