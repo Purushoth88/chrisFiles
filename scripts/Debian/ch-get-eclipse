@@ -37,7 +37,7 @@ fi
 mkdir -p ~/egit-releases
 rel=org.eclipse.egit.repository-3.4.1.201406201815-r
 if [ ! -d ~/egit-releases/$rel ] ;then
-	wget -q http://download.eclipse.org/egit/updates-3.2/$rel.zip && unzip -q $rel.zip -d ~/egit-releases/$rel && rm $rel.zip
+	wget -q http://download.eclipse.org/egit/updates/$rel.zip && unzip -q $rel.zip -d ~/egit-releases/$rel && rm $rel.zip
 fi
 
 read -p "Start Preferences/Keyboard Input Methods and set General/Next input method: to CTRL-Alt-Space. That way it doesn't conflict with eclipse CTRL-Space shortcut"
