@@ -7,9 +7,9 @@ sudo -E apt-get -q=2 install openjdk-7-{jdk,doc,source}
 
 # install eclipse
 if [ ! -x /usr/bin/eclipse ] ;then
-	eclipseUrl='http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/luna/R/eclipse-standard-luna-R-linux-gtk.tar.gz&r=1'
+	eclipseUrl='http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/luna/R/eclipse-jee-luna-R-linux-gtk.tar.gz&r=1'
 	if [ $(uname -m) == "x86_64" ] ;then
-		eclipseUrl='http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/luna/R/eclipse-standard-luna-R-linux-gtk-x86_64.tar.gz&r=1'
+		eclipseUrl='http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/luna/R/eclipse-jee-luna-R-linux-gtk-x86_64.tar.gz&r=1'
 	fi
 	tmp=$(mktemp -d)
 	wget -qO- "$eclipseUrl" | tar -C $tmp -xz
