@@ -11,20 +11,20 @@ function print_git_object()
     git cat-file -p $id | while read memberMode memberType memberId memberName ;do
       case $memberType in
       blob)
-        echo "$prefix$memberName $memberId / $memberMode"
+        echo "$prefix$memberName ${memberId:0:7} / $memberMode"
         ;;
       tree)
-        echo "$prefix$memberName/ $memberId"
+        echo "$prefix$memberName/ ${memberId:0:7}"
         print_git_object $memberId "$prefix  " tree
         ;;
       esac
     done
     ;;
   commit)
-    echo "commit $id"
-    git cat-file -p $id | grep '^parent' | cut -f2 -d' ' | while read parentId ;do echo "$prefix  parent $parentId" ;done
+    echo "commit ${id:0:7}"
+    git cat-file -p $id | grep '^parent' | cut -f2 -d' ' | while read parentId ;do echo "$prefix  parent ${parentId:0:7}" ;done
     treeId=$(git cat-file -p $id | grep '^tree' | cut -f2 -d' ')
-    echo "$prefix  tree: $treeId"
+    echo "$prefix  tree: ${treeId:0:7}"
     print_git_object $treeId "$prefix    " tree
     ;;
   esac
