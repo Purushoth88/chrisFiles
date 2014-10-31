@@ -1,35 +1,41 @@
 #!/bin/bash
 # Creates a new git repo for demonstrating submodules
-set -x 
 
-# create all the independent repos
-for i in root child ;do
-  rm -fr $i
-  mkdir -p $i
-  git init $i
-  cd $i
+rm -fr server client
+# create root, child, nonPrjChild as independent repos 
+for i in root child nonPrjChild ;do
+  mkdir -p server/$i
+  git init server/$i
+  cd server/$i
   echo $i>content.txt
   git add content.txt
   git commit -m "initial in $i"
-  cd ..
+  cd ../..
+done
+# create root, child should contain eclipse projects
+for i in root child ;do
+  cd server/$i
+  echo '<?xml version="1.0" encoding="UTF-8"?><projectDescription><name>'$i'</name></projectDescription>'>.project
+  git add .project
+  git commit -m "add .project in $i"
+  cd ../..
 done
 
 # start a git daemon serving all the repos (only if it is not already running)
-git ls-remote git://localhost/root || git daemon --export-all --base-path="$(pwd)" &
-sleep 5
+git ls-remote git://localhost/root || ( git daemon --export-all --base-path="$(pwd)/server" & ; sleep 5; )
 
 # add two submodules feature1,feature2 to repo "main"
-cd root
+cd server/root
 git submodule add git://localhost/child plugins/child
-git commit -m "adding child submodule" 
-cd ..
+git submodule add git://localhost/child plugins/nonPrjChild
+git commit -m "adding child, nonPrjChild submodules" 
+cd ../..
 
-# clone the repo into root-clone folder
-rm -fr root-clone
-git clone --recursive git://localhost/root root-clone
+# clone the root repo recursively
+git clone --recursive git://localhost/root client/root
 
 # Now update the child repo, make sure new commit is not visible from refs/heads/*
-cd child
+cd server/child
 echo "new content in submodule">content.txt
 git commit -a -m "modfied child"
 git update-ref refs/changes/newChange HEAD
@@ -37,23 +43,24 @@ git reset --hard HEAD~
 cd ..
 
 # Update the root repo to point to the new commit
-cd root/plugins/child
+cd server/root/plugins/child
 git fetch git://localhost/child refs/changes/newChange 
 git checkout FETCH_HEAD
 cd ../..
 git add plugins/child
 git commit -a -m "updated the submodule"
-cd ..
+cd ../..
 
 # try to update your clone -> will fail
-cd root-clone
+cd client/root
 git pull --recurse-submodules
 GIT_TRACE_PACKET=1 GIT_TRACE=1 git submodule update
-cd ..
+cd ../..
 
 # fix it by explicitly fetch
-cd root-clone
-cd plugins/child
+cd client/root/plugins/child
 git fetch origin refs/changes/newChange
 cd ../..
 git submodule update 
+cd ../..
+
