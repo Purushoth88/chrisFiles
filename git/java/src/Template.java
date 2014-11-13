@@ -20,5 +20,6 @@ public class Template {
 				.next();
 		System.out.println("repo:" + git.getRepository()
 				+ ", head-commit:" + headCommit);
+		System.out.println("git fetch: "+git.fetch().call().getMessages());
 	}
 }

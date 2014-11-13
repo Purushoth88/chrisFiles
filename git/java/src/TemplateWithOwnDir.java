@@ -21,12 +21,13 @@ public class TemplateWithOwnDir {
 		tmpDir.mkdirs();
 		try {
 			Git git = Git.cloneRepository().setDirectory(tmpDir)
-					.setURI(args[0]).call();
+					.setURI(args[0]).setBare(true).call();
 			RevCommit headCommit = git.log().setMaxCount(1).call().iterator().next();
 			System.out.println("repo:" + git.getRepository()
 					+ ", head-commit:" + headCommit+ ", uri:"+args[0]);
+			System.out.println("git fetch: "+git.fetch().call().getMessages());
 		} finally {
-			rm(tmpDir);
+			// rm(tmpDir);
 		}
 	}
 
