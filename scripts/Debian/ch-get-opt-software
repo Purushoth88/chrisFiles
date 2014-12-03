@@ -6,7 +6,21 @@
 sudo -E apt-get -q=2 update
 
 # install applications
-sudo -E apt-get -q=2 install python-software-properties python g++ make vim vim-gui-common visualvm curl terminator openjdk-6-jdk chromium-browser
+sudo -E apt-get -q=2 install python-software-properties python g++ make vim vim-gui-common visualvm curl terminator openjdk-6-jdk chromium-browser mc nfs-common nfs-kernel-server
+sudo service rpcbind restart
+
+dir=$(basename $HOME)
+# setup nfs exports
+[ -e /export ] || ( sudo mkdir /export; sudo chmod 777 /export; )
+[ -e "/export/$dir" ] || sudo ln -s "$HOME" "/export/$dir"
+grep "/export/$dir" /etc/exports || sudo sh -c "echo '/export/$dir	*(rw,sync,no_root_squash)' >>/etc/exports"
+sudo service nfs-kernel-server start
+
+# setup nfs imports
+[ -e /mnt ] || ( sudo mkdir /mnt; sudo chmod 777 /mnt; )
+[ -e /mnt/localhost ] || ( sudo mkdir /mnt/localhost; sudo chmod 777 /mnt/localhost; )
+grep "/export/$dir" /etc/fstab || sudo sh -c "echo 'localhost:/export/$dir   /mnt/localhost   nfs    auto  0  0' >>/etc/fstab"
+sudo mount /mnt/localhost
 
 # install cdt in eclipse
 eclipse -application org.eclipse.equinox.p2.director \
