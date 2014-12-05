@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.lang.management.ManagementFactory;
 import java.nio.channels.FileChannel;
@@ -21,51 +20,50 @@ public class FileOp {
 		BufferedReader sysInReader = new BufferedReader(new InputStreamReader(
 				System.in));
 
-		StringBuilder usage = new StringBuilder("usage: LockFile <FileName>");
+		StringBuilder usage = new StringBuilder("usage: "+FileOp.class.getName()+" <FileName>");
 		if (args.length == 0 || args.length > 1
 				|| "-h".equalsIgnoreCase(args[0])) {
 			System.err.println(usage);
 			System.exit(-1);
 		}
 		File f = new File(args[0]);
-		if (!f.exists()) {
-			System.err.println("Couldn't find file: " + args[0]);
-			System.exit(-2);
-		}
 
 		try {
 			String cmd = null;
 			do {
 				System.out
-						.println("Possible commands: cat, closeInputStream|cis, closeOutputStream|cos, create, openInputStream|ois, openOutputStream|oos, delete|del, lock, lockx, unlock, unlockx, write, rename <newFile>, quit");
+						.println("Possible commands: cat, closeFileInputStream|cfis, closeFileOutputStream|cfos, createNewFile|cnf, delete|del, exists, lock, lockx, newFileInputstream|nfis, newFileOutputStream|nfos, unlock, unlockx, write, rename <newFile>, quit");
 				System.out.print("Enter command:");
 				try {
 					line = sysInReader.readLine();
 					String[] tokens = line.split(" ");
 					cmd = tokens[0];
 					if (cmd.equalsIgnoreCase("cat")) {
-						System.out.println("Content of file " + f.getPath()
-								+ ":");
-						BufferedReader br = new BufferedReader(
-								new InputStreamReader(new FileInputStream(f)));
-						line = br.readLine();
-						while (line != null) {
-							System.out.println(line);
-							line = br.readLine();
-						}
-						System.out.println("EOF");
-						br.close();
-					} else if (cmd.equalsIgnoreCase("closeInputStream")
-							|| cmd.equalsIgnoreCase("cis")) {
 						if (fis == null)
-							System.out.println("fatal: no inputstream created");
+							System.out
+									.println("fatal: no inputstream created");
+						else {
+							System.out.println("Content of file " + f.getPath()
+									+ ":");
+							for (;;) {
+								int d = fis.read();
+								if (d == -1)
+									break;
+								System.out.write(d);
+							}
+							System.out.println("EOF");
+						}
+					} else if (cmd.equalsIgnoreCase("closeFileInputStream")
+							|| cmd.equalsIgnoreCase("cfis")) {
+						if (fis == null)
+							System.out.println("fatal: no fileInputStream created");
 						else {
 							fis.close();
 							fis = null;
 							System.out.println("closed FileInputStream");
 						}
-					} else if (cmd.equalsIgnoreCase("closeOutputStream")
-							|| cmd.equalsIgnoreCase("cos")) {
+					} else if (cmd.equalsIgnoreCase("closeFileOutputStream")
+							|| cmd.equalsIgnoreCase("cfos")) {
 						if (fos == null)
 							System.out
 									.println("fatal: no outputstream created");
@@ -74,21 +72,25 @@ public class FileOp {
 							fos = null;
 							System.out.println("closed FileOutputStream");
 						}
-					} else if (cmd.equalsIgnoreCase("create")) {
+					} else if (cmd.equalsIgnoreCase("createNewFile")
+							|| cmd.equalsIgnoreCase("cnf")) {
 						boolean createRc = f.createNewFile();
 						System.out.println("Creating new file " + f.getPath()
 								+ " lead to rc:" + createRc);
-					} else if (cmd.equalsIgnoreCase("openInputStream")
-							|| cmd.equalsIgnoreCase("ois")) {
+					} else if (cmd.equalsIgnoreCase("newFileInputstream")
+							|| cmd.equalsIgnoreCase("nfis")) {
 						if (fis != null)
+							System.out
+									.println("fatal: inputstream already created");
+						else if (f == null)
 							System.out
 									.println("fatal: inputstream already created");
 						else {
 							fis = new FileInputStream(f);
 							System.out.println("created FileInputStream");
 						}
-					} else if (cmd.equalsIgnoreCase("openOutputStream")
-							|| cmd.equalsIgnoreCase("oos")) {
+					} else if (cmd.equalsIgnoreCase("newFileOutputStream")
+							|| cmd.equalsIgnoreCase("nfos")) {
 						if (fos != null)
 							System.out
 									.println("fatal: outputstream already created");
@@ -138,11 +140,15 @@ public class FileOp {
 							System.out
 									.println("fatal: not fileoutputstream has been created");
 						else {
-							PrintWriter pw = new PrintWriter(fos, true);
-							pw.println("Writing content to stream from process "
+							String data="Writing content to stream from process "
 									+ ManagementFactory.getRuntimeMXBean()
-											.getName());
+									.getName()+"\n";
+							fos.write(data.getBytes());
 						}
+					} else if (cmd.equalsIgnoreCase("exists")) {
+						boolean existsRc = f.exists();
+						System.out.println("File.exists("+f.getPath()+").exists "
+								+ " lead to rc:" + existsRc);
 					} else if (cmd.equalsIgnoreCase("rename")) {
 						if (tokens.length < 2)
 							System.err.println("No target filename specified.");
