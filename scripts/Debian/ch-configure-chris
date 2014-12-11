@@ -27,9 +27,6 @@ clone() {
 if [ -f ~/.netrc ] ;then
 	echo "Don't write ~/.netrc because it already exists"
 else
-	read -s -p "Enter password for P1323864547 at servermetermeter-meter.prod.jpaas.sapbydesign.com: " epass
-	echo -e "machine servermetermeter-meter.prod.jpaas.sapbydesign.com\nlogin P1323864547\npassword $epass" >> ~/.netrc
-	echo
 	read -s -p "Enter password for d032780 at git.wdf.sap.corp: " epass
 	echo -e "machine git.wdf.sap.corp\nlogin d032780\npassword $epass" >> ~/.netrc
 	echo
@@ -44,7 +41,8 @@ else
 	chmod 600 ~/.netrc
 fi
 
-clone http://github.com/chalstrick/chrisFiles && ~/git/chrisFiles/git/setGitConfig.sh
+clone http://github.com/chalstrick/chrisFiles
+[ -x ~/git/chrisFiles/git/setGitConfig.sh ] && . ~/git/chrisFiles/git/setGitConfig.sh
 [ -f ~/.vimrc ] || cp ~/git/chrisFiles/vim/_vimrc ~/.vimrc
 
 (cd ~/git/jgit && git config remote.origin.pushurl https://chalstrick@git.eclipse.org/r/jgit/jgit.git && git remote add sap https://d032780@git.wdf.sap.corp:8080/NGP/LDI/jgit && git remote add github https://chalstrick@github.com/chalstrick/jgit.git && git fetch github sap && git config remote.sap.push HEAD:refs/for/master)
@@ -55,8 +53,10 @@ git config -f ~/git/egit-github/.git/config remote.origin.pushurl https://chalst
 
 read -p "import certificates (your and sap) into firefox and chrome"
 read -p "import ssh keys to ~/.ssh"
-read -p "import bookmarks into firefox and chrome"
+read -p "login to Chromium. Don't import passwords."
+read -p "import bookmarks from chrome to firefox"
 read -p "login once in firefox and chrome to google, eclipse, github, sap-gerrit, sap-intranet"
 read -p "import chrisFiles into eclipse"
+read -p "add Chrome, Terminator, Eclipse to startbar. Remove old browser"
 
 ssh gerrit@git.wdf.sap.corp
