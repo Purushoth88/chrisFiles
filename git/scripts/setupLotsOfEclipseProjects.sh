@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Creates multiple git repos each with a lot of eclipse projects
 
 nrOfRepos=5
