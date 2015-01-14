@@ -5,22 +5,13 @@
 
 # get gerrit.war
 gerrit_war=gerrit-2.9.1.war
-[ -f $gerrit_war ] || wget http://gerrit-releases.storage.googleapis.com/$gerrit_war
+[ -f gerrit.war ] || wget -O gerrit.war http://gerrit-releases.storage.googleapis.com/$gerrit_war || exit -1
 
 # initialise & start a gerrit
-[ -d gerrit ] && { echo "ERROR: gerrit folder already exists" ; exit 1 ; }
-java -jar $gerrit_war init --batch -d gerrit
+[ -d gerrit ] || java -jar gerrit.war init --batch --no-auto-start -d gerrit || exit -2
 
 # configure gerrit
-gerrit/bin/gerrit.sh stop
-cd gerrit
-git config -f etc/gerrit.config auth.type DEVELOPMENT_BECOME_ANY_ACCOUNT 
-java -jar bin/gerrit.war gsql -c "insert into ACCOUNTS (ACCOUNT_ID, REGISTERED_ON) VALUES (1000000, NOW());"
-java -jar bin/gerrit.war gsql -c "insert into ACCOUNT_EXTERNAL_IDS (ACCOUNT_ID, EXTERNAL_ID) VALUES (1000000, 'username:admin');"
-java -jar bin/gerrit.war gsql -c "insert into ACCOUNT_EXTERNAL_IDS (ACCOUNT_ID, EXTERNAL_ID) VALUES (1000000, 'uuid:37ded9ac-e81e-4417-85d6-e4205e9fa7a3');"
-java -jar bin/gerrit.war gsql -c "insert into ACCOUNT_SSH_KEYS (ACCOUNT_ID, SSH_PUBLIC_KEY, VALID) VALUES (1000000, '$(cat ~/.ssh/id_rsa.pub)', 'Y');"
-java -jar bin/gerrit.war gsql -c "insert into ACCOUNT_GROUP_MEMBERS (ACCOUNT_ID, GROUP_ID) VALUES (1000000, 1);"
-cd -
+git config -f gerrit/etc/gerrit.config auth.type DEVELOPMENT_BECOME_ANY_ACCOUNT 
 
 # start gerrit, make sure known_hosts contains correct entry
 gerrit/bin/gerrit.sh start
@@ -28,12 +19,22 @@ ssh-keygen -f ~/.ssh/known_hosts -R localhost:29418
 ssh-keyscan -p 29418 localhost >>~/.ssh/known_hosts
 
 # update properties of admin, create second user
+read -p "Navigate to http://localhost:8080/#/register/ and create a user admin with known ssh key" resp
 ssh -p 29418 admin@localhost gerrit set-account --full-name "Admin" --add-email "admin@admin.com" --http-password adminpwd admin
-cat ~/.ssh/id_rsa.pub | ssh -p 29418 admin@localhost gerrit create-account --full-name "User" --email "user@user.com" --ssh-key - --http-password userpwd user
+ssh -p 29418 admin@localhost gerrit create-account --full-name "User" --email "user@user.com" --ssh-key - --http-password userpwd user <~/.ssh/id_rsa.pub
 
-# create test-project
-ssh -p 29418 admin@localhost gerrit create-group --member user test-project-owners
-ssh -p 29418 admin@localhost gerrit create-project --owner test-project-owners --empty-commit test-project
-
-# clone from both users with ssh and https
-git clone http://user:userPwd@localhost:8080/test-project
+# create test-projects
+for prj in testInitialNoCommit testInitialEmptyCommit testNoReviews testSomeReviews ;do
+  ssh -p 29418 admin@localhost gerrit create-group --member user $prj-owners
+  [ $prj == "testInitialNoCommit" ] && emptyCommit="" || emptyCommit="--empty-commit"
+  ssh -p 29418 admin@localhost gerrit create-project $emptyCommit --owner $prj-owners $prj
+  git clone http://user:userpwd@localhost:8080/$prj
+  scp -p -P 29418 user@localhost:hooks/commit-msg $prj/.git/hooks/ 
+  if [ $prj == "testNoReviews" -o $prj == "testSomeReviews" ] ;then
+    touch $prj/a
+    git -C $prj add a
+    git -C $prj commit -m "add a to $prj"
+    [ $prj == "testNoReviews" ] && refSpec="HEAD:refs/heads/master" || refSpec="HEAD:refs/for/master"
+    git -C $prj push origin $refSpec
+  fi
+done
