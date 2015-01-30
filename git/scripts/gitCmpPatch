@@ -1,0 +1,16 @@
+#!/bin/bash
+
+[ "$#" -gt 2 -o "$#" -lt 1 ] && echo "usage: gitCmpPatch [<commit1>] <commit2>" && exit -1
+revB=${2:-$1}
+revA=$1
+[ "$#" == 1 ] && revA=HEAD 
+
+fileA="/tmp/${revA//\//_}.show"
+fileB="/tmp/${revB//\//_}.show"
+
+git format-patch -p -U0 --minimal --patience -M -D --stdout -1 "$revA" >"$fileA" 
+git format-patch -p -U0 --minimal --patience -M -D --stdout -1 "$revB" >"$fileB" 
+
+diff -w $fileA $fileB
+
+rm "$fileA" "$fileB"
