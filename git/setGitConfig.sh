@@ -23,3 +23,5 @@ git config --global alias.snap '!bash -c '\''~/git/chrisFiles/git/scripts/snapsh
 git config --global alias.lssnap '!bash -c '\''~/git/chrisFiles/git/scripts/lssnap.sh $*'\'' -'
 git config --global alias.show-local 'log --all --not --remotes --decorate --oneline'
 git config --global alias.show-local-refs 'log --all --not --remotes --simplify-by-decoration --decorate --oneline'
+git config --global alias.cleanup = '!bash -c '\''git branch --merged origin/master | grep -v master | xargs -n 1 git branch -D'\'
+git config --global alias.trycleanup = '!bash -c '\''git branch --merged origin/master | grep -v master | echo '\'
