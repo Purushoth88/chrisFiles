@@ -14,9 +14,6 @@ import org.eclipse.jgit.transport.TransportHttp;
 public class CloneWithHttps {
 	public static void main(String args[]) throws IOException, GitAPIException,
 			JGitInternalException {
-		System.setProperty("https.proxyHost", "proxy");
-		System.setProperty("https.proxyPort", "8080");
-
 		File tmpDir = new File(System.getProperty("java.io.tmpdir"),
 				"JGitTest_CloneWithHttps_" + System.currentTimeMillis());
 		tmpDir.mkdirs();
