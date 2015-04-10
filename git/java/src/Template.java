@@ -15,7 +15,7 @@ public class Template {
 				+ Template.class.getName());
 		try (Git git = Git.cloneRepository().setDirectory(tmp.toFile())
 				.setURI(args[0]).setBare(false).call()) {
-			System.out.println("Repo " + args[0] + " clone to " + tmp);
+			System.out.println("Repo " + args[0] + " cloned to " + tmp);
 			for (RevCommit c : git.log().setMaxCount(10).call())
 				System.out.println("Commit:" + c.getShortMessage()+ " ("+c.getName()+")");
 		} finally {
