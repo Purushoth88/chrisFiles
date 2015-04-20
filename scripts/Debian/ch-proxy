@@ -3,33 +3,21 @@
 # Configure a ubuntu based system to use SAP proxy if needed
 
 mode=auto
-ind=1
-while [ $# -gt $ind ]; do
-  case ${!ind} in
-  -h|--help)
-    echo "usage: setProxy [-o|--on] [-f|--off] [-u|--update] [-b|--boot] [-h|--help]"
-    echo "       -o|--on:  turn on proxy usage"
-    echo "       -f|--off: turn off proxy usage"
-    echo "       -u|--update: force rewriting of the config files"
-    echo "       -b|--boot: reboot"
-    echo "       by default it is determined automatically whether a proxy is needed or not"
-    exit 0
-    ;;
+ind=0
+
+for opt in "$@" ;do
+  case "${opt}" in
   -o|--on)
     mode=on
-    shift
     ;;
   -f|--off)
     mode=off
-    shift
     ;;
   -u|--update)
     update=true
-    shift
     ;;
   -b|--boot)
     boot=true
-    shift
     ;;
   esac
 done
