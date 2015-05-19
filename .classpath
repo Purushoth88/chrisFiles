@@ -7,7 +7,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.ant"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.ant.test"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.console"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.http.server"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.http.test"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.jgit.junit"/>
