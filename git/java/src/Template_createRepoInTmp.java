@@ -8,11 +8,11 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-public class Template {
+public class Template_createRepoInTmp {
 	public static void main(String args[]) throws IOException, GitAPIException,
 			JGitInternalException {
 		Path tmp = Files.createTempDirectory("JGitTest_"
-				+ Template.class.getName());
+				+ Template_createRepoInTmp.class.getName());
 		try (Git git = Git.cloneRepository().setDirectory(tmp.toFile())
 				.setURI(args[0]).setBare(false).call()) {
 			System.out.println("Repo " + args[0] + " cloned to " + tmp);
