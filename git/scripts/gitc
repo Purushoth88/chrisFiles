@@ -1,0 +1,13 @@
+#!/bin/bash
+file=${1:-foo}
+nr=$(git rev-list --all --count 2>/dev/null || echo 0)
+branch=$(git branch | sed -n '/\* /s///p')
+if [ -f $file ] ;then
+  op=modified 
+else
+  op=create 
+fi
+
+date '+%s' >>$file
+git add $file
+git commit -m "$nr: $op $file on $branch" 
