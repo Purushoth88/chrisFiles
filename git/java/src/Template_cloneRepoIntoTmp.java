@@ -10,17 +10,15 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-public class Template_createRepoInTmp {
+public class Template_cloneRepoIntoTmp {
 	public static void main(String args[]) throws IOException, GitAPIException,
 			JGitInternalException {
 		Path tmp = Files.createTempDirectory("JGitTest_"
-				+ Template_createRepoInTmp.class.getName());
-		try (Git git = Git.init().setDirectory(tmp.toFile()).call()) {
-			System.out.println("Repo created in " + tmp);
-			Files.write(tmp.resolve("a"), "a".getBytes());
-			git.add().addFilepattern("a").call();
-			git.commit().setMessage("add a").call();
-			for (RevCommit c : git.log().call())
+				+ Template_cloneRepoIntoTmp.class.getName());
+		try (Git git = Git.cloneRepository().setDirectory(tmp.toFile())
+				.setURI(args[0]).setBare(false).call()) {
+			System.out.println("Repo " + args[0] + " cloned to " + tmp);
+			for (RevCommit c : git.log().setMaxCount(10).call())
 				System.out.println("Commit:" + c.getShortMessage() + " ("
 						+ c.getName() + ")");
 		} finally {
