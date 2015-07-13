@@ -1,0 +1,145 @@
+#!/bin/sh
+#----------------------------------------------------------------------------------
+# script for deploying a WAR on Hana Cloud
+#----------------------------------------------------------------------------------
+# parameters taken from environment
+# USER        : SCN user for deployment
+# PASSWORD    : password of this user
+# DEPLOY_FILE : *.properties file defining common deploy properties for
+#               a given target deployment; defaults to $2
+# DEPLOYABLE  : WAR to deploy, defaults to $1
+# HOST        : host name for the landscape of target metering application
+# ACCOUNT     : account the target application shall run under
+# APPLICATION : appname of the target application
+# DROPDB      : database schema of application will be dropped if set to true
+# URL_PREFIX  : the URL prefix of that application
+#----------------------------------------------------------------------------------
+
+# resolve script path
+export basePath=$(cd "$(dirname "$0")"; pwd)
+echo basePath $basePath
+
+export http_proxy=http://proxy:8080
+export https_proxy=https://proxy:8080
+export no_proxy=nexus
+if [ -z $DEPLOY_FILE ]; then
+  export DEPLOY_FILE=$2
+fi
+export DEPLOY_PROPERTIES=$DEPLOY_FILE
+
+if [ -z $DEPLOYABLE ]; then
+  export DEPLOYABLE="$1"
+fi
+
+if [ -n "$URL_PREFIX" ]; then
+  URL_PREFIX_OPT="--url-prefix $URL_PREFIX"
+fi
+
+get_deploy_prop() {
+  cat $DEPLOY_PROPERTIES | grep $1 | sed -e 's/.*= *//'
+}
+
+echo "======================================="
+echo "Deploy properties: $DEPLOY_PROPERTIES"
+echo "======================================="
+echo "WAR file: $(get_deploy_prop source)"
+echo "======================================="
+echo "Deploy environment variables:"
+echo "USER              : $USER"
+echo "PASSWORD          : *******"
+echo "DEPLOY_FILE       : $DEPLOY_FILE"
+echo "DEPLOYABLE        : $DEPLOYABLE"
+echo "HOST              : $HOST"
+echo "ACCOUNT           : $ACCOUNT"
+echo "APPLICATION       : $APPLICATION"
+echo "DROPDB            : $DROPDB"
+echo "URL_PREFIX        : $URL_PREFIX"
+echo "======================================="
+
+get_application_status () {
+  echo "Asking for the status of the application" >&2
+  OUT=$(neo status -host https://$HOST -account $ACCOUNT -application $APPLICATION -user $USER -password $PASSWORD 2>&1 )
+  if [ "$?" -ne "0" ]; then
+    case "$OUT" in
+    *" : Missing application "*)
+      echo "Status: NOT_FOUND"
+      return 0
+      ;;
+    *)
+      echo "ERROR: Failed to retrieve application status"
+      exit 1;
+      ;;
+    esac
+  fi
+  echo "$OUT" | grep "Status:"
+}
+
+
+STATUS=$(get_application_status)
+if ([ "$STATUS" != "Status: NOT_FOUND" ]); then
+  ## Stop
+  neo stop  -host https://$HOST -account $ACCOUNT -application $APPLICATION -user $USER -password $PASSWORD -sync
+  if [ "$?" -ne "0" ]; then
+    echo "ERROR: Failed to stop application"
+    exit 1;
+  else
+    STATUS=$(get_application_status)
+  fi
+fi
+
+list_schema () {
+  OUT=$(neo list-application-schemas -host https://$1 -a $ACCOUNT -b $APPLICATION  -user $USER -password $PASSWORD)
+  if [ "$?" -ne "0" ]; then
+    echo "ERROR: Failed to retrieve application schemas"
+    exit 1;
+  fi
+  echo "$OUT" | tail -1 | cut -f 3 -d ' '
+}
+
+## Drop schema
+echo "Checking if schema should be dropped"
+if ([ "$DROPDB" = "true" ]); then
+    echo "searching schema"
+    if [ -z $TUNNEL_HOST ]; then
+      TUNNEL_HOST=$HOST
+    fi
+    SCHEMAID=$(list_schema $TUNNEL_HOST)
+    if ([ "$SCHEMAID" != "" ]); then
+        echo "Deleting schema $SCHEMAID"
+        neo delete-schema -host https://$TUNNEL_HOST -account $ACCOUNT -user $USER -password $PASSWORD -i $SCHEMAID --silent --force
+        if [ "$?" -ne "0" ]; then
+          echo "ERROR: Deleting schema failed"
+          exit 1;
+        fi
+    else
+       echo "No schema found"
+    fi
+fi
+
+## Deploy
+neo deploy --java-version 7 -host https://$HOST -account $ACCOUNT -application $APPLICATION -user $USER -password $PASSWORD -severity error $URL_PREFIX_OPT -s $DEPLOYABLE $DEPLOY_PROPERTIES -r
+if [ "$?" -ne "0" ]; then
+  echo "ERROR: Failed to deploy application"
+  exit 1;
+fi
+
+# Don't create destination per default as this does not work on dev landscapes
+# echo "Creating metering destination"
+# neo put-destination -host https://$HOST -account $ACCOUNT -application $APPLICATION -user $USER -password $PASSWORD -localpath $basePath/metering
+# if [ "$?" -ne "0" ]; then
+#   echo "ERROR: Failed to configure destination to metering"
+#   exit 1;
+# fi
+
+## in case the app was started before, start it again to have also the patchset running
+if ([ "$STATUS" = "Status: STOPPED" ] || [ "$STATUS" = "Status: NOT_FOUND" ]); then
+  ## Start
+  neo start -host https://$HOST -account $ACCOUNT -application $APPLICATION -user $USER -password $PASSWORD -sync
+  if [ "$?" -ne "0" ]; then
+    echo "ERROR: Failed to start application"
+    exit 1;
+  fi
+else
+  echo "Application will not be started. It was in status \"$STATUS\"."
+  exit 1;
+fi

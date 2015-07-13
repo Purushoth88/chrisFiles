@@ -1,0 +1,7 @@
+export USER=d032780
+export PASSWORD=
+export DEPLOY_FILE=deploywithoutpersistentfs.properties
+export HOST=neo.ondemand.com
+export ACCOUNT=git
+export APPLICATION=gerritchl
+export DROPDB=true
