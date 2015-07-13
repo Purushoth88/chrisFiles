@@ -4,7 +4,7 @@
 # Christian Halstrick, 2014
 
 # get gerrit.war
-gerrit_war=gerrit-2.9.1.war
+gerrit_war=gerrit-2.11.1.war
 [ -f gerrit.war ] || wget -O gerrit.war http://gerrit-releases.storage.googleapis.com/$gerrit_war || exit -1
 
 # initialise & start a gerrit
@@ -20,15 +20,15 @@ ssh-keyscan -p 29418 localhost >>~/.ssh/known_hosts
 
 # update properties of admin, create second user
 read -p "Navigate to http://localhost:8080/#/register/ and create a user admin with known ssh key" resp
-ssh -p 29418 admin@localhost gerrit set-account --full-name "Admin" --add-email "admin@admin.com" --http-password adminpwd admin
-ssh -p 29418 admin@localhost gerrit create-account --full-name "User" --email "user@user.com" --ssh-key - --http-password userpwd user <~/.ssh/id_rsa.pub
+ssh -p 29418 admin@localhost gerrit set-account --full-name "Admin" --add-email "admin@example.com" --http-password admin admin
+ssh -p 29418 admin@localhost gerrit create-account --full-name "User" --email "user@example.com" --ssh-key - --http-password user user <~/.ssh/id_rsa.pub
 
 # create test-projects
 for prj in testInitialNoCommit testInitialEmptyCommit testNoReviews testSomeReviews ;do
   ssh -p 29418 admin@localhost gerrit create-group --member user $prj-owners
   [ $prj == "testInitialNoCommit" ] && emptyCommit="" || emptyCommit="--empty-commit"
   ssh -p 29418 admin@localhost gerrit create-project $emptyCommit --owner $prj-owners $prj
-  git clone http://user:userpwd@localhost:8080/$prj
+  git clone http://user:user@localhost:8080/$prj
   scp -p -P 29418 user@localhost:hooks/commit-msg $prj/.git/hooks/ 
   if [ $prj == "testNoReviews" -o $prj == "testSomeReviews" ] ;then
     touch $prj/a
