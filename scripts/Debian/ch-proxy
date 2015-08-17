@@ -19,6 +19,9 @@ for opt in "$@" ;do
   -b|--boot)
     boot=true
     ;;
+  *)
+    echo $"Usage: $0 {-o|--on|-f|--off|-u|--update|-b|--boot}"
+    exit 1
   esac
 done
 
