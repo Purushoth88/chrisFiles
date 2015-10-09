@@ -1,22 +1,14 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Properties;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
-import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.TextProgressMonitor;
 import org.eclipse.jgit.submodule.SubmoduleStatus;
 import org.eclipse.jgit.submodule.SubmoduleWalk;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
-
-import com.sun.javafx.collections.MappingChange.Map;
-import com.sun.xml.internal.stream.StaxXMLInputSource;
 
 public class CloneSubmoduleRepo {
 	public static void main(String args[]) throws IOException, GitAPIException,

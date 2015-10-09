@@ -50,11 +50,8 @@ public class DetermineWetherOneCommitIsMergedIntoAnother {
 	}
 	
 	static boolean isMergedInto(Repository repo, String a, String b) throws MissingObjectException, IncorrectObjectTypeException, AmbiguousObjectException, IOException {
-		RevWalk rw = new RevWalk(repo);
-		try {
+		try (RevWalk rw = new RevWalk(repo)) {
 			return rw.isMergedInto(rw.parseCommit(repo.resolve(a+"^{commit}")), rw.parseCommit(repo.resolve(b+"^{commit}")));
-		} finally {
-			rw.release();
 		}
 	}
 }

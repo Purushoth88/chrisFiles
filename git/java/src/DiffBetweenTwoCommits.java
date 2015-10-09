@@ -17,8 +17,8 @@ public class DiffBetweenTwoCommits {
 
 	public static void main(String args[]) throws IOException, GitAPIException {
 		if (args.length < 2 || args.length > 3) {
-			System.err
-					.println("DiffBetweenTwoCommits: invalid number of argurments\nUsage: java DiffBetweenTwoCommits <pathToRepo> <refToCommitA> [<refToCommitB>]");
+			System.err.println(
+					"DiffBetweenTwoCommits: invalid number of argurments\nUsage: java DiffBetweenTwoCommits <pathToRepo> <refToCommitA> [<refToCommitB>]");
 			System.exit(1);
 		}
 
@@ -28,31 +28,19 @@ public class DiffBetweenTwoCommits {
 
 		Git git = Git.open(new File(pathToRepo));
 		Repository db = git.getRepository();
-		RevWalk rw = null;
-		final ObjectReader or = db.newObjectReader();
-		try {
-			final ObjectId srcTreeId = db.resolve(referenceToCommitA
-					+ "^{tree}");
-			final ObjectId tgtTreeId = db.resolve(referenceToCommitB
-					+ "^{tree}");
+		try (ObjectReader or = db.newObjectReader(); RevWalk rw = new RevWalk(db)) {
+			final ObjectId srcTreeId = db.resolve(referenceToCommitA + "^{tree}");
+			final ObjectId tgtTreeId = db.resolve(referenceToCommitB + "^{tree}");
 			final CanonicalTreeParser srcTreeParser = new CanonicalTreeParser();
-			rw = new RevWalk(db);
 			srcTreeParser.reset(or, rw.parseTree(srcTreeId));
 			final CanonicalTreeParser tgtTreeParser = new CanonicalTreeParser();
 			tgtTreeParser.reset(or, rw.parseTree(tgtTreeId));
 
-			List<DiffEntry> diffs = git.diff().setOldTree(srcTreeParser)
-					.setNewTree(tgtTreeParser).call();
+			List<DiffEntry> diffs = git.diff().setOldTree(srcTreeParser).setNewTree(tgtTreeParser).call();
 			for (DiffEntry diff : diffs)
-				System.out
-						.printf("changeType: %s, old path(mode): %s(%s), new path(mode): %s(%s)\n",
-								diff.getChangeType(), diff.getOldPath(),
-								diff.getOldMode(), diff.getNewPath(),
-								diff.getNewMode());
-		} finally {
-			or.release();
-			if (rw != null)
-				rw.dispose();
+				System.out.printf("changeType: %s, old path(mode): %s(%s), new path(mode): %s(%s)\n",
+						diff.getChangeType(), diff.getOldPath(), diff.getOldMode(), diff.getNewPath(),
+						diff.getNewMode());
 		}
 	}
 }
