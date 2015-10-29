@@ -11,6 +11,9 @@ fileB="/tmp/${revB//\//_}.show"
 git format-patch -p -U0 --minimal --patience -M -D --stdout -1 "$revA" >"$fileA" 
 git format-patch -p -U0 --minimal --patience -M -D --stdout -1 "$revB" >"$fileB" 
 
+sed -i 's/^@@.*@@/@@@@/' "$fileA"
+sed -i 's/^@@.*@@/@@@@/' "$fileB"
+
 diff -w $fileA $fileB
 
 rm "$fileA" "$fileB"
