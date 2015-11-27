@@ -1,0 +1,26 @@
+#!/bin/bash
+# Wraps the execution of a command to trace args,rc,stdin,stdout,stderr
+# stdin,stdout,stderr are dumped to the tracefile with 'od' in a hex
+# format allowing to trace binary data
+
+# Configure these two lines
+wrappedCommand="git-lfs"
+traceFile="/tmp/git-lfs.trace"
+
+traceFileStdin=$(mktemp commandTracer.stdin.XXX) 
+traceFileStdout=$(mktemp commandTracer.stdout.XXX) 
+traceFileStderr=$(mktemp commandTracer.stderr.XXX) 
+
+echo "*******************************************" >>"$traceFile" 
+echo "$(date) Will call <$wrappedCommand $*>" >>"$traceFile" 
+echo "Environment: pwd: $(pwd), \$GIT_DIR: $GIT_DIR" >>"$traceFile" 
+cat - > "$traceFileStdin"
+cat "$traceFileStdin" | "$wrappedCommand" $* > >(tee "$traceFileStdout") 2> >(tee "$traceFileStderr")
+echo "$(date) rc=$?" >>"$traceFile" 
+echo "stdin was:" >>"$traceFile" 
+od -A x -t x1z -v "$traceFileStdin" >>"$traceFile" 
+echo "stdout was:" >>"$traceFile" 
+od -A x -t x1z -v "$traceFileStdout" >>"$traceFile" 
+echo "stderr was:" >>"$traceFile" 
+od -A x -t x1z -v "$traceFileStderr" >>"$traceFile" 
+echo "*******************************************" >>"$traceFile" 
