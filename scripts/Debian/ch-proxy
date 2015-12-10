@@ -3,25 +3,34 @@
 # Configure a ubuntu based system to use SAP proxy if needed
 
 mode=auto
-ind=0
-
-for opt in "$@" ;do
-  case "${opt}" in
+ind=1
+while [ $# -ge $ind ]; do
+  case ${!ind} in
+  -h|--help)
+    echo "usage: setProxy [-o|--on] [-f|--off] [-u|--update] [-b|--boot] [-h|--help]"
+    echo "       -o|--on:  turn on proxy usage"
+    echo "       -f|--off: turn off proxy usage"
+    echo "       -u|--update: force rewriting of the config files"
+    echo "       -b|--boot: reboot"
+    echo "       by default it is determined automatically whether a proxy is needed or not"
+    exit 0
+    ;;
   -o|--on)
     mode=on
+    shift
     ;;
   -f|--off)
     mode=off
+    shift
     ;;
   -u|--update)
     update=true
+    shift
     ;;
   -b|--boot)
     boot=true
+    shift
     ;;
-  *)
-    echo $"Usage: $0 {-o|--on|-f|--off|-u|--update|-b|--boot}"
-    exit 1
   esac
 done
 
@@ -83,10 +92,10 @@ fi
 if [ "$mode" = on ] ;then
   grep "^http_proxy" /etc/environment || sudo sh -c 'echo http_proxy=http://proxy.wdf.sap.corp:8080 >> /etc/environment'
   grep "^https_proxy" /etc/environment || sudo sh -c 'echo https_proxy=https://proxy.wdf.sap.corp:8080 >> /etc/environment'
-  grep "^no_proxy" /etc/environment || sudo sh -c 'echo "no_proxy=wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp,'$host'" >> /etc/environment'
+  grep "^no_proxy" /etc/environment || sudo sh -c 'echo "no_proxy=sap.corp,nexus,jtrack,127.0.0.1,localhost,*.sap.corp,'$host'" >> /etc/environment'
   export http_proxy=http://proxy.wdf.sap.corp:8080
   export https_proxy=https://proxy.wdf.sap.corp:8080
-  export no_proxy='wdf.sap.corp,nexus,jtrack,127.0.0.1,localhost,*.wdf.sap.corp,'$host
+  export no_proxy='sap.corp,nexus,jtrack,127.0.0.1,localhost,*.sap.corp,'$host
   [ -f /etc/apt/apt.conf.d/80proxy ] || sudo cp ~/.80proxy /etc/apt/apt.conf.d/80proxy
   [ -f ~/.m2/settings.xml ] || cp ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml
   if [ -f /usr/share/applications/chromium-browser.desktop ] ;then
