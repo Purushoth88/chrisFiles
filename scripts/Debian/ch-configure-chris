@@ -55,10 +55,8 @@ git config -f ~/git/egit-github/.git/config remote.origin.pushurl https://chalst
 
 read -p "import certificates (your and sap) into firefox and chrome"
 read -p "import ssh keys to ~/.ssh"
-read -p "login to Chromium. Don't import passwords."
-read -p "import bookmarks from chrome to firefox"
+read -p "import bookmarks into firefox and chrome"
 read -p "login once in firefox and chrome to google, eclipse, github, sap-gerrit, sap-intranet"
 read -p "import chrisFiles into eclipse"
-read -p "add Chrome, Terminator, Eclipse to startbar. Remove old browser"
 
 ssh gerrit@git.wdf.sap.corp
