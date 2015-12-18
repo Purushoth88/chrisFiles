@@ -1,10 +1,11 @@
 #!/bin/bash
-# Creates multiple git repos each with a lot of eclipse projects
+# Creates multiple git repos each with a few eclipse projects. Each project contains a lot of compileable java files
 
-nrOfRepos=5
-projectsPerRepo=100
-filesPerProject=20
+nrOfRepos=2
+projectsPerRepo=3
+filesPerProject=20000
 
+n2c="abcdefghij"
 for (( r=1; r<=$nrOfRepos; r++ )) ;do
 	repoPath=repo_$r
 	mkdir $repoPath
@@ -12,6 +13,7 @@ for (( r=1; r<=$nrOfRepos; r++ )) ;do
 	for (( p=1; p<=$projectsPerRepo; p++ )) ;do
 		projectPath=$repoPath/project_${r}_${p}
 		mkdir $projectPath
+		echo .
 		cat >$projectPath/.project <<EOL
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
@@ -41,9 +43,15 @@ EOL
 			
 		echo "bin/" >$projectPath/.gitignore
 		mkdir $projectPath/src
-		for (( f=1; f<=$filesPerProject; f++ )) ;do
-
-			cat >$projectPath/src/Calc_${r}_${p}_${f}.java <<EOL
+		for (( f=10; f<10+$filesPerProject; f++ )) ;do
+			if (( f%10 == 0 )) ;then
+				d=""
+				for (( i=0; 1+i<${#f}; i++ )) ;do c=${f:$i:1} ; d=$d/${n2c:$c:1} ;done
+				d="${d:1}"
+				mkdir $projectPath/src/$d
+			fi
+			cat >$projectPath/src/$d/Calc_${r}_${p}_${f}.java <<EOL
+package ${d//\//.}; 
 public class Calc_${r}_${p}_${f} {
  /** @return the sum of a and b */
  public int add(int a, int b) {
@@ -51,9 +59,8 @@ public class Calc_${r}_${p}_${f} {
  }
 }
 EOL
-
 		done
 	done
 	git -C $repoPath add .
-	git -C $repoPath commit -m "adding classes Calc_${r}_<x>_<y> with add(int,int) to project project_${r}_<x>"
+	git -C $repoPath commit -m initial
 done
