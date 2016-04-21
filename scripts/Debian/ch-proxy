@@ -93,9 +93,15 @@ if [ "$mode" = on ] ;then
   grep "^http_proxy" /etc/environment || sudo sh -c 'echo http_proxy=http://proxy.wdf.sap.corp:8080 >> /etc/environment'
   grep "^https_proxy" /etc/environment || sudo sh -c 'echo https_proxy=https://proxy.wdf.sap.corp:8080 >> /etc/environment'
   grep "^no_proxy" /etc/environment || sudo sh -c 'echo "no_proxy=sap.corp,nexus,jtrack,127.0.0.1,localhost,*.sap.corp,'$host'" >> /etc/environment'
+  grep "^HTTP_PROXY" /etc/environment || sudo sh -c 'echo HTTP_PROXY=http://proxy.wdf.sap.corp:8080 >> /etc/environment'
+  grep "^HTTPS_PROXY" /etc/environment || sudo sh -c 'echo HTTPS_PROXY=https://proxy.wdf.sap.corp:8080 >> /etc/environment'
+  grep "^NO_PROXY" /etc/environment || sudo sh -c 'echo "NO_PROXY=sap.corp,nexus,jtrack,127.0.0.1,localhost,*.sap.corp,'$host'" >> /etc/environment'
   export http_proxy=http://proxy.wdf.sap.corp:8080
   export https_proxy=https://proxy.wdf.sap.corp:8080
   export no_proxy='sap.corp,nexus,jtrack,127.0.0.1,localhost,*.sap.corp,'$host
+  export HTTP_PROXY=http://proxy.wdf.sap.corp:8080
+  export HTTPS_PROXY=https://proxy.wdf.sap.corp:8080
+  export NO_PROXY='sap.corp,nexus,jtrack,127.0.0.1,localhost,*.sap.corp,'$host
   [ -f /etc/apt/apt.conf.d/80proxy ] || sudo cp ~/.80proxy /etc/apt/apt.conf.d/80proxy
   [ -f ~/.m2/settings.xml ] || cp ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml
   if [ -f /usr/share/applications/chromium-browser.desktop ] ;then
@@ -108,9 +114,15 @@ else
   sudo sed -i '/^http_proxy/d' /etc/environment
   sudo sed -i '/^https_proxy/d' /etc/environment
   sudo sed -i '/^no_proxy/d' /etc/environment
+  sudo sed -i '/^HTTP_PROXY/d' /etc/environment
+  sudo sed -i '/^HTTPS_PROXY/d' /etc/environment
+  sudo sed -i '/^NO_PROXY/d' /etc/environment
   unset http_proxy
   unset https_proxy
   unset no_proxy
+  unset HTTP_PROXY
+  unset HTTPS_PROXY
+  unset NO_PROXY
   cmp -s ~/.80proxy /etc/apt/apt.conf.d/80proxy && sudo rm /etc/apt/apt.conf.d/80proxy
   cmp -s ~/.m2/settings_sap_proxy.xml ~/.m2/settings.xml && rm ~/.m2/settings.xml
   if [ -f /usr/share/applications/chromium-browser.desktop ] ;then
