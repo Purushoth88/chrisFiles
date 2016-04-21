@@ -1,0 +1,39 @@
+#!/bin/bash
+# Wraps the execution of a command to trace args,rc,stdin,stdout,stderr
+# stdin,stdout,stderr are dumped to the tracefile with 'od' in a hex
+# format allowing to trace binary data
+
+# Configure these two lines
+wrappedCommand="/home/chris/go/bin/git-lfs"
+traceFile="/tmp/trc.gitLfs.trace"
+
+traceFileStdin=$(mktemp /tmp/trc.gitLfs.stdin.XXX) 
+traceFileStdout=$(mktemp /tmp/trc.gitLfs.stdout.XXX) 
+traceFileStderr=$(mktemp /tmp/trc.gitLfs.stderr.XXX) 
+trap "rm -f $traceFileStdin $traceFileStdout $traceFileStderr" EXIT
+
+echo "*******************************************" >>"$traceFile" 
+echo "$(date) Will call <$wrappedCommand $*>" >>"$traceFile" 
+echo "Environment: pwd: $(pwd), \$GIT_DIR: $GIT_DIR" >>"$traceFile" 
+if [ "$1" == "pre-push" -o "$1" == "clean" -o "$1" == "smudge" ]; then
+	cat - >"$traceFileStdin"
+	cat "$traceFileStdin" | "$wrappedCommand" $* > >(tee "$traceFileStdout") 2> >(tee "$traceFileStderr")
+	rc=${PIPESTATUS[1]}
+#	cat - >"$traceFileStdin"
+#	echo "stdin was:" >>"$traceFile" 
+#	od -A x -t x1z -v "$traceFileStdin" >>"$traceFile" 
+#	echo "Forced exit" >>"$traceFile" 
+#	exit 200
+else
+	"$wrappedCommand" $* > >(tee "$traceFileStdout") 2> >(tee "$traceFileStderr")
+	rc=$?
+fi
+echo "$(date) rc=$rc" >>"$traceFile" 
+echo "stdin was:" >>"$traceFile" 
+od -A x -t x1z -v "$traceFileStdin" >>"$traceFile" 
+echo "stdout was:" >>"$traceFile" 
+od -A x -t x1z -v "$traceFileStdout" >>"$traceFile" 
+echo "stderr was:" >>"$traceFile" 
+cat "$traceFileStderr" >>"$traceFile" 
+echo "*******************************************" >>"$traceFile" 
+exit $rc
