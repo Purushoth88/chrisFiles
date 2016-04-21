@@ -20,12 +20,13 @@ for h in 0 a ;do
 				[[ $m == d && $w != c ]] && continue
 				echo "$h$i$w$m: a" >$h$i$w$m
 				git add $h$i$w$m
-				rm $h$i$w$m
+				[ $i == $w ] || echo difference! $h$i$w$m
 			done
 		done
 	done
 done
 git commit -m initial
+rm [0a][0ab][0abc][0abcd]
 
 # prepare HEAD
 git rm --cached '*'
@@ -42,13 +43,13 @@ for h in 0 a ;do
 				if [[ $h != 0 ]] ;then
 					echo "$h$i$w$m: $h" >$h$i$w$m
 					git add $h$i$w$m
-					rm $h$i$w$m
 				fi
 			done
 		done
 	done
 done
 git commit -m head
+rm [0a][0ab][0abc][0abcd]
 
 # prepare MERGE
 git checkout -b merge HEAD~
@@ -66,13 +67,13 @@ for h in 0 a ;do
 				if [[ $m != 0 ]] ;then
 					echo "$h$i$w$m: $m" >$h$i$w$m
 					git add $h$i$w$m
-					rm $h$i$w$m
 				fi
 			done
 		done
 	done
 done
 git commit -m merge
+rm [0a][0ab][0abc][0abcd]
 
 # prepare index & working tree
 git checkout master
@@ -90,7 +91,6 @@ for h in 0 a ;do
 				if [[ $i != 0 ]] ;then
 					echo "$h$i$w$m: $i" >$h$i$w$m
 					git add $h$i$w$m
-					rm $h$i$w$m
 				fi
 				if [[ $w != 0 ]] ;then
 					echo "$h$i$w$m: $w" >$h$i$w$m
@@ -100,4 +100,5 @@ for h in 0 a ;do
 	done
 done
 git status
+git stash save -a afterPreparingIndexWT
 
