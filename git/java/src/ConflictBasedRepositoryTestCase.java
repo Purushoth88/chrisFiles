@@ -120,6 +120,7 @@ public class ConflictBasedRepositoryTestCase extends RepositoryTestCase {
 				}
 			}
 		}
+		System.out.println("mResult.toStringExt(): "+mResult.toString());
 	}
 
 	@Test
